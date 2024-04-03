@@ -1,0 +1,106 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.SqlQuery
+<style>
+    #AddSQLQuery {
+        padding: 40px;
+    }
+
+        #AddSQLQuery h1 {
+            margin-bottom: 20px;
+            color: #4c4c4c;
+        }
+
+    #playbookadd {
+        width: 241px;
+    }
+
+    textarea {
+        background-color: #E9EAEC !important;
+    }
+
+    .playbtn {
+        margin-left: 33px;
+    }
+
+    #getresulttable {
+        padding-left: 10px;
+    }
+
+    #updatesuccess {
+        color: #5cb85c;
+    }
+</style>
+<div id="AddSQLQuery" class="row playbookComments">
+
+    @using (Html.AjaxBeginForm("AddSqlQuery", "BOL", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "AddSqlQuerySuccess" }, new { @class = "form-horizontal frmAddSqlQuery" }))
+    {
+        if (Model.QueryId <= 0)
+        {
+            <h1>Add SQL Query</h1>
+        }
+        else
+        {
+            <h1>Edit SQL Query</h1>
+        }
+        @Html.HiddenFor(i => i.QueryId)
+        ;
+        var queryId = Context.Request.Query["queryId"];
+        <div class="row">
+            <div class="form-group">
+                @*<label for="inputUrl" class="mylabel control-label col-md-2">Enter Query</label>*@
+                <div class="col-md-5">
+                    @Html.TextAreaFor(x => x.Query, new { id = "", @class = "form-control", rows = "12", placeholder = "please enter your query..." })
+                </div>
+            </div>
+        </div>
+        <div id="sqlqueryresult"></div>
+        <div id="updatesuccess"></div>
+        <div class="row">
+            <div id="getresulttable">
+                <div class="form-group">
+                    @Html.CheckBoxFor(m => m.ResultTableFormat, new { @class = "chktableresult" })
+                    <label for="inputUrl" class="mylabel control-label">Display results in table format</label>
+                </div>
+            </div>
+
+            @*<div class="col-md-2"></div>*@
+            <div class="col-md-5 playbtn">
+                <button type="submit" class="btn btn-lg btnSave right pull-right btnLoadData"><i class="fa fa-eye"></i> Try</button>
+                @if (string.IsNullOrWhiteSpace(queryId))
+                {
+                    <a id="playbookadd" href="" class="btn btn-lg btnSave right pull-right hidden"><i class="fa fa-floppy-o"></i> Save To Playbook</a>
+                }
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function AddSqlQuerySuccess(ajaxContext) {
+
+        if (ajaxContext != "undefined") {
+            if (ajaxContext.Message != "undefined") {
+                $("#updatesuccess").text(ajaxContext.Message);
+            }
+            if (ajaxContext.QueryId > 0) {
+                $("#sqlqueryresult").text("");
+                $("#playbookadd").attr("href", SiteRoot + "Bol/AddPlaybook?queryId=" + ajaxContext.QueryId);
+                if (ajaxContext.ResultTableFormat == true) {
+                    window.open(SiteRoot + "Bol/ViewAuditingResultTableFormat?queryId=" + ajaxContext.QueryId + "&idx=1", '_blank');
+                    $("#playbookadd").removeClass("hidden");
+                }
+                else {
+                    window.open(SiteRoot + "Bol/AuditingResults?queryId=" + ajaxContext.QueryId + "&idx=1", '_blank');
+                    $("#playbookadd").removeClass("hidden");
+                }
+                //window.location.href = SiteRoot + "Bol/AuditingResults?queryId=" + ajaxContext.QueryId + "&idx=1";
+            }
+            else {
+                $("#sqlqueryresult").text(ajaxContext);
+                $("#updatesuccess").text("");
+            }
+
+        }
+    }
+</script>

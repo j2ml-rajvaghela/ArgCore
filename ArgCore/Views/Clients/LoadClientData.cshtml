@@ -1,0 +1,407 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.LoadClientData
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.CommonObjects.Heading</title>
+    <partial name="PageHeader" />
+    <link href="~/res/css/Main.css" rel="stylesheet" />
+    @*<style>
+    body {
+    font-family: 'Montserrat', Helvetica, Arial, Lucida, sans-serif !important;
+    padding-top: 0 !important;
+    background-color: #2d3e4e;
+    padding: 0;
+    }
+
+    #logo {
+    background-color: #212D39;
+    text-align: center;
+    /*height: 28%;*/
+    padding: 5%;
+    }
+
+    .leftBlock {
+    background-image: url('../../images/image-BG.png');
+    background-position: center bottom;
+    background-color: #2D3E4E;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    }
+
+    img.admin-img {
+    margin-top: 5%;
+    }
+
+    h4, h5 {
+    color: #fff;
+    }
+
+    h5.lastLogin {
+    color: #7B828B;
+    }
+
+    .admin-image {
+    text-align: center;
+    }
+
+    h5.site-admin {
+    background-color: #475A6C;
+    width: 25%;
+    margin-left: 37%;
+    padding: 2px;
+    border-radius: 3px;
+    }
+
+    span.col-md-3 {
+    text-align: right;
+    color: #fff;
+    }
+
+    .main-dashboard.col-md-9 {
+    background-color: #FFFFFF;
+    }
+
+    .techno.col-md-2 {
+    margin-top: 2%;
+    margin-left: -5%;
+    color: #A3A2A3;
+    }
+
+    .bell.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+    }
+
+    .search.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+    }
+
+    .side-menu .static a {
+    text-decoration: none;
+    }
+
+    a:hover {
+    color: white;
+    }
+
+    .logout1 {
+    float: right;
+    color: #CDCDCD;
+    }
+
+    .head-online {
+    font-size: 20px;
+    color: #838182;
+    font-weight: 700;
+    }
+
+    .scheduleDet {
+    margin-bottom: 20px;
+    }
+
+    h5.second-content {
+    font-style: italic;
+    color: #7F7D7E;
+    }
+
+    li.static:active {
+    background-color: #263643;
+    border-right: 1px solid #5FCE9B;
+    }
+
+    .heading {
+    padding-bottom: 30px;
+    }
+
+    .countDetails {
+    text-align: center;
+    }
+
+    .label {
+    width: 100%;
+    top: 22.5%;
+    position: absolute;
+    left: 0;
+    line-height: 34px;
+    }
+
+    .labelName {
+    font-size: 23px;
+    font-weight: normal;
+    }
+
+    .count {
+    font-weight: normal;
+    color: #9A9A9A;
+    font-size: 40px;
+    margin-top: 6%;
+    }
+
+    .labelText {
+    font-size: 16px;
+    line-height: 3;
+    font-weight: normal;
+    width: 68%;
+    margin-left: 19%;
+    margin-top: 22px;
+    }
+
+    .main-content {
+    background-color: #F4F5F7;
+    min-height: 1100px;
+    }
+
+    .dash2 {
+    background-color: #FFFFFF;
+    }
+
+    h3.heading {
+    color: #949393;
+    }
+
+    .active-title {
+    margin-left: 10px;
+    }
+
+    .activelogDetails {
+    margin-bottom: 20px;
+    height: 45px;
+    }
+
+    .labelText h4 {
+    color: #9A9A9A;
+    }
+
+    .welcome {
+    color: #4E4B4A;
+    }
+
+    .recent-sign {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+    }
+
+    .activitylog, .log-price {
+    padding: 12px;
+    font-size: 20px;
+    }
+
+    .logtimedetails {
+    padding: 0 20px;
+    font-size: 18px;
+    }
+
+    .activity-log {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    margin-left: 12px;
+    }
+
+    .uppercase-txt {
+    text-transform: uppercase;
+    color: white;
+    }
+
+    .no-padding {
+    padding: 0;
+    }
+
+    .parent-menu-item {
+    font-size: 18px;
+    }
+
+    .parent-menu-item a {
+    color: white;
+    }
+
+    .bottom-block {
+    padding-top: 12px;
+    }
+
+    .static {
+    margin-bottom: 0 !important;
+    }
+
+    #colPush {
+    -webkit-transition: width 0.3s ease, margin 0.3s ease;
+    -moz-transition: width 0.3s ease, margin 0.3s ease;
+    -o-transition: width 0.3s ease, margin 0.3s ease;
+    transition: width 0.3s ease, margin 0.3s ease;
+    }
+
+    #trig {
+    color: #4f4c4b;
+    margin: 5px 10px 0 0;
+    cursor: pointer;
+    }
+
+    .toggleLeftMenu {
+    background-color: white;
+    }
+
+    .toggleLeftMenu a:hover {
+    color: #4f4c4b;
+    }
+
+    .glyphicon-menu-hamburger {
+    font-size: 24px;
+    }
+
+    .col-md-0 {
+    display: none;
+    }
+    </style>*@
+</head>
+<body>
+    <div id="admin-dashboard" class="row">
+        @*id="cbp-spmenu-s2"  class="sidebar-menu cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"*@
+        <div id="colPush" class="col-md-3 leftBlock">
+            <div class="scroll-view" tabindex="5000" style="overflow: hidden; outline: none;">
+                <div id="logo">
+                    <a href="@(Common.MyRoot)">
+                        <img src="~/images/ARG-LOGO-DASHBOARD.png">
+                    </a>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-image">
+                        <img class="admin-img" src="~/images/ProfilePic.png">
+                        <h5 class="site-admin">@Common.CurrentUserRole</h5>
+                        <h4 class="per-name">@Common.CurrentUserName</h4>
+                        @if (Common.GetCurrentUserLastLogin() != null)
+                        {
+                            <h5 class="lastLogin">Last Login: @Common.GetCurrentUserLastLogin()</h5>
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <partial name="LeftMenu"/>
+            </div>
+        </div>
+        <div id="colMain" class="col-md-9 rightBlock">
+            <div class="dash2 row">
+                <ul class="main-dashboard content-container">
+                    <li id="trig" class="toggleLeftMenu">
+                        <a class="show-right-button" id="showRightPush"><i class="glyphicon glyphicon-menu-hamburger"></i></a>
+                    </li>
+                    <li>
+                        <h1>
+                            @if (Model != null && !string.IsNullOrWhiteSpace(@Model.CommonObjects.TopHeading))
+                            {
+                                @Model.CommonObjects.TopHeading
+                            }
+                            else
+                            {
+                                var heading = new Common.CommonObjects().TopHeading;
+                                @Html.Raw(heading)
+                                ;
+                            }
+                        </h1>
+                    </li>
+                    <li class="right text-right rightOptions">
+                        <a href="@(Common.MyRoot)Account/LogOff">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="content-container">
+                    <div id="AddClientData" class="main-content row">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2>Load Client Data</h2>
+                            </div>
+                        </div>
+                        @*@using (Html.BeginForm("ImportData", "Import", FormMethod.Post, new { @class = "form-horizontal" }))
+                        {*@
+                        <div class="row">
+                            <div class="form-group col-md-8">
+                                <label for="inputUrl" class="mylabel control-label col-md-3">Select Client</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "-- select client --", new { id = "ddlClients", @class = "form-control SelectActiveClient neverclear", data_val = "true", data_val_required = "The Client field is required." })
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.CompanyId > 0)
+                        {
+                            <div class="row">
+                                @if (Model.TruncateTables != null && Model.TruncateTables.Any())
+                                {
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">Truncate Tables</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("TruncateTable", Model.TruncateTables, "-- select table --", new { id = "ddlTruncateTables", @class = "form-control", @readonly = "readonly" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div id="BtnMngTableSettings" class="col-md-4" style="margin-top: 12px;">
+                                    <span><img src="~/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Table Settings</span>
+                                </div>
+                            </div>
+                        }
+                        @*<div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Select Data Type</label>
+                        <div class="col-md-5">
+                        <select class="form-control" required>
+                        <option></option>
+                        <option></option>
+                        <option></option>
+                        </select>
+                        @Html.DropDownList("", null, "-- select data type --", new { id = "ddlDataTypes", @class = "form-control" })
+                        </div>
+                        </div>
+                        <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-5 checkbox">
+                        <input type="checkbox" id="Load_Multiple_Files__in_same_directory_" value="">
+                        <span class="lblMultipleFile">Load Multiple Files (in same directory)</span>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-5">
+                        <img src="~/images/Choose-file.png" /> <input class="lblChooseFile" id="ClientFile" type="file" name="upload" />
+                        </div>
+                        </div>*@
+                        <div class="row">
+                            <button type="submit" id="BtnLoadClientData" class="btn btn-lg btnLoadData"><i class="fa fa-spinner"></i> Load Data</button>
+                            @*<button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>*@
+                        </div>
+                        @*}*@
+                        @if (Model.CompanyId > 0)
+                        {
+                            <div id="FilesDDL" class="hidden row" style="margin-top:20px;">
+                                <div class="col-md-8" style="width: 66.5%;">
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3" style="text-align: right;">Files</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(x => x.SelectedFile, Model.DataFiles, "-- select file --", new { id = "ddlDataFiles", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="BtnMngMappings" class="col-md-4" style="margin-top: 12px;">
+                                    <span><img src="~/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Mappings</span>
+                                </div>
+                            </div>
+                        }
+                        <div id="lblLoadClientsDataMsg" style="color:#c00000;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="PageFooter" />
+    <script src="~/Scripts/LoadClientsData.js"></script>
+
+</body>
+</html>

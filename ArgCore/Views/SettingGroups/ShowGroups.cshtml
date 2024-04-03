@@ -1,0 +1,55 @@
+﻿
+@model ArgCore.Models.SettingGroups
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@if (Model == null)
+{
+    return;
+}
+@{
+    // var groupID = ViewContext.HttpContext.Request.Query.ContainsKey("groupId");
+    var groupID = ViewContext.HttpContext.Request.Query["groupId"].ToString();
+}
+
+
+<div id="AddSetting" class="main-content row">
+    @using (Html.AjaxBeginForm("ShowGroups", "SettingGroups", new AjaxOptions { OnSuccess = "GroupSaved" }, new { @class = "form-horizontal" }))
+    {
+        <h2>Groups</h2>
+        int SettingId = 0;
+        if (Model.SettingsList != null && Model.SettingsList.Any())
+        {
+            var idx = 0;
+
+            foreach (var setting in Model.SettingsList)
+            {
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-3">@setting.Label</label>
+                    <div class="col-md-5">
+                        <input class="form-control hidden" name="Setting[@idx].SettingId" type="text" value="@setting.SettingId">
+                        <input class="form-control" name="Setting[@idx].Value" type="text" value="@setting.Value" required oninvalid="this.setCustomValidity('All fields are required.')">
+                        @{
+                            idx += 1; SettingId = @setting.SettingId;
+                        }
+                    </div>
+                </div>
+            }
+            <div class="btnReasrItemInfo">
+                <div class="col-xs-12 col-md-4">
+                    <a href="~/Settings/Delete?settingId=@SettingId" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</a>
+                </div>
+                <div class="col-xs-12 col-md-8 right text-right">
+                    <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                    <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.Raw("<h3>No groups found!</h3>")
+        }
+    }
+</div>
+

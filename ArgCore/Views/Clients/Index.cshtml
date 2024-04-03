@@ -1,0 +1,140 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.Clients
+@* @using Dashboard *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <link href="~/Content/jquery-dataTables-1.10.12.css" rel="stylesheet" />
+    <link href="~/Content/dataTables-bootstrap-1.10.12.min.css" rel="stylesheet" />
+    <link href="~/res/css/Style_v1.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="main-content row">
+        <div id="SearchResearchResults">
+            @using (Html.BeginForm("Index", "Clients", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+            @*     Html.EnableClientValidation(false); *@
+                <div class="clientSearchForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>@Model.CommonObjects.Heading</h2>
+                        </div>
+                        <div class="col-md-4 text-right right addItem">
+                            <a href="~/Clients/Save?clientId=0" title="Add Client">+ Add Client</a>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(x => x.SearchOptions.ClientId)
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Client Name</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(x => x.SearchOptions.CompanyId, Model.ClientNames, "-- select client --", new { id = "ddlClients", @class = "form-control" })
+                            @*@Html.TextBoxFor(x => x.SearchOptions.Name, null, new { @class = "form-control" })*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Email</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.SearchOptions.Email, null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Phone</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.SearchOptions.Contact, null, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                <label for="inputUrl" class="mylabel control-label col-md-2">Location</label>
+                <div class="col-md-5">
+                @Html.TextBoxFor(x => x.SearchOptions.Location, null, new { @class = "form-control" })
+                </div>
+                </div>*@
+                    @*<div class="form-group">
+                <label for="inputUrl" class="mylabel control-label col-md-2">Last accessed between</label>
+                <div class="col-md-5 dateBlock">
+                <div class="col-md-5">
+                @Html.TextBoxFor(x => x.SearchOptions.LastModifiedStartDate, null, new { @class = "form-control BDDatepicker" })
+                </div>
+                <label class="col-md-2">and</label>
+                <div class="col-md-5">
+                @Html.TextBoxFor(x => x.SearchOptions.LastModifiedEndDate, null, new { @class = "form-control BDDatepicker" })
+                </div>
+                </div>
+                </div>*@
+
+                    <div class="btnReasrItemInfo">
+                        <button type="submit" class="btn btn-lg btnLoadData"><img src="~/images/GetResults.png" /> Get Results</button>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (Model.ClientsList != null && Model.ClientsList.Count > 0)
+        {
+            <table id="clients-list" class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="cName">CLIENT NAME</th>
+                        <th class="email">EMAIL</th>
+                        <th class="phone">Phone</th>
+                        @*<th class="location">LOCATION</th>*@
+                        <th class="lastAccessDate">LAST ACCESS DATE</th>
+                        <th class="dbName">DbName</th>
+                    </tr>
+                </thead>
+                <tbody class="client-details">
+                    @foreach (var item in Model.ClientsList)
+                    {
+                        <tr>
+                            <td class="row">
+                                @*cName*@
+                                @*<span class="clientPic col-md-4">
+                        <img src="~/res/graphics/img1.png" />
+                        </span>
+                        <span class="col-md-8">
+                        <span class="userName">Lorem</span>*@
+                                <span class="name">
+                                    <a href="~/Clients/Save?clientId=@item.CompanyId" title="Edit Client">@item.Name</a>
+                                </span>
+                                @*</span>*@
+                            </td>
+                            <td class="email">@item.Email</td>
+                            <td class="phone">@item.Contact</td>
+                            @*<td class="location">@item.Location</td>*@
+                            <td class="lastAccessDate">@item.LastAccessDate.ToString("D")</td>
+                            <td class="dbName">@item.DBName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            @Html.Raw("<h3>No clients found!</h3>")
+        }
+    </div>
+    <script src="~/Scripts/jquery-1.10.12-dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables-1.10.12-bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var dataTableOptions = {
+                order: [],
+                "dom": 'rtip',
+                "bLengthChange": false,
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-fw fa-long-arrow-right">',
+                        previous: '<i class="fa fa-fw fa-long-arrow-left">'
+                    }
+                },
+            };
+            var shouldPaginate = $('#clients-list tbody tr').length > 10;
+            dataTableOptions["bPaginate"] = shouldPaginate;
+            $('#clients-list').DataTable(dataTableOptions);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,256 @@
+﻿body {
+    font-family: 'Montserrat', Helvetica, Arial, Lucida, sans-serif !important;
+    padding-top: 0 !important;
+    background-color: #212d39;
+    padding: 0;
+}
+
+#logo {
+    background-color: #2a93bd;
+    text-align: center;
+    /*height: 28%;*/
+    padding: 5%;
+}
+
+.leftBlock {
+    /*background-image: url('../../images/image-BG.png');*/
+    background: url("/res/graphics/LeftMenuBg.jpg") no-repeat;
+    background-position: center bottom;
+    background-color: #212d39;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+img.admin-img {
+    margin-top: 5%;
+}
+
+h4, h5 {
+    color: #fff;
+}
+
+    h5.lastLogin {
+        color: #7B828B;
+    }
+
+.admin-image {
+    text-align: center;
+}
+
+h5.site-admin {
+    background-color: #475A6C;
+    width: 25%;
+    margin-left: 37%;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+span.col-md-3 {
+    text-align: right;
+    color: #fff;
+}
+
+.main-dashboard.col-md-9 {
+    background-color: #FFFFFF;
+}
+
+.techno.col-md-2 {
+    margin-top: 2%;
+    margin-left: -5%;
+    color: #A3A2A3;
+}
+
+.bell.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+}
+
+.search.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+}
+
+.side-menu .static a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+}
+
+.viewInvoice:hover {
+    color: #5A738E !important;
+}
+
+.logout1 {
+    float: right;
+    color: #CDCDCD;
+}
+
+.head-online {
+    font-size: 20px;
+    color: #838182;
+    font-weight: 700;
+}
+
+.scheduleDet {
+    margin-bottom: 20px;
+}
+
+h5.second-content {
+    font-style: italic;
+    color: #7F7D7E;
+}
+
+li.static:active {
+    background-color: #263643;
+    border-right: 1px solid #5FCE9B;
+}
+
+.heading {
+    padding-bottom: 30px;
+}
+
+.countDetails {
+    text-align: center;
+}
+
+.label {
+    width: 100%;
+    top: 22.5%;
+    position: absolute;
+    left: 0;
+    line-height: 34px;
+}
+
+.labelName {
+    font-size: 23px;
+    font-weight: normal;
+}
+
+.count {
+    font-weight: normal;
+    color: #9A9A9A;
+    font-size: 40px;
+    margin-top: 6%;
+}
+
+.labelText {
+    font-size: 16px;
+    line-height: 3;
+    font-weight: normal;
+    width: 68%;
+    margin-left: 19%;
+    margin-top: 22px;
+}
+
+.main-content {
+    background-color: #F4F5F7;
+    min-height: 1100px;
+}
+
+.dash2 {
+    background-color: #FFFFFF;
+}
+
+h3.heading {
+    color: #949393;
+}
+
+.active-title {
+    margin-left: 10px;
+}
+
+.activelogDetails {
+    margin-bottom: 20px;
+    height: 45px;
+}
+
+.labelText h4 {
+    color: #9A9A9A;
+}
+
+.welcome {
+    color: #4E4B4A;
+}
+
+.recent-sign {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+}
+
+.activitylog, .log-price {
+    padding: 12px;
+    font-size: 20px;
+}
+
+.logtimedetails {
+    padding: 0 20px;
+    font-size: 18px;
+}
+
+.activity-log {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+    margin-left: 12px;
+}
+
+.uppercase-txt {
+    text-transform: uppercase;
+    color: white;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.parent-menu-item {
+    font-size: 18px;
+}
+
+    .parent-menu-item a {
+        color: white;
+    }
+
+.bottom-block {
+    padding-top: 12px;
+}
+
+.static {
+    margin-bottom: 0 !important;
+}
+
+#colPush {
+    -webkit-transition: width 0.3s ease, margin 0.3s ease;
+    -moz-transition: width 0.3s ease, margin 0.3s ease;
+    -o-transition: width 0.3s ease, margin 0.3s ease;
+    transition: width 0.3s ease, margin 0.3s ease;
+}
+
+#trig {
+    color: #4f4c4b;
+    margin: 5px 10px 0 0;
+    cursor: pointer;
+}
+
+.toggleLeftMenu {
+    background-color: white;
+}
+
+    .toggleLeftMenu a:hover {
+        color: #4f4c4b;
+    }
+
+.glyphicon-menu-hamburger {
+    font-size: 24px;
+}
+
+.col-md-0 {
+    display: none;
+}

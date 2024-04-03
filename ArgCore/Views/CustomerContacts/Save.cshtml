@@ -1,0 +1,96 @@
+﻿@*@{Layout = "~/Views/Shared/_AdminLayout.cshtml";}*@
+@model ArgCore.Models.CustomerContacts
+@{
+    Layout = "";
+}
+
+<style>
+    .modal {
+        top: -190px !important;
+        bottom: 10px !important;
+    }
+
+    .modal-open .modal {
+        overflow: hidden !important;
+    }
+</style>
+<div id="AddCustomerContact" class="row">
+    @using (Html.AjaxBeginForm("Save", "CustomerContacts", null, new AjaxOptions { OnSuccess = "OnNewCustContactAdded", OnBegin = "OnBegin" }, new { @class = "form-horizontal", id = "frmSaveCustomerContact" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.CustomerContactDetail.ContactId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Customer ID</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.CustomerId, null, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Company</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CompanyName, null, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Region</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.Region, null, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Location Code</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.CustomerLocationCode, null, new { @maxlength = "100", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.CustomerContactDetail.CustomerLocationCode)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">First Name</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.FirstName, null, new { @maxlength = "150", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.CustomerContactDetail.FirstName)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Last Name</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.LastName, new { @maxlength = "150", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Phone</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.PhoneNo, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @maxlength = "10", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.CustomerContactDetail.PhoneNo)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Email</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.CustomerContactDetail.Email, null, new { @maxlength = "150", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.CustomerContactDetail.Email)
+            </div>
+        </div>
+        <div class="btnReasrItemInfo">
+            @if (Model.CustomerContactDetail.ContactId > 0)
+            {
+                <div class="col-xs-12 col-md-4">
+                    <a href="javascript:void(0);" data-contactid="@Model.CustomerContactDetail.ContactId" class="btn btn-lg btnDelete btnDelCustContact" title="Delete">Delete</a>
+                    @*@Html.ActionLink("Delete", "Delete", "CustomerContacts", new { contactId = @Model.CustomerContactDetail.ContactId }, new { @class = "btn btn-lg btnDelete" })*@
+                </div>
+            }
+
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave btnCustContactAdded"><i class="fa fa-floppy-o"></i> Save</button>
+                @*btnCancel*@
+                <button type="button" class="bootbox-close-button btn btn-lg CancelButton"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+        <div id="lblCustContactMsg" style="color: #c00000; font-size: 20px;"></div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse('#frmSaveCustomerContact');
+    });
+</script>

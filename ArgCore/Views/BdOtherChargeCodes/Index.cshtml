@@ -1,0 +1,137 @@
+﻿@model ArgCore.Models.BdOtherChargeCodes
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <link href="~/Content/jquery-dataTables-1.10.12.css" rel="stylesheet" />
+    <link href="~/Content/dataTables-bootstrap-1.10.12.min.css" rel="stylesheet" />
+    <link href="~/res/css/Style_v1.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="BdOtherChargeCodesList" class="main-content row">
+        <div id="SearchResearchResults">
+            @using (Html.BeginForm("Index", "BdOtherChargeCodes", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+               @*  Html.EnableClientValidation(false); *@
+                <div class="bdOtherChargeCodesSearchForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>@Model.CommonObjects.Heading</h2>
+                        </div>
+                        <div class="col-md-4 text-right right addItem">
+                            <a href="~/BdOtherChargeCodes/Save?otherChargeCodeId=0" title="Add Charge Code">+ Add Charge Code</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Client</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(x => x.SearchOptions.CompanyId, Model.Companies, "-- select client --", new { id = "ddlOtherChargeCodeCompanies", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Charge Code</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(x => x.SearchOptions.BDOtherChargeCodeId, Model.ChargeCodesList, "-- select charge code --", new { id = "ddlOtherChargeCodes", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="btnReasrItemInfo">
+                        <button type="submit" class="btn btn-lg btnLoadData"><img src="~/images/GetResults.png" /> Get Results</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row text-right right options exportIcon">
+            <img src="~/images/export.png" />
+        </div>
+        @if (Model.ChargeCodes != null && Model.ChargeCodes.Count > 0)
+        {
+            <table id="BdChargeCodes-list" class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="company">Client</th>
+                        <th class="chargeCode">Charge Code</th>
+                        <th class="description">DESCRIPTION</th>
+                    </tr>
+                </thead>
+                <tbody class="bdChargeCode-details">
+                    @foreach (var item in Model.ChargeCodes)
+                    {
+                        <tr>
+                            <td class="company">@item.Company</td>
+                            <td class="chargeCode">
+                                <a href="~/BdOtherChargeCodes/Save?otherChargeCodeId=@item.BDOtherChargeCodeId" title="Edit Other Charge Code">@item.ChargeCode</a>
+                            </td>
+                            <td class="description">@item.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else if (!string.IsNullOrWhiteSpace(Model.SearchOptions.Message))
+        {
+            @Html.Raw("<h3>" + Model.SearchOptions.Message + "</h3>")
+        }
+    </div>
+    <script src="~/Scripts/jquery-1.10.12-dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables-1.10.12-bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var dataTableOptions = {
+                order: [],
+                "dom": 'rtip',
+                "bLengthChange": false,
+                language: {
+                    paginate: {
+                        next: '<i class="fa fa-fw fa-long-arrow-right">',
+                        previous: '<i class="fa fa-fw fa-long-arrow-left">'
+                    }
+                },
+            };
+            var shouldPaginate = $('#BdChargeCodes-list tbody tr').length > 10;
+            dataTableOptions["bPaginate"] = shouldPaginate;
+            $('#BdChargeCodes-list').DataTable(dataTableOptions);
+        });
+
+        function SetOtherChargeCodesByClientId(clientId = "0") {
+            debugger
+            $.get("/BdOtherChargeCodes/SetOtherChargeCodesByClient?companyId=" + clientId, function (data) {
+                console.log(data);
+                if (data) {
+                    // Update the other charge code dropdown options
+                    var ddlOtherChargeCodes = $("#ddlOtherChargeCodes");
+                    ddlOtherChargeCodes.empty(); // Clear existing options
+
+                    // Add new options based on the data received
+                    $.each(data, function (index, item) {
+                        ddlOtherChargeCodes.append($('<option>', {
+                            value: item.BDOtherChargeCodeId,
+                            text: item.ShortDescription
+                        }));
+                    });
+
+                    ddlOtherChargeCodes.prepend($('<option>', {
+                        value: '',
+                        text: '-- select charge code --',
+                        selected: true
+                    }));
+                }
+            });
+        }
+        // Client dropdown change event
+        $("#ddlOtherChargeCodeCompanies").change(function () {
+            debugger
+            var clientId = $(this).val(); // Selected client ID
+            if (clientId) {
+                SetOtherChargeCodesByClientId(clientId)
+            }
+            else {
+                // SetOtherChargeCodesByClientId()
+                console.log("No client selected.");
+            }
+        });
+    </script>
+</body>
+</html>

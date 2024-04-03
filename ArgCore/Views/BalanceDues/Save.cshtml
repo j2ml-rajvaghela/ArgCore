@@ -1,0 +1,253 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.BalanceDues
+<div id="AddBalance" class="main-content row">
+    @using (Html.BeginForm("Save", "BalanceDues", FormMethod.Post, new { @id = "AddBalance", @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.BalanceDuesDetail.BalanceId)
+        <div class="row firstRow">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content ">Customer</label>
+                    @Html.DropDownListFor(x => x.BalanceDuesDetail.CustomerId, Model.Customers, "-- select customer --", new { id = "ddlCustomers", @class = "form-control", maxlength = "5" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.CustomerId)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Region</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.Region, null, new { @class = "form-control", maxlength = "5" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Region)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Client</label>
+                    @Html.DropDownListFor(x => x.BalanceDuesDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlCompanies", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.CompanyId)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Customer Location Code</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.CustomerLocationCode, null, new { @class = "form-control", maxlength = "20" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.CustomerLocationCode)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Booking ID</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BookingId, null, new { @class = "form-control", maxlength = "50" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BookingId)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Vessel</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.Vessel, null, new { @class = "form-control", maxlength = "10" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Vessel)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Voyage</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.Voyage, null, new { @class = "form-control", maxlength = "10" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Voyage)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Quote</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.Quote, null, new { @class = "form-control", maxlength = "100" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Quote)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Balance Due Invoice</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BalanceDueInvoice, null, new { @class = "form-control", maxlength = "50" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BalanceDueInvoice)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Balance Due Invoice Date</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BalanceDueInvoiceDate, null, new { @class = "form-control datepicker" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BalanceDueInvoiceDate)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">BOL No.</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.Bol, null, new { @class = "form-control", maxlength = "100" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Bol)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Bol Execution Date</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BolExecutionDate, null, new { @class = "form-control datepicker" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BolExecutionDate)
+                </div>
+            </div>
+            @*<div class="col-md-4">
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel label-content">Tariff Reference No.</label>
+        @Html.TextBoxFor(x => x.BalanceDuesDetail.Tariff, null, new { @class = "form-control", maxlength = "20" })
+        @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Tariff)
+        </div>
+        </div>*@
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Invoice Status</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.InvoiceStatus, null, new { @class = "form-control", maxlength = "100" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.InvoiceStatus)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Collection Status</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.CollectionStatus, null, new { @class = "form-control", maxlength = "100" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.CollectionStatus)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Client Gl Status</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.ClientGlStatus, null, new { @class = "form-control", maxlength = "100" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.ClientGlStatus)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Port Of Loading</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.PortOfLoading, null, new { @class = "form-control", maxlength = "5" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.PortOfLoading)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Port Of Discharge</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.PortOfDischarge, null, new { @class = "form-control", maxlength = "5" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.PortOfDischarge)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Move Type</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.MoveType, null, new { @class = "form-control", maxlength = "10" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.MoveType)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Balance Due Amount</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BalanceDueAmount, null, new { @class = "form-control", @type = "deciaml" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BalanceDueAmount)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Balance Due Error Code</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BDErrorCode, null, new { @class = "form-control", maxlength = "5" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BDErrorCode)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Balance Due Description</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.BDDescription, null, new { @class = "form-control", maxlength = "1500" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.BDDescription)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Close Reason Code</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.CloseReasonCode, null, new { @class = "form-control", maxlength = "5" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.CloseReasonCode)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Invoice Type</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.InvoiceType, null, new { @class = "form-control", maxlength = "100" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.InvoiceType)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Revenue Analyst Auditor</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.RevenueAnalystAuditor, null, new { @class = "form-control", maxlength = "50" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.RevenueAnalystAuditor)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Revenue Analyst Collector</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.RevenueAnalystCollector, null, new { @class = "form-control", maxlength = "50" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.RevenueAnalystCollector)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Date Added</label>
+                    @Html.TextBoxFor(x => x.BalanceDuesDetail.DateAdded, null, new { @class = "form-control datepicker" })
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Comments</label>
+                    @Html.TextAreaFor(x => x.BalanceDuesDetail.Comments, new { @class = "form-control", maxlength = "1000" })
+                    @Html.ValidationMessageFor(x => x.BalanceDuesDetail.Comments)
+                </div>
+            </div>
+            @*<div class="col-md-4">
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel label-content">Last Modified</label>
+        @Html.TextBoxFor(x => x.BalanceDuesDetail.LastModified, null, new { @readonly = "readonly", @class = "form-control" })
+        </div>
+        </div>
+        <div class="col-md-4">
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel label-content">Last Modified By</label>
+        @Html.TextBoxFor(x => x.BalanceDuesDetail.LastModifiedBy, null, new { @readonly = "readonly", @class = "form-control" })
+        </div>
+        </div>*@
+        </div>
+        @*<div class="row">
+    <div class="form-group col-md-12">
+    <label for="inputUrl" class="mylabel label-content">Comments</label>
+    @Html.TextBoxFor(x => x.BalanceDuesDetail.Comments, null, new { @class = "form-control", maxlength = "100" })
+    </div>
+    </div>*@
+        <div class="btnReasrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                <button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

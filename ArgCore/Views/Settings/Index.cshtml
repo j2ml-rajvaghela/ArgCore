@@ -1,0 +1,53 @@
+﻿@model ArgCore.Models.Settings
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Settings";
+}
+@if (Model == null)
+{
+    return;
+}
+<div id="SettingsList" class="main-content row">
+    <div class="row text-right right options exportIcon">
+        <img src="~/images/export.png" />
+    </div>
+    <div id="searchBlock" class="row">
+        <div class="col-md-10 searchBlock">
+            <input id="txtSearch" type="text" name="searchquery" class="form-control txtSearch" placeholder="Type here to search...">
+            <a id="btnSearch" class="Search" href="javascript:void(0);"><span class="fa fa-search"></span></a>
+        </div>
+        <div class="col-md-2 text-right right addItem">
+            <a href="~/Settings/Save?settingId=0" title="Add Setting">+ Add Setting</a>
+        </div>
+    </div>
+    @if (Model.SettingsList != null && Model.SettingsList.Any())
+    {
+        <table id="settings-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Key</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody class="setting-details">
+                @foreach (var setting in Model.SettingsList)
+                {
+                    <tr>
+                        <td>@setting.Label</td>
+                        <td>
+                            <a href="~/Settings/Save?settingId=@setting.SettingId" title="Edit Setting">@setting.Key</a>
+                        </td>
+                        <td>@setting.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No settings found!</h3>")
+    }
+</div>

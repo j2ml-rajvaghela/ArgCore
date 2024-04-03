@@ -1,0 +1,106 @@
+﻿@model ArgCore.Models.Regions
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div id="AddRegion" class="main-content row">
+    @using (Html.BeginForm("Save", "Regions", FormMethod.Post))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.RegionDetail.RegionId)
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Client</label>
+                    @Html.DropDownListFor(x => x.RegionDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlCompanies", @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.RegionDetail.CompanyId)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel label-content">Region</label>
+                    @Html.TextBoxFor(x => x.RegionDetail.Region, null, new { @class = "form-control firstSpacetruncate", maxlength = "10" })
+                    @Html.ValidationMessageFor(x => x.RegionDetail.Region)
+                </div>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="row">
+
+                    @Html.Raw(Model.ErrorMessage)
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="inputUrl" class="mylabel label-content">Description</label>
+                @Html.TextAreaFor(x => x.RegionDetail.Description, new { @class = "form-control firstSpacetruncate" })
+                @Html.ValidationMessageFor(x => x.RegionDetail.Description)
+            </div>
+        </div>
+        <div class="btnReasrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "Regions", new { regionId = @Model.RegionDetail.RegionId }, new { @class = "btn btn-lg btnDelete" })
+                @*<button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+@* <form asp-action="Save" asp-controller="Regions" method="post">
+    <h2>@Model.CommonObjects.Heading</h2>
+    <input type="hidden" asp-for="RegionDetail.RegionId" />
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <lable for="inputUrl" class="myLabel label-content">Client</lable>
+                <select asp-for="RegionDetail.CompanyId" id="ddlCompanies" class="form-control">
+                    <option value="">"-- select client --</option>
+                    @foreach (var item in Model.Companies)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <span asp-validation-for="RegionDetail.CompanyId"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="inputUrl" class="mylabel label-content">Region</label>
+                <input type="text" asp-for="RegionDetail.Region" class="form-control firstSpacetruncate" maxlength="10" />
+                <span asp-validation-for="RegionDetail.Region"></span>
+            </div>
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="row">
+                @Html.Raw(Model.ErrorMessage)
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <textarea asp-for="RegionDetail.Description" class="form-control firstSpacetruncate"></textarea>
+            <span asp-validation-for="RegionDetail.Description"></span>
+        </div>
+    </div>
+    <div class="btnReasrItemInfo">
+        <div class="col-xs-12 col-md-4">
+            <a asp-action="Delete" asp-controller="Regions" asp-route-regionId="@Model.RegionDetail.RegionId" class="btn btn-lg btnDelete">Delete</a>
+        </div>
+        <div class="col-xs-12 col-md-8 right text-right">
+            <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+            <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+        </div>
+    </div>
+</form> *@

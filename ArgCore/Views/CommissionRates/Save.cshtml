@@ -1,0 +1,90 @@
+﻿@model ArgCore.Models.Commissions
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="AddCommission" class="main-content row">
+    @using (Html.BeginForm("Save", "Commissions", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.CommissionDetail.CommissionId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Company</label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(x => x.CommissionDetail.CompanyId, Model.Companies, "-- select company --", new { id = "ddlCompanies", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.CompanyId)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Region</label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(x => x.CommissionDetail.Region, Model.Regions, "-- select region --", new { id = "ddlRegions", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.Region)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Invoice#</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.InvoiceNo, null, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.InvoiceNo)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Invoice Date</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.InvoiceDate, null, new { @class = "form-control datepicker" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.InvoiceDate)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Customer</label>
+            <div class="col-md-4">
+                @Html.DropDownListFor(x => x.CommissionDetail.CustomerId, Model.Customers, "-- select customer --", new { id = "ddlCustomers", @class = "form-control", maxlength = "5" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.CustomerId)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Customer Location Code</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.CustomerLocationCode, null, new { @class = "form-control", maxlength = "50" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.CustomerLocationCode)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Booking Id</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.BookingId, null, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.BookingId)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">BOL#</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.BOLNo, null, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.BOLNo)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Bol Execution Date</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.BolExecutionDate, null, new { @class = "form-control datepicker" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.BolExecutionDate)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Amount Due USD</label>
+            <div class="col-md-4">
+                @Html.TextBoxFor(x => x.CommissionDetail.AmountDueUSD, null, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.CommissionDetail.AmountDueUSD)
+            </div>
+        </div>
+        <div class="btnClientInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "Commissions", new { commissionId = @Model.CommissionDetail.CommissionId }, new { @class = "btn btn-lg btnDelete" })
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave">Save</button>
+                <input type="button" class="btn btn-lg btnCancel" value="Cancel" />
+            </div>
+        </div>
+    }
+</div>

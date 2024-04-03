@@ -1,0 +1,60 @@
+﻿@model ArgCore.Models.Companies
+@{
+    Layout = "";
+}
+<script src="~/res/js/Script.js"></script>
+<script>
+    var userId = "@(Model.UserId)";
+</script>
+@*class="main-content row"*@
+<div id="Companies">
+    <h2>Assign Companies</h2>
+    <div class="col-md-5">
+        @if (Model.CompaniesList != null && Model.CompaniesList.Any())
+        {
+            <table id="companiesList" class="display dataTable selectableDatatable table table-striped">
+                <thead>
+                    <tr>
+                        <th>Companies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var comp in Model.CompaniesList)
+                    {
+                        <tr>
+                            <td data-companyid="@comp.CompanyId" class="compName">@comp.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div class="col-md-2 assignIcons">
+        <div id="assignCompany">
+            <a href="javascript:void(0);" class="assignCompany"><i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div id="removeCompany">
+            <a href="javascript:void(0);" class="removeCompany"><i class="fa fa-chevron-left"></i></a>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <table id="assignedCompaniesList" class="display dataTable selectableDatatable table table-striped">
+            <thead>
+                <tr>
+                    <th>Assigned Companies</th>
+                </tr>
+            </thead>
+            @if (Model.AssignedCompanies != null && Model.AssignedCompanies.Any())
+            {
+                <tbody>
+                    @foreach (var comp in Model.AssignedCompanies)
+                    {
+                        <tr>
+                            <td data-companyid="@comp.CompanyId" class="compName">@comp.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        </table>
+    </div>
+</div>

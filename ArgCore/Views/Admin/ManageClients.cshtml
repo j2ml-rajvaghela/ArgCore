@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = Arg.Terms.Resource1.pgTitleManageClients;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divmain">
+    <fieldset>
+        @*<legend><button id="btnaddclient" class="btn btn-primary btn-thin">@Arg.Terms.Resource1.btnAddClient</button></legend>*@
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblEdit</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblAbbreviation</div>
+            <div class="col-md-3">@Arg.Terms.Resource1.lblClient</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblHasClientDB</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1" data-bind="text:clientid"></div>
+                <div class="col-md-1"><i class="mdi mdi-pencil-box-outline icngrn elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i></div>
+                <div class="col-md-1" data-bind="text:nickname"></div>
+                <div class="col-md-3" data-bind="text:clientname"></div>
+                <div class="col-md-1" data-bind="if: hasclientdb==true"><i class="mdi mdi-check icngrn"></i></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            setProgressBar()
+            InitializeViewModel();
+            getData("manageclients");
+        });
+
+        function InitializeViewModel() {
+            ko.applyBindings(viewModel, $("#divmain")[0]);
+        }
+
+        function editClient(x) {
+            $('#modalNotYet').modal('show');
+            //data-toggle="modal" data-target="#myModal"
+            //var sid = event.target.id;
+            //var id = sid.substr(1);
+            //log.info("edit task: id=" + id);
+            //window.location.href = "/Clients/ClientEdit/" + id;
+        }
+
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            try {
+                for (i = 0; i < response.length; i++) {
+                    viewModel.items.push(response[i]);
+                }
+                finishProgressBar();
+                $(".elnk").on("click", function () { editClient(this); });
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        }
+    </script>
+}

@@ -1,0 +1,101 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.AuditorPlaybooks
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Auditor Playbooks</title>
+    <partial name="PageHeader" />
+    <style>
+        body {
+            padding: 0;
+            background-color: #F4F5F7 !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="BOLUpdateAuditorPlaybooks">
+        <h2>Update Playbook</h2>
+
+        @using (Html.AjaxBeginForm("UpdatePlaybookStatus", "BOL", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "PlayBookUpdateSuccess" }, new { @class = "form-horizontal" }))
+        {
+
+            @Html.HiddenFor(x => x.AuditorPlaybookDetail.PlayID)
+            @Html.HiddenFor(x => x.AuditorPlaybookDetail.CompanyID)
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Title</label>
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(x => x.AuditorPlaybookDetail.Title, new { id = "txttitle", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AuditorPlaybookDetail.Title)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Status</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.AuditorPlaybookDetail.Status, Common.StatusType, null, new { id = "ddlStatus", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AuditorPlaybookDetail.Status)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Priority</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.AuditorPlaybookDetail.Priority, Common.Priority, null, new { id = "ddlPriority", @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AuditorPlaybookDetail.Priority)
+                    </div>
+                </div>
+            </div>
+            <div class="btnplaybookInfo">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <button type="submit" class="btn btn-md btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>
+<script>
+
+    function PlayBookUpdateSuccess(ajaxContext) {
+
+        if (ajaxContext != "undefined" && ajaxContext.PlayID > 0) {
+            if (ajaxContext.Title != null) {
+                var title = ajaxContext.Title;
+                $(".title-" + ajaxContext.PlayID + " span").text(title);
+            }
+            var status = $("#ddlStatus option:selected").text();
+            var statusClass = status.replace(/\s+/g, '');
+            var priority = $("#ddlPriority option:selected").text();
+            $(".status-" + ajaxContext.PlayID + " span").text(status);
+            $(".status-" + ajaxContext.PlayID + " span").removeClass();
+            $(".status-" + ajaxContext.PlayID + " span").addClass("status-" + statusClass + " status-label");
+            $(".priority-" + ajaxContext.PlayID + " span").text(priority);
+            var Comment = ajaxContext.Comment;
+            if (Comment.length > 50) {
+                Comment = "<span><p>" + Comment.substring(0, 50);
+                Comment += "<br /> <a data-playid=" + ajaxContext.PlayID + " href='javascript:void(0);' data-ajax='@(Common.MyRoot)Bol/LoadPlaybookComments?playId=" + ajaxContext.PlayID + "' class='animatedPopUp playbookcomment'>Read More</a></p><span>"
+                $(".playcomments-" + ajaxContext.PlayID).text("");
+                $(".playcomments-" + ajaxContext.PlayID).prepend(Comment);
+                $(".close-animatedModal").click();
+                LinkAnimatedPopup();
+
+            }
+            else {
+                $(".playcomments-" + ajaxContext.PlayID).text(Comment);
+                $(".close-animatedModal").click();
+                LinkAnimatedPopup();
+            }
+
+            $(".close-animatedModal").click();
+        }
+    }
+</script>

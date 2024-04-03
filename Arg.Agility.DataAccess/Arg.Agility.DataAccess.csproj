@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CacheManager.Core" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Arg.Agility.DataModels\Arg.Agility.DataModels.csproj" />
+    <ProjectReference Include="..\Arg.Core\Arg.Core.csproj" />
+    <ProjectReference Include="..\Arg.DataAccess\Arg.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

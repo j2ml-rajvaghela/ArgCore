@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.MenuItems
+<div id="AddMenuItem" class="main-content row">
+    @using (Html.BeginForm("Save", "MenuItems", FormMethod.Post, new { @id = "AddItem" }))
+    {
+        @Html.HiddenFor(x => x.MenuItemDetail.ItemId)
+        <h2>Add Menu Item</h2>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Name</label>
+                @Html.TextBoxFor(x => x.MenuItemDetail.Name, null, new { @class = "form-control", maxlength = "150" })
+                @Html.ValidationMessageFor(x => x.MenuItemDetail.Name)
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Display Name</label>
+                @Html.TextBoxFor(x => x.MenuItemDetail.DisplayName, null, new { @class = "form-control", maxlength = "150" })
+                @Html.ValidationMessageFor(x => x.MenuItemDetail.DisplayName)
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Link</label>
+                <span class="declar"><i class="fa fa-info-circle"></i>Target to send user on click in menu</span>
+                @Html.TextBoxFor(x => x.MenuItemDetail.Link, null, new { @class = "form-control", maxlength = "150" })
+                @Html.ValidationMessageFor(x => x.MenuItemDetail.Link)
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Menu</label>
+                @Html.DropDownListFor(x => x.MenuItemDetail.MenuId, Model.Menus, "-- select menu --", new { id = "ddlMenus", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.MenuItemDetail.MenuId)
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Parent</label>
+                @Html.DropDownListFor(x => x.MenuItemDetail.ParentId, Model.ParentMenuItems, "-- select parent --", new { id = "ddlParentMenuItems", @class = "form-control", data_val = "false" })
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Icon</label>
+                <span class="declar"><i class="fa fa-info-circle"></i>Show on the left of the text in menu</span>
+                @Html.TextBoxFor(x => x.MenuItemDetail.ImgSrc, null, new { @class = "form-control", maxlength = "150" })
+                @Html.ValidationMessageFor(x => x.MenuItemDetail.ImgSrc)
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Display Index</label>
+                <span class="declar"><i class="fa fa-info-circle"></i>Decides the order of items in the same parent</span>
+                @Html.TextBoxFor(x => x.MenuItemDetail.DisplayIdx, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.MenuItemDetail.DisplayIdx)
+            </div>
+        </div>
+        <div class="btnResrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "MenuItems", new { itemId = @Model.MenuItemDetail.ItemId }, new { @class = "btn btn-lg btnDelete" })
+                @*<button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,63 @@
+﻿@model ArgCore.Models.AppActions
+@{
+    Layout = "";
+}
+<script>
+    var roleId = "@(Model.RoleId)";
+</script>
+@if (Model.AppActionsList != null || Model.AssignedActions != null)
+{
+    <div id="AppActions" class="row">
+        <h2>Assign App Actions</h2>
+        <div class="col-md-5">
+            <div class="scrolltable">
+                <table id="appActionsList" class="display dataTable selectableDatatable table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.AppActionsList != null && Model.AppActionsList.Any())
+                        {
+                            foreach (var item in Model.AppActionsList)
+                            {
+                                <tr>
+                                    <td data-appactionid="@item.AppActionId" class="menuItemName">@item.ActionName</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-2 assignIcons">
+            <div id="assignAppAction">
+                <a href="javascript:void(0);" class="assignAppAction"><i class="fa fa-chevron-right"></i></a>
+            </div>
+            <div id="removeAppAction">
+                <a href="javascript:void(0);" class="removeAppAction"><i class="fa fa-chevron-left"></i></a>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <table id="assignedAppActionsList" class="display dataTable selectableDatatable table table-striped">
+                <thead>
+                    <tr>
+                        <th>Assigned App Actions</th>
+                    </tr>
+                </thead>
+                @if (Model.AssignedActions != null && Model.AssignedActions.Any())
+                {
+                    <tbody>
+                        @foreach (var item in Model.AssignedActions)
+                        {
+                            <tr>
+                                <td data-appactionid="@item.AppActionId" class="menuItemName">@item.ActionName</td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+}

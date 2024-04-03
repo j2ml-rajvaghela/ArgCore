@@ -1,0 +1,6 @@
+﻿<!-- manager menu -->
+@if (Context.User.Identity.IsAuthenticated && User.IsInRole("ARGManager"))
+{
+    <li>@Html.ActionLink("Dashboard", "Index", "Manager")</li>
+    <li>@Html.ActionLink("Clients", "ManageClients", "Manager")</li>
+}

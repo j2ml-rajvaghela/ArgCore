@@ -1,0 +1,493 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.ResearchItems
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.CommonObjects.Heading</title>
+    <partial name="PageHeader" />
+    <link href="~/res/css/Main.css" rel="stylesheet" />
+    @*<style>
+    body {
+    font-family: 'Montserrat', Helvetica, Arial, Lucida, sans-serif !important;
+    padding-top: 0 !important;
+    background-color: #2d3e4e;
+    padding: 0;
+    }
+
+    #logo {
+    background-color: #212D39;
+    text-align: center;
+    /*height: 28%;*/
+    padding: 5%;
+    }
+
+    .leftBlock {
+    background-image: url('../../images/image-BG.png');
+    background-position: center bottom;
+    background-color: #2D3E4E;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    }
+
+    img.admin-img {
+    margin-top: 5%;
+    }
+
+    h4, h5 {
+    color: #fff;
+    }
+
+    h5.lastLogin {
+    color: #7B828B;
+    }
+
+    .admin-image {
+    text-align: center;
+    }
+
+    h5.site-admin {
+    background-color: #475A6C;
+    width: 25%;
+    margin-left: 37%;
+    padding: 2px;
+    border-radius: 3px;
+    }
+
+    span.col-md-3 {
+    text-align: right;
+    color: #fff;
+    }
+
+    .main-dashboard.col-md-9 {
+    background-color: #FFFFFF;
+    }
+
+    .techno.col-md-2 {
+    margin-top: 2%;
+    margin-left: -5%;
+    color: #A3A2A3;
+    }
+
+    .bell.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+    }
+
+    .search.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+    }
+
+    .side-menu .static a {
+    text-decoration: none;
+    }
+
+    a:hover {
+    color: white;
+    }
+
+    .logout1 {
+    float: right;
+    color: #CDCDCD;
+    }
+
+    .head-online {
+    font-size: 20px;
+    color: #838182;
+    font-weight: 700;
+    }
+
+    .scheduleDet {
+    margin-bottom: 20px;
+    }
+
+    h5.second-content {
+    font-style: italic;
+    color: #7F7D7E;
+    }
+
+    li.static:active {
+    background-color: #263643;
+    border-right: 1px solid #5FCE9B;
+    }
+
+    .heading {
+    padding-bottom: 30px;
+    }
+
+    .countDetails {
+    text-align: center;
+    }
+
+    .label {
+    width: 100%;
+    top: 22.5%;
+    position: absolute;
+    left: 0;
+    line-height: 34px;
+    }
+
+    .labelName {
+    font-size: 23px;
+    font-weight: normal;
+    }
+
+    .count {
+    font-weight: normal;
+    color: #9A9A9A;
+    font-size: 40px;
+    margin-top: 6%;
+    }
+
+    .labelText {
+    font-size: 16px;
+    line-height: 3;
+    font-weight: normal;
+    width: 68%;
+    margin-left: 19%;
+    margin-top: 22px;
+    }
+
+    .main-content {
+    background-color: #F4F5F7;
+    min-height: 1100px;
+    }
+
+    .dash2 {
+    background-color: #FFFFFF;
+    }
+
+    h3.heading {
+    color: #949393;
+    }
+
+    .active-title {
+    margin-left: 10px;
+    }
+
+    .activelogDetails {
+    margin-bottom: 20px;
+    height: 45px;
+    }
+
+    .labelText h4 {
+    color: #9A9A9A;
+    }
+
+    .welcome {
+    color: #4E4B4A;
+    }
+
+    .recent-sign {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+    }
+
+    .activitylog, .log-price {
+    padding: 12px;
+    font-size: 20px;
+    }
+
+    .logtimedetails {
+    padding: 0 20px;
+    font-size: 18px;
+    }
+
+    .activity-log {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+    margin-left: 12px;
+    }
+
+    .uppercase-txt {
+    text-transform: uppercase;
+    color: white;
+    }
+
+    .no-padding {
+    padding: 0;
+    }
+
+    .parent-menu-item {
+    font-size: 18px;
+    }
+
+    .parent-menu-item a {
+    color: white;
+    }
+
+    .bottom-block {
+    padding-top: 12px;
+    }
+
+    .static {
+    margin-bottom: 0 !important;
+    }
+
+    #colPush {
+    -webkit-transition: width 0.3s ease, margin 0.3s ease;
+    -moz-transition: width 0.3s ease, margin 0.3s ease;
+    -o-transition: width 0.3s ease, margin 0.3s ease;
+    transition: width 0.3s ease, margin 0.3s ease;
+    }
+
+    #trig {
+    color: #4f4c4b;
+    margin: 5px 10px 0 0;
+    cursor: pointer;
+    }
+
+    .toggleLeftMenu {
+    background-color: white;
+    }
+
+    .toggleLeftMenu a:hover {
+    color: #4f4c4b;
+    }
+
+    .glyphicon-menu-hamburger {
+    font-size: 24px;
+    }
+
+    .col-md-0 {
+    display: none;
+    }
+    </style>*@
+</head>
+<body>
+    <div id="admin-dashboard" class="row">
+        @*id="cbp-spmenu-s2"  class="sidebar-menu cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"*@
+        <div id="colPush" class="col-md-3 leftBlock">
+            <div class="scroll-view" tabindex="5000" style="overflow: hidden; outline: none;">
+                <div id="logo">
+                    <a href="@(Common.MyRoot)">
+                        <img src="~/images/ARG-LOGO-DASHBOARD.png">
+                    </a>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-image">
+                        <img class="admin-img" src="~/images/ProfilePic.png">
+                        <h5 class="site-admin">@Common.CurrentUserRole</h5>
+                        <h4 class="per-name">@Common.CurrentUserName</h4>
+                        @if (Common.GetCurrentUserLastLogin() != null)
+                        {
+                            <h5 class="lastLogin">Last Login: @Common.GetCurrentUserLastLogin()</h5>
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <partial name="LeftMenu" />
+            </div>
+        </div>
+        <div id="colMain" class="col-md-9 rightBlock">
+            <div class="dash2 row">
+                <ul class="main-dashboard content-container">
+                    <li id="trig" class="toggleLeftMenu">
+                        <a class="show-right-button" id="showRightPush"><i class="glyphicon glyphicon-menu-hamburger"></i></a>
+                    </li>
+                    <li>
+                        <h1>
+                            @if (Model != null && !string.IsNullOrWhiteSpace(@Model.CommonObjects.TopHeading))
+                            {
+                                @Model.CommonObjects.TopHeading
+                            }
+                            else
+                            {
+                                var heading = new Common.CommonObjects().TopHeading;
+                                @Html.Raw(heading)
+                                ;
+                            }
+                        </h1>
+                    </li>
+                    <li class="right text-right rightOptions">
+                        <a href="@(Common.MyRoot)Account/LogOff">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="content-container">
+                    <div class="main-content row">
+                        <div id="SearchResearchResults">
+                            @using (Html.BeginForm("Index", "Research", FormMethod.Post, new { @class = "form-horizontal" }))
+                            {
+                              @*   Html.EnableClientValidation(false); *@
+                                <div class="researchItemSearchForm">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h2>@Model.CommonObjects.Heading</h2>
+                                        </div>
+                                        <div class="col-md-4 text-right right addItem">
+                                            <a href="javascript:void(0);" class="animatedPopUp" data-ajax="@(Common.MyRoot)Research/Save?researchId=0" title="Add Item">+ Add Item</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Client</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "-- select client --", new { id = "ddlClients", @class = "form-control SelectActiveClient" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Region</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.Regions, Model.Regions, new { id = "ddlRegions", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Regions != null ? String.Join(" ,", Model.SearchOptions.Regions) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Revenue Analyst Auditor</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.RevenueAnalystAuditors, Model.Auditors, "-- select auditor --", new { id = "ddlAuditors", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.RevenueAnalystAuditors != null ? String.Join(" ,", Model.SearchOptions.RevenueAnalystAuditors) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Status</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.SelectedStatus, Model.Status, "--select status--", new { id = "ddlStatus", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.SelectedStatus != null ? String.Join(" ,", Model.SearchOptions.SelectedStatus) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Research Reason Code</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.ResearchReasonCodes, Model.ReasonCodes, "-- select reason code --", new { id = "ddlCodes", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.ResearchReasonCodes != null ? String.Join(" ,", Model.SearchOptions.ResearchReasonCodes) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">BOL date between</label>
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BolExecutionStartDate, null, new { @class = "form-control BDDatepicker", , data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BolExecutionEndDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Last modified between</label>
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.LastModifiedStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.LastModifiedEndDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">BOL No.</label>
+                                        <div class="col-md-5">
+                                            @Html.TextBoxFor(x => x.SearchOptions.Bol, null, new { @class = "form-control", maxlength = "100" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Booking ID</label>
+                                        <div class="col-md-5">
+                                            @Html.TextBoxFor(x => x.SearchOptions.BookingId, null, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="btnReasrItemInfo">
+                                        <button type="submit" id="GetResearchResults" class="btn btn-lg btnLoadData"><img src="~/images/GetResults.png" />Get Results</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.ResearchItemsList != null && Model.ResearchItemsList.Count > 0)
+                        {
+                            <table id="research-list" class="table text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="company">COMPANY</th>
+                                        <th class="region">REGION</th>
+                                        <th class="shipper">SHIPPER</th>
+
+                                        <th class="bolNo">BOL</th>
+                                        @*<th class="bolNo">Booking ID</th>*@
+                                        <th class="researchReasonCode">RESEARCH REASON CODE</th>
+                                        <th class="status">STATUS</th>
+                                        <th class="auditor">AUDITOR</th>
+                                        <th class="lastmodaud">LAST MODIFIED AUDITOR</th>
+                                        <th class="comments">COMMENTS</th>
+                                        <th class="lastmod">LAST MODIFIED</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="research-details">
+                                    @foreach (var item in Model.ResearchItemsList)
+                                    {
+                                        <tr>
+                                            <td class="company">@item.Company</td>
+                                            <td class="region">@item.Region</td>
+                                            <td class="shipper">@item.Shipper</td>
+                                            @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("Ceva"))
+                                            {
+                                                <td class="bolNo">
+                                                    <a href="@(Common.MyRoot)/booking/AuditingResults?bolNo=@item.BOL" target="_blank">@item.BOL</a>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td class="bolNo">
+                                                    <a href="@(Common.MyRoot)/Bol/AuditingResults?bolNo=@item.BOL" target="_blank">@item.BOL</a>
+                                                </td>
+                                            }
+
+                                            <td class="researchReasonCode">
+                                                <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)Research/Save?researchId=@item.ResearchId" title="Edit Research Item" class="animatedPopUp">
+                                                    @item.ResearchReasonCode
+                                                </a>
+                                            </td>
+                                            <td class="invStatus">
+                                                <span class="status-@item.Status.ToLower() status-label">
+                                                    @*@if (Common.CurrentUserInfo.IsAdmin || (Common.CurrentUserInfo.IsARGManager && Common.IsCurrentCompanyAssigned))*@
+                                                    @if (item.Status == "Open" && Common.CanRunAction.CloseResearchItem)
+                                                    {
+                                                        <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)Research/StatusDetails?researchId=@item.ResearchId" class="animatedPopUp">
+                                                            @item.Status
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.Status
+                                                    }
+                                                </span>
+                                            </td>
+
+                                            <td class="auditor">@Html.Raw(item.UserName)</td>
+                                            <td class="lastmodaud">@item.LastModifiedAuditor</td>
+                                            <td class="comments">@Html.Raw(item.Comments)</td>
+                                            <td class="lastmod">@item.LastModified.ToString("d")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            @Html.Raw("<h3>No items found!</h3>")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="PageFooter"/>
+    <partial name="PopUpBox"/>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        if (@Model.CompanyId> 0) {
+            $("#ddlClients").val(@Model.CompanyId);
+        
+    });
+</script>

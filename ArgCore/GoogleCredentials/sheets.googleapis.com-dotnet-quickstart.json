@@ -1,0 +1,8 @@
+﻿{
+  "access_token": "ya29.a0ARrdaM_AdL-ltqOevnyux9lK7Nif2hoQ3tSCIW-A89meeDUODg-K2fBdgU7DQuD8_Z49qyNyXHTlPgFntKLjshTHXOwII2xh0cGxDuJEcFKjeZB2TGUaHmFStY-UQtw7fwy-qHApFYvTIUk3UnUDakcy6T3YUg",
+  "token_type": "Bearer",
+  "expires_in": 3599,
+  "refresh_token": "1//0dBs1FWBRaIAlCgYIARAAGA0SNwF-L9Ir1oQtYciFiFgk-MtdKRfgs2zmccXbA0do9avSQffQtTEuNp1nQj1_8v9FrTY-qqS1E2k",
+  "scope": "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive",
+  "Issued": "2021-10-21T13:17:50.302-04:00"
+}

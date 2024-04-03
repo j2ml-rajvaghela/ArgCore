@@ -1,0 +1,17 @@
+﻿<tr>
+    <input type="hidden" name="BalanceDuesItems[].BalanceDueInvoiceDate" value="@Model.InvoiceSummary.InvoiceDate" />
+    <td style="display:none"><input type="text" class="txtrow" name="BalanceDuesItems[@idx].ItemNo" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].Type" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].Container" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].ContainerType" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].ContainerSize" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].Weight" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].WeightUnit" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].Measure" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].ItemNo" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].Hazmat" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].TariffRef" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].Commodity" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].CommodityDesc" value="" /></td>
+    <td><input type="text" class="txtrow" name="BalanceDuesItems[@idx].AmountDue" value="" /></td>
+</tr>

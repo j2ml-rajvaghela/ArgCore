@@ -1,0 +1,124 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.BDPaymentAmountDetails
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BD Payment Amount Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        @{
+            decimal totalPayments = 0;
+        }
+        @if (Model.BalanceDueInfo != null && (Model.BalanceDueInfo.InvoiceStatus.Contains("Invoiced_") || Model.BalanceDueInfo.InvoiceStatus == "Short_Paid") && (Model.BalanceDueInfo.ClientGlStatus == "Open"))
+        {
+            using (Html.AjaxBeginForm("SaveBDPayments", "BalanceDues", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "SubmitSuccess" }, new { @class = "form-horizontal frmAddPayment" }))
+            {
+                @Html.HiddenFor(x => x.BalanceDueInfo.BalanceId)
+                @Html.HiddenFor(x => x.TotalPaymentAmount, new { Value = @totalPayments })
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payor</label>
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(x => x.Payor, Model.Customers, "--select payor--", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Type</label>
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(x => x.PaymentType, new List<SelectListItem>{
+                    new SelectListItem { Text = "Check", Value = "Check"},
+                    new SelectListItem { Text = "Wire", Value = "Wire"}  },
+                                     new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Reference No</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.PaymentReference, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Date</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.PaymentDate, null, new { @class = "form-control datepicker", data_val = "false" })
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row">
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-2">Invoice Status</label>
+        <div class="col-md-4">
+        @Html.DropDownListFor(x => x.BalanceDueInfo.InvoiceStatus, Model.InvoiceStatuses, new { @class = "form-control",id="ddlInvoiceStatus"})
+        </div>
+        </div>
+        </div>*@
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Amount</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.BDPaymentAmount, new { @class = "form-control", data_val_required = "BDPaymentAmount field is required", @required = "required" })
+                            @*@Html.ValidationMessageFor(x => x.BDPaymentAmount)*@
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+        <div id="lblInvoiceStatus" style="color: green; font-size: 20px;"></div>
+        </div>
+        </div>*@
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Currency</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.Currency, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div id="lblPaymentAmountMsg" style="color: green; font-size: 20px;"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-lg btnSave"><img src="~/images/save.png" /> Save</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" value="Exit" class="close-animatedModal btn btn-lg btn-default" style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <button type="button" value="Exit" class="close-animatedModal btn btn-lg btn-default" style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+        }
+    </div>
+</body>
+</html>

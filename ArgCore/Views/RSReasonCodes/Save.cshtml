@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.RSReasonCodes
+<div id="AddClient" class="main-content row">
+    @using (Html.BeginForm("Save", "RSReasonCodes", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.RSReasonCodeDetail.ReasonCodeId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Reason Code</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.RSReasonCodeDetail.ReasonCode, null, new { @class = "form-control firstSpacetruncate", maxlength = "200" })
+                @Html.ValidationMessageFor(x => x.RSReasonCodeDetail.ReasonCode)
+            </div>
+        </div>
+        if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="row errormessage">
+
+                @Html.Raw(Model.ErrorMessage)
+            </div>
+        }
+        <div class="btnClientInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "RSReasonCodes", new { reasonCodeId = Model.RSReasonCodeDetail.ReasonCodeId }, new { @class = "btn btn-lg btnDelete" })
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" id="reasoncodesave" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

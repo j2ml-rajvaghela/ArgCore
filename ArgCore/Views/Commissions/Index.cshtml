@@ -1,0 +1,142 @@
+﻿@model ArgCore.Models.Commissions
+@* @using Dashboard *@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="main-content row">
+
+    @*<div id="searchBlock" class="row">
+    <div class="col-md-10 searchBlock">
+    </div>
+    <div class="col-md-2 text-right right addItem">
+    <a href="@(Common.MyRoot)Commissions/Save?commissionId=0" title="Add Commission">+ Add Commission</a>
+    </div>
+    </div>*@
+    <div id="SearchCommissionResults">
+        @using (Html.BeginForm("Index", "Commissions", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+           @*  Html.EnableClientValidation(false); *@
+            @Html.HiddenFor(x => x.SearchOptions.CommissionId)
+            <div class="commissionSearchForm">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Client</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "-- select client --", new { id = "ddlClients", @class = "form-control SelectActiveClient" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Region</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.SearchOptions.Regions, Model.Regions, new { id = "ddlRegions", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Regions != null ? String.Join(" ,", Model.SearchOptions.Regions) : "" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Invoice#</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.SearchOptions.InvoiceNos, Model.InvoiceNos, new { id = "ddlInvoices", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.InvoiceNos != null ? String.Join(" ,", Model.SearchOptions.InvoiceNos) : "" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Invoice date</label>
+                    <div class="col-md-5 dateBlock">
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.SearchOptions.InvoiceStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                        </div>
+                        <label class="col-md-2">and</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.SearchOptions.InvoiceEndDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                        </div>
+                    </div>
+                </div>
+
+                @*@if (Common.CurrentUserInfo.IsAdmin || Common.CurrentUserInfo.IsARGManager)
+            {*@
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Users</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.SearchOptions.UserIds, Model.Users, new { id = "ddlCommUsers", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.UserIds != null ? String.Join(" ,", Model.SearchOptions.UserIds) : "" })
+                    </div>
+                </div>
+                @*}*@
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">User Role</label>
+                    <div class="col-md-5">
+                        @* @Html.DropDownListFor(x => x.SearchOptions.Roles, Model.UserRoles, new { id = "ddlUserRoles", multiple = "", @class = "form-control chzn-select", @disabled = "disabled", @selectedvals = Model.SearchOptions.Roles != null ? String.Join(",", Model.SearchOptions.Roles) : "" })*@
+                        @Html.DropDownListFor(x => x.SearchOptions.Roles, Model.UserRoles, new { id = "ddlUserRoles", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Roles != null ? String.Join(",", Model.SearchOptions.Roles) : "" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Status</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.SearchOptions.Status, Model.InvoiceStatus, "-- select status -- ", new { id = "ddlStatus", @class = "form-control" })
+                    </div>
+                </div>
+                <div id="lblCommissionsMsg" style="color:#c00000;font-size:18px;"></div>
+                <div class="btnReasrItemInfo">
+                    <button id="GetCommissionResults" type="submit" class="btn btn-lg btnLoadData">
+                        <img src="~/images/GetResults.png" /> Get Results
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+    @if (Model.CommissionsList != null && Model.CommissionsList.Count > 0)
+    {
+        <div class="QueryTotal">
+            <b>Query total:</b>
+            <span class="lblCount">Total Commission Amount USD: <span class="totalComm count">@Model.TotalCommissions</span></span> |
+            <span class="lblCount">Total Commission Amount Paid USD: <span class="totalCommPaid count">@Model.TotalCommissionsPaid</span></span> |
+            <span class="lblCount">Total Amount Due: <span class="totalAmntDue count">@Model.TotalAmountDue</span></span>
+        </div>
+        <table id="commissions-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="user">User</th>
+                    <th class="company">Company</th>
+                    <th class="region">Region</th>
+                    <th class="invoice">Invoice</th>
+                    <th class="invoiceDate">Inv Date</th>
+                    <th class="cId">Cust. Id</th>
+                    <th class="customer">Customer</th>
+                    <th class="bol">BOL#</th>
+                    <th class="bolExecDate">BOL Exec Date</th>
+                    <th class="amntDue">Amount Due USD</th>
+                    <th class="status">Status</th>
+                </tr>
+            </thead>
+            <tbody class="client-details">
+                @foreach (var item in Model.CommissionsList)
+                {
+                    <tr>
+                        <td class="user">@item.UserName</td>
+                        <td class="company">@item.Company</td>
+                        <td class="region">@item.Region</td>
+                        <td class="invoice">@item.InvoiceNo</td>
+                        <td class="invoiceDate">@item.InvoiceDate.ToString("d")</td>
+                        <td class="cId">@item.CustomerId</td>
+                        <td class="customer">@item.CustomerName</td>
+                        <td class="bol">@item.BOLNo</td>
+                        <td class="bolExecDate">@item.BolExecutionDate.ToString("d")</td>
+                        <td class="amntDue">@item.AmountDueUSD</td>
+                        <td class="status">@item.InvoiceStatus</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        @Html.Raw("<h3>" + Model.Message + "</h3>")
+    }
+</div>
+
+<script src="~/res/js/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if(@Model.CompanyId>0)
+        {
+            $("#ddlClients").val(@Model.CompanyId);
+        }
+    @*setTimeout(function(){  $("#ddlClients").val(@Model.CompanyId); }, 300);*@
+        });
+</script>

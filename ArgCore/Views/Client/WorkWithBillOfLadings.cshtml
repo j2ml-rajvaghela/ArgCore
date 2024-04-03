@@ -1,0 +1,207 @@
+﻿@{
+    // ViewBag.Title = Arg.Terms.Resource1.pgTitleWorkWithBillofLadings;
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+<div id="divsearch">
+    <div class="row">
+        <div class="col-sm-3">
+            Search BOL#: <input type="text" id="searchbol" /> <button id="btnsearchbol" class="btn btn-primary btn-thin">Go</button>
+        </div>
+        <div class="col-sm-3">
+            Search Booking#: <input type="text" id="searchbook" /> <button id="btnsearchbook" class="btn btn-primary btn-thin">Go</button>
+        </div>
+    </div>
+</div>
+<div id="divmain">
+    <fieldset>
+        <div class="row gridhdr">
+          @*   <div class="col-md-1">@Arg.Terms.Resource1.lblReview</div> *@
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblBOLNumber</div>
+           @*  <div class="col-md-3">@Arg.Terms.Resource1.lblCustomerName</div> *@
+            <div class="col-md-2">@Arg.Terms.Resource1.lblOrigin</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblDestination</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1">
+                    <!-- ko if: stat=='10' -->
+                    <a data-bind="click: function () { reviewBOL(billofladingid); }" title="BOL Review Not Started">
+                        <i class="mdi mdi-view-module icngry elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i>
+                    </a>
+                    <!-- /ko -->
+                    <!-- ko if: stat=='20' -->
+                    <a data-bind="click: function () { reviewBOL(billofladingid); }" title="BOL Review Started">
+                        <i class="mdi mdi-view-module icnorg elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i>
+                    </a>
+                    <!-- /ko -->
+                    <!-- ko if: stat=='30' -->
+                    <a data-bind="click: function () { reviewBOL(billofladingid); }" title="BOL Needs Review">
+                        <i class="mdi mdi-view-module icnred elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i>
+                    </a>
+                    <!-- /ko -->
+                    <!-- ko if: stat=='40' -->
+                    <a data-bind="click: function () { reviewBOL(billofladingid); }" title="BOL Review Complete">
+                        <i class="mdi mdi-view-module icngrn elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i>
+                    </a>
+                    <!-- /ko -->
+                </div>
+                <div class="col-md-1" data-bind="text:billofladingid"></div>
+                <div class="col-md-2" data-bind="text:bolnumber"></div>
+                <div class="col-md-3" data-bind="text:customername"></div>
+                <div class="col-md-2" data-bind="text:origin"></div>
+                <div class="col-md-2" data-bind="text:destination"></div>
+            </div>
+        </div>
+        <partial name="_MoreButton" />
+    </fieldset>
+</div>
+
+@section Scripts {
+    <script>
+        var clientid = "@ViewBag.clientid";
+        var customerid = "@ViewBag.customerid";
+        var clnt;
+        var index = 0;
+        var progbar = "progress";
+        $(document).ready(function () {
+            InitializeViewModel();
+            clearMessage();
+            $("#progress2outer").hide();
+            $("#btnMore").off('click').on("click", getMoreData);
+            log.info("managebol; clientid=" + clientid);
+
+            var bolsearch = $.session.get('bolsearch');
+            log.info("bolsearch=" + bolsearch);
+            if (bolsearch != null && bolsearch.length > 0) {
+                doMore = false;
+                $("#searchbol").val(bolsearch);
+                getMoreDataSearchBol();
+            }
+
+            var booksearch = $.session.get('booksearch');
+            log.info("booksearch=" + booksearch);
+            if (booksearch != null && booksearch.length > 0) {
+                doMore = false;
+                $("#searchbook").val(booksearch);
+                getMoreDataSearchBook();
+            }
+
+            $("#searchbol").off('change keyup').change(checkSearchBol).keyup(checkSearchBol);
+            $("#searchbook").off('change keyup').change(checkSearchBook).keyup(checkSearchBook);
+            $("#btnsearchbol").on("click", getMoreDataSearchBol);
+            $("#btnsearchbook").on("click", getMoreDataSearchBook);
+        });
+
+        function InitializeViewModel() {
+            ko.applyBindings(viewModel, $("#divmain")[0]);
+        }
+
+        function getMoreDataSearchBol() {
+            $("#btnMore").hide();
+            clearMessage();
+            index = 0;
+            doMore = false;
+            setProgressBar(progbar);
+            var searchterm = $("#searchbol").val();
+            log.info("searchbol=" + searchterm);
+            getData("bolsearch", clientid, searchterm, index);
+        }
+        function getMoreDataSearchBook() {
+            $("#btnMore").hide();
+            clearMessage();
+            index = 0;
+            doMore = false;
+            setProgressBar(progbar);
+            var searchterm = $("#searchbook").val();
+            log.info("searchbook=" + searchterm);
+            getData("booksearch", clientid, searchterm, index);
+        }
+        function checkSearchBol() {
+            if (event.keyCode == "13") {
+                log.info("search bol");
+                index = 0;
+                if ($("#searchbol").val() != "") {
+                    $("#searchbook").val("");
+                    $.session.set("bolsearch", $("#searchbol").val());
+                    $.session.set("booksearch", "");
+                    getMoreData("bol", $("#searchbol").val());
+                }
+            }
+        }
+        function checkSearchBook() {
+            if (event.keyCode == "13") {
+                log.info("search book");
+                index = 0;
+                if ($("#searchbook").val() != "") {
+                    $("#searchbol").val("");
+                    $.session.set("booksearch", $("#searchbook").val());
+                    $.session.set("bolsearch", "");
+                    getMoreData("book", $("#searchbook").val());
+                }
+            }
+        }
+
+        function getMoreData(typ, term) {
+            log.info("index=" + index + "; progbar=" + progbar);
+            $("#btnMore").hide();
+            setProgressBar(progbar);
+            if (typ == "bol") {
+                getData("bolsearch", clientid, term, index);
+            } else {
+                getData("booksearch", clientid, term, index);
+            }
+        }
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            try {
+                viewModel.items([]);
+                if (response == null || response.length == 0) {
+                    setMessage("No records found", "error");
+                }
+                for (i = 0; i < response.length; i++) {
+                    viewModel.items.push(response[i]);
+                    index += 1;
+                }
+                $("#reccnt").text(index);
+                finishProgressBar(progbar);
+                if (progbar == "progress") { progbar = "progress2"; }
+                if (response.length > 0) { $("#btnMore").show(); }
+                $(".elnk").on("click", function () { editClient(this); });
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        }
+
+        //class customerModel {
+        //    constructor(rec) {
+        //        this.customerid = ko.observable(rec.customerid || 0);
+        //        this.customername = ko.observable(rec.customername || "");
+        //        this.clientid = ko.observable(rec.clientid || 0);
+        //        this.clientname = ko.observable(rec.clientname || "");
+        //        this.clientnickname = ko.observable(rec.clientnickname || "");
+        //        this.isactive = ko.observable(rec.isactive || false);
+        //    }
+        //}
+
+        //function customerDataResponse(response) {
+        //    log.info("customerDataResponse");
+        //    try {
+        //        clnt = new customerModel(response);
+        //        ko.cleanNode($("#divclientinfo")[0])
+        //        ko.applyBindings(clnt, $("#divclientinfo")[0]);
+        //    } catch (e) {
+        //        log.error("clientDataResponse: " + e.message);
+        //        setMessage("clientDataResponse: " + e.message, "error");
+        //    }
+        //}
+
+        function reviewBOL(sid) {
+            //var sid = event.target.id;
+            window.location.href = '@Url.Action("BillofLading", "Client")' + "/" + sid;
+        }
+    </script>
+}

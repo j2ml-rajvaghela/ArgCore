@@ -1,0 +1,53 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.InvoiceStatusDetails
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Invoice Status Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="InvoiceStatusDetails">
+        <div class="headingBlock row">
+            <span class="heading">Change BalanceDue Status </span>
+            <span class="head-details">Cust. ID: @Model.BalanceDueInfo.CustomerId | Cust. Name: @Model.CustomerName | Bol#: @Model.BalanceDueInfo.Bol | CompanyId: @Model.BalanceDueInfo.CompanyId</span>
+        </div>
+        <div class="form-horizontal row UpdateInvoiceStatus">
+            @Html.HiddenFor(x => x.BalanceDueInfo.BalanceId)
+            <div class="form-group">
+                <label for="inputUrl" class="mylabel control-label col-md-2">Invoice Status</label>
+                <div class="col-md-5">
+                    @Html.DropDownListFor(x => x.BalanceDueInfo.InvoiceStatus, Model.InvoiceStatuses, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-5">
+                    <div id="lblInvoiceStatusMsg" style="color: green; font-size: 20px;"></div>
+                    <div class="ChangesDoneMsg" style="font-size:14px; margin-top:12px; color:#82797b;"></div>
+                </div>
+            </div>
+        </div>
+        @{
+            <partial name="LoadCollectionComments" model="Model.BalanceDueInfo.BalanceId" />
+        }
+    </div>
+    <script src="@(Common.MyRoot)/Scripts/BDInvoiceStatus.js?c=@Common.VersionNo"></script>
+</body>
+</html>

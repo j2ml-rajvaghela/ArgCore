@@ -1,0 +1,154 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.PullForResearch
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Research For Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        /*.modal {
+                    top: -190px !important;
+                    bottom: 10px !important;
+                }
+
+                .modal-open .modal {
+                    overflow: hidden !important;
+                }*/
+
+        #ResearchForDetails {
+            padding: 15px;
+            background-color: #F4F5F7;
+            min-height: 700px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ResearchForDetails">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">X</span>
+        </button>
+        @if (Model.BolDetails != null)
+        {
+            <div class="headingBlock" style="margin-bottom:30px;">
+                <span class="heading">Research For Details </span>
+                <span class="head-details">Bol#: @Model.BolDetails.BOLNo |  Booking ID: @Model.BolDetails.BookingID</span>
+            </div>
+        }
+        else if (Model.JobDetails != null)
+        {
+            <div class="headingBlock" style="margin-bottom:30px;">
+                <span class="heading">Research For Details </span>
+                <span class="head-details">
+                    Job#: @Model.JobDetails.JobNumber | BookingRef: @Model.JobDetails.BookingReference
+                </span>
+            </div>
+        }
+        else if (Model.ShipmentDetails != null)
+        {
+            <div class="headingBlock" style="margin-bottom:30px;">
+                <span class="heading">Research For Details </span>
+                <span class="head-details">
+                    Shipment #: @Model.ShipmentDetails.Shipment_No | Shipment Date: @Model.ShipmentDetails.Shipment_Date
+                </span>
+            </div>
+        }
+        @*@if (Model.ResearchItems != null && Model.ResearchItems.Any())
+        {
+        <table id="collComments-list" class="table text-center">
+        <thead>
+        <tr>
+        <th class="company">Company</th>
+        <th class="region">Region</th>
+        <th class="bol">BOL</th>
+        <th class="bookingId">Booking Id</th>
+        <th class="code">Reason Code</th>
+        <th class="status">Status</th>
+        <th class="date">Bol Execution date</th>
+        <th class="auditor">Analyst Auditor</th>
+        <th class="comment">Comments</th>
+        </tr>
+        </thead>
+        <tbody class="collComments-details">
+        @foreach (var item in Model.ResearchItems)
+        {
+        <tr>
+        <td class="company">@item.Company</td>
+        <td class="region">@item.Region</td>
+        <td class="bol">@item.BOL</td>
+        <td class="bookingId">@item.BookingId</td>
+        <td class="code">@item.ResearchReasonCode</td>
+        <td class="status">@item.Status</td>
+        <td class="date">@item.BolExecutionDate.ToString("d")</td>
+        <td class="auditor">@item.RevenueAnalystAuditor</td>
+        <td class="comment">@item.Comments</td>
+        </tr>
+        }
+        </tbody>
+        </table>
+        }*@
+        @using (Html.AjaxBeginForm("SaveResearchDetails", "BOL", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "SubmitSuccess" }, new { @class = "form-horizontal" }))
+        {
+
+            @Html.HiddenFor(x => x.BOLNo)
+            if (Model.ShipmentDetails != null)
+            {
+                @Html.HiddenFor(x => x.IsShipmentDetails)
+            }
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Pull Reason</label>
+                    <div class="col-md-7">
+                        @*new System.Web.Mvc.SelectList(Common.PullReasons.OrderBy(x => x.Text), "Value", "Text")*@
+                        @Html.DropDownListFor(x => x.PullReasonCode, Model.ReasonCodes, " -- select reason code -- ", new { @class = "form-control", id = "ddlResReasonCodes", data_val_required = "Pull Reason Code field is required", @required = "required" })
+                    </div>
+                    @if (Common.CurrentUserInfo.IsAdmin)
+                    {
+                        <div class="col-md-3" style="margin-top:12px;">
+                            <a href="@(Common.MyRoot)RSReasonCodes/Index" target="_blank">
+                                <span><img src="/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Reason Codes</span>
+                            </a>
+                        </div>
+                        @*<div class="col-md-3 addItem">
+                <a href="javascript:void(0);" title="Add Research Reason Code" id="AddResearchReasonCodePopUp">+ Add Reason Code</a>
+                </div>*@
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Comments</label>
+                    <div class="col-md-7">
+                        @Html.TextAreaFor(x => x.ResearchComments, 7, 5, new { @class = "form-control ckeditor", maxlength = "500", data_val_required = "Comments field is required", @required = "required" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5" id="lblResearchItemMsg" style="color: green; font-size: 20px;"></div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-lg btnSave"><img src="~/images/save.png" /> Save</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" value="Exit" class="btn btn-lg btn-default close btnCancel" data-dismiss='modal' style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+                </div>
+            </div>
+        }
+    </div>
+    <script>
+        function SubmitSuccess(ajaxContext) {
+            $("#lblResearchItemMsg").html(ajaxContext);
+        }
+    </script>
+    <script src="@(Common.MyRoot)/Scripts/PullForResearch.js?c=@Common.VersionNo"></script>
+</body>
+</html>

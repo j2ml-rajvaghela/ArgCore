@@ -1,0 +1,91 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.CollectionStatusDetails
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Collection Status Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        /*.modal-dialog {
+                    width: 1500px !important;
+                }*/
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="collectionStatusDetails">
+        <h2>Collection Detail</h2>
+        <div class="form-horizontal">
+            @Html.HiddenFor(x => x.BalanceDueInfo.BalanceId)
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">Customer ID</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(x => x.BalanceDueInfo.CustomerId, null, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">Customer Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(x => x.CustomerName, null, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">BOL#</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(x => x.BalanceDueInfo.Bol, null, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">Collection Status</label>
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(x => x.BalanceDueInfo.CollectionStatus, Model.CollectionStatuses, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8" id="lblCollStatusMsg" style="color: green; font-size: 20px;"></div>
+                </div>
+            </div>
+        </div>
+        @{
+            <partial name="LoadCollectionComments" model="Model.BalanceDueInfo.BalanceId" />
+        }
+    </div>
+    <script src="@(Common.MyRoot)/Scripts/BDCollectionStatus.js?c=@Common.VersionNo"></script>
+    @*<script>
+    function SubmitSuccess(ajaxContext) {
+    var html = '<div class="collectionComment"><div class="details">';
+    html += ajaxContext.DateTimeFormatted;
+    if ($(ajaxContext.CollectorName).length > 0) {
+    html += " | ";
+    html += '<span class="name"><img src="/images/user-name.png" /> <b>' + $(ajaxContext.CollectorName) + '</b></span>';
+    }
+    html += "</div>";
+    html += "<div class='comment'>" + ajaxContext.Comments + '</div>';
+    html += "</div>";
+    $(".comments").prepend(html);
+    $("#CollectionComment").val("");
+    }
+    </script>*@
+</body>
+</html>

@@ -1,0 +1,156 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.AuditorPlaybooks
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Auditor Playbooks</title>
+    <partial name="PageHeader" />
+    <style>
+        body {
+            padding: 0;
+            background-color: #F4F5F7 !important;
+            color: #82797b;
+        }
+
+        .status-InProcess {
+            background-color: #dcc025;
+        }
+
+        .status-Completed {
+            background-color: #5cb85c;
+        }
+
+        .status-Open {
+            background-color: #d34d1e;
+        }
+
+        .status-label {
+            width: 110px !important;
+            display: inline-block;
+            line-height: 20px;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div id="BOLAuditorPlaybooks">
+        <div class="row addplaybook right text-right">
+            <input id="AddToPlaybook" data-queryid="@Model.QueryId" type="checkbox" value="Add to Playbook" /> Add to Playbook<br />
+            @if (Common.CanRunAction.AddAuditorPlaybookSQL)
+            {
+                <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)Bol/AddSqlQuery" class="animatedPopUp">Add SQL Query</a>
+            }
+        </div>
+        @if (Model.AuditorPlaybookList != null && Model.AuditorPlaybookList.Any())
+        {
+            <table id="stats-list" class="table text-center auditorplaybook-list">
+                <thead>
+                    <tr>
+                        <th class="region">Region</th>
+                        <th class="filters">Filters</th>
+                        <th class="title">Title</th>
+                        <th class="status">Status</th>
+                        <th class="statusdate">Status Date</th>
+                        <th class="userid">User</th>
+                        <th class="priority">Priority</th>
+                        <th class="playcomments">Comments</th>
+                        <th class="options">Options</th>
+                    </tr>
+                </thead>
+                <tbody class="client-details">
+                    @foreach (var item in Model.AuditorPlaybookList)
+                    {
+                        var queryId =Context.Request.Query["queryId"];
+                        var playId = Context.Request.Query["playId"];
+
+                        //Status and Priority Casting
+                        Common.Contants.StatusTypeEnum Status = (Common.Contants.StatusTypeEnum)Enum.Parse(typeof(Common.Contants.StatusTypeEnum), item.Status.ToString());
+                        Common.Contants.PriorityTypeEnum Priority = (Common.Contants.PriorityTypeEnum)Enum.Parse(typeof(Common.Contants.PriorityTypeEnum), item.Priority.ToString());
+                        var className = (item.PlayID == Convert.ToInt32(playId)) ? "newplaybook" : "";
+                        <tr class="@className">
+                            <td class="region">@item.Region</td>
+                            <td class="filters">
+                                <div class="scrollable">
+                                    @{
+                                        if (!string.IsNullOrWhiteSpace(item.FielterField))
+                                        {
+                                            @Html.Raw(item.FielterField)
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(item.SqlQuery)
+                                        }
+
+                                    }
+                                </div>
+                            </td>
+                            <td class="title title-@item.PlayID"><span>@item.Title</span></td>
+                            <td class="status status-@item.PlayID"><span class="status-@Status status-label">@Status</span></td>
+                            <td class="statusdate">@item.StatusDate</td>
+                            <td class="userid">@item.FullName</td>
+                            <td class="priority priority-@item.PlayID"><span>@Priority</span></td>
+                            <td class="playcomments playcomments-@item.PlayID">
+                                @if (!string.IsNullOrWhiteSpace(item.PlaybookComment))
+                                {
+                                    <span>@Html.Raw(item.PlaybookComment)</span>
+
+                                    <br />
+                                    if (item.PlaybookComment.Length >= 50)
+                                    {
+                                        <a data-playid="@item.PlayID" href="javascript:void(0);" data-ajax="@(Common.MyRoot)Bol/LoadPlaybookComments?playId=@item.PlayID" class="animatedPopUp playbookcomment">Read More</a>
+                                    }
+                                }
+                            </td>
+                            <td class="options">
+                                @if (Common.CanRunAction.DeleteAuditorPlaybook)
+                                {
+                                    <a class="deleteplaybook" data-playid="@item.PlayID" data-companyid="@item.CompanyID" href="javascript:void(0)">Delete</a>  @Html.Raw(" | ")
+                                }
+                                @if (Common.CanRunAction.UpdateAuditorPlaybook)
+                                {
+                                    <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)BOL/UpdatePlaybookStatus?playId=@item.PlayID&companyId=@item.CompanyID" class="animatedPopUp updateplaybookstatus">Update</a>  @Html.Raw(" | ")
+                                }
+                                @if (Common.CanRunAction.PlayAuditorPlaybook)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(item.SqlQuery))
+                                    {
+                                        <input type="checkbox" class="chktableresult" id="playtableformat" />
+
+                                        <a data-sqlquery="@item.SqlQuery" data-qid="@item.QueryId" class="playbookquery" href="@(Common.MyRoot)Bol/AuditingResults?queryId=@item.QueryId&idx=1" target="_blank">Play table format</a>  @Html.Raw(" | ")
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="chktableresult" id="playtableformat" />
+
+                                        <a data-sqlquery="@item.SqlQuery" data-qid="@item.QueryId" class="playbookquery" href="@(Common.MyRoot)Bol/Index?queryId=@item.QueryId" target="_blank">Play table format</a>  @Html.Raw(" | ")
+                                    }
+                                }
+                                @if (Common.CanRunAction.UpdateAuditorPlaybookSQL)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(item.SqlQuery))
+                                    {
+                                        <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)Bol/AddSqlQuery?queryId=@item.QueryId" class="playsqlquery animatedPopUp">Edit Query</a>  @Html.Raw(" | ")
+                                    }
+                                }
+                                <a data-playid="@item.PlayID" href="javascript:void(0);" data-ajax="@(Common.MyRoot)Bol/LoadPlaybookComments?playId=@item.PlayID" class="animatedPopUp btnplaybookcomment">Comments</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <partial name="PageFooter" />
+    <partial name="PopUpBox" />
+    <script>
+    </script>
+</body>
+</html>

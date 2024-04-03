@@ -1,0 +1,73 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.ClientGLStatusDetails
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Client GL Status Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="ClientGLStatusDetails">
+        <div class="headingBlock row">
+            <span class="heading">Change Client GL Status </span>
+            <span class="head-details">Cust. ID: @Model.BalanceDueInfo.CustomerId | Cust. Name: @Model.CustomerName | Bol#: @Model.BalanceDueInfo.Bol | Client GL Status: @Model.BalanceDueInfo.ClientGlStatus</span>
+        </div>
+        @*@ViewBag.OldStatus=@Model.BalanceDueInfo.ClientGlStatus*@
+        @*@using (Html.BeginForm("UpdateBDClientGLStatus", "BalanceDues", new { @class = "form-horizontal" }))
+        {*@
+        <div class="UpdateClientGLStatus">
+            @Html.HiddenFor(x => x.BalanceDueInfo.BalanceId)
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Close Reason Code</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.BalanceDueInfo.CloseReasonCode, Model.CloseReasonCodes, "--select--", new { @class = "form-control" })
+                        @*@Html.ValidationMessageFor(x=>x.BalanceDueInfo.CloseReasonCode)*@
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Client GL Status</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.BalanceDueInfo.ClientGlStatus, Model.ClientGLStatuses, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+            @*<div class="row">
+            <div class="form-group">
+            <label for="inputUrl" class="col-md-2"></label>
+            <div class="col-md-5">
+            <button type="submit" class="btn btn-lg btnSaveGlStatus"><img src="~/images/save.png" /> Save</button>
+            </div>
+            </div>
+            </div>*@
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-5" id="lblClientGLStatusMsg" style="color: green; font-size: 20px;"></div>
+            </div>
+        </div>
+        @*}*@
+        @{
+            <partial name="LoadCollectionComments" model="Model.BalanceDueInfo.BalanceId" />
+        }
+    </div>
+    <script src="@(Common.MyRoot)Scripts/BDClientGLStatus.js?c=@Common.VersionNo"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.ClientManagementReports
+@using CustomExtensions;
+
+@if (Model.OverchargeRevenueRecovered != null && Model.OverchargeRevenueRecovered.Any())
+{
+    <partial name="OverchargeReportPDF" model="@Model" />
+
+}
+else
+{
+    @Html.Raw(Model.SearchOptions.Message)
+}
+<div class="pagebreak" id="reportseparator"></div>
+@if ((Model.RevenueRecovered != null && Model.RevenueRecovered.Any()))
+{
+    <partial name="ReportPDF" model="@Model" />
+
+}

@@ -1,0 +1,50 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="RegionsList" class="main-content row">
+    <div class="row text-right right options exportIcon">
+     @*    <img src="@(Common.MyRoot)images/export.png" /> *@
+        <img src="~/images/export.png" />
+    </div>
+    <div id="searchBlock" class="row">
+        <div class="col-md-10 searchBlock">
+            <input id="txtSearch" type="text" name="searchquery" class="form-control txtSearch" placeholder="Type here to search..." />
+            <a id="btnSearch" class="Search" href="javascript:void(0);"><span class="fa fa-search"></span></a>
+        </div>
+        <div class="col-md-2 text-right right addItem">
+         @*    <a href="@(Common.MyRoot)Regions/Save?regionId=0" title="Add Region">+ Add Region</a> *@
+            <a href="~/Regions/Save?regionId=0" title="Add Region">+ Add Region</a>
+        </div>
+    </div>
+    @if (Model.RegionsList != null && Model.RegionsList.Count > 0)
+    {
+        <table id="regions-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="company">Client</th>
+                    <th class="region">REGION</th>
+                    <th class="description">DESCRIPTION</th>
+                </tr>
+            </thead>
+            <tbody class="region-details">
+                @foreach (var item in Model.RegionsList)
+                {
+                    <tr>
+                        <td class="company">@item.Company</td>
+                        <td class="region">
+                          @*   <a href="@(Common.MyRoot)Regions/Save?regionId=@item.RegionId" title="Edit Region">@item.Region</a> *@
+                            <a href="~/Regions/Save?regionId=@item.RegionId" title="Edit Region">@item.Region</a>
+                        </td>
+                        <td class="description">@item.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No regions found!</h3>")
+    }
+</div>
+

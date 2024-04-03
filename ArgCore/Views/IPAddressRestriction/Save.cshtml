@@ -1,0 +1,59 @@
+﻿@model ArgCore.Models.IPAddressRestriction
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Save IP Address Restriction";
+}
+
+
+<div class="content-container">
+    <div class="main-content row">
+        <div id="ClientManagementReports">
+            @using (Html.BeginForm("Save", "IPAddressRestriction", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>@Model.CommonObjects.Heading</h2>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.IPAddressRestrictionDetail.IPAddressRestrictionId)
+                <div class="clientSearchForm">
+                    <div class="clientSearchForm">
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-2">Client</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(x => x.IPAddressRestrictionDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlUserCompanies", @class = "form-control" })
+                                @Html.ValidationMessageFor(x => x.IPAddressRestrictionDetail.CompanyId)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Beginning IP</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(m => m.IPAddressRestrictionDetail.BeginningIp, null, new { @class = "form-control firstSpacetruncate" })
+                            @Html.ValidationMessageFor(x => x.IPAddressRestrictionDetail.BeginningIp)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Ending IP</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(m => m.IPAddressRestrictionDetail.EndingIp, null, new { @class = "form-control firstSpacetruncate" })
+                            @Html.ValidationMessageFor(x => x.IPAddressRestrictionDetail.EndingIp)
+                        </div>
+                    </div>
+                </div>
+                <div class="btnReasrItemInfo">
+                    <div class="col-xs-12 col-md-4">
+                        @Html.ActionLink("Delete", "Delete", "IPAddressRestriction", new { ipAddressRestrictionId = Model.IPAddressRestrictionDetail.IPAddressRestrictionId }, new { @class = "btn btn-lg btnDelete" })
+                    </div>
+                    <div class="col-xs-12 col-md-8 right text-right">
+                        <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                        <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

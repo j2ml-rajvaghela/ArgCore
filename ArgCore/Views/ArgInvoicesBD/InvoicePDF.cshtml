@@ -1,0 +1,323 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.ArgInvoicesBDPDF
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Arg Invoice BD PDF</title>
+    <style type="text/css">
+        body {
+            font-family: 'Courier New';
+        }
+
+        .invoicePDF {
+            padding: 10px 20px;
+            padding-top: 0;
+            width: 1200px;
+        }
+
+            /*Dont uncomment..creates extra page*/
+            .invoicePDF.nopagebreak {
+                page-break-after: unset;
+            }
+
+        h1 {
+            text-transform: uppercase;
+            border-bottom: 3px solid #ccc;
+            text-align: center;
+            padding-bottom: 2px;
+            margin-top: 0;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .clientDetailsBlock {
+            border-bottom: 3px solid #000;
+            /*float: left;*/
+            clear: both;
+            padding-bottom: 4px;
+            /*width: 1200px;*/
+        }
+
+        .remitTo .myLabel, .billTo .myLabel {
+            padding: 0;
+            /*width: 130px;*/
+            font-size: 18px;
+            /*float: left;*/
+            clear: both;
+        }
+
+        .remitTo .value, .billTo .value {
+            font-size: 17px;
+            color: #1b1b1b;
+            margin-bottom: 12px;
+            /*width: 1050px;*/
+            line-height: 20px;
+        }
+
+        .value {
+            color: #1b1b1b;
+        }
+
+        .clientDetails .myLabel {
+            font-weight: 700;
+        }
+
+        .clientName {
+            color: black;
+            padding: 4px 0;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .invDetBlock .myLabel {
+            clear: both;
+        }
+
+        .amountSection td {
+            padding-top: 20px;
+        }
+
+        .bd-items, .other-charges, .totalAmountBlock {
+            border-top: 3px solid #000;
+            margin-bottom: 20px;
+            padding-top: 16px;
+            font-size: 18px;
+            line-height: 20px;
+            padding-bottom: 40px;
+        }
+
+        .totalsBlock {
+            float: right;
+            text-align: right;
+        }
+
+        .totalAmountBlock .value {
+            font-weight: 700;
+        }
+
+        .totalAmountDue .value {
+            float: right;
+            text-align: right;
+        }
+
+        .totalAmountBlock {
+            /*width: 1200px;*/
+            padding-bottom: 20px;
+            /*float: left;*/
+            border-bottom: 3px solid #000;
+        }
+
+        .bdItemsBlock .labels, .bd-items .labels, .other-charges .labels {
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .bdItemsBlock .amtDue, .bdItemsBlock .curncy {
+            text-align: right;
+        }
+
+        .bd-ItemsBlock, .otherChargesBlock {
+            /*width: 1200px;*/
+            /*float: left;*/
+            margin-bottom: 12px;
+        }
+
+        .bd-items, .other-charges {
+            /*width: 100%;*/
+            padding-bottom: 10px;
+        }
+
+        tr.totalAmountDueBlock.topBorder td {
+            border-top: 3px solid #000;
+            padding-top: 12px;
+        }
+
+        .bdItemsBlock .widItem {
+            font-size: 14px;
+        }
+
+        .bdItemsBlock td {
+            padding-bottom: 12px;
+            padding-right: 4px;
+        }
+
+        .bdDescBlock {
+            /*width: 1200px;*/
+            /*float: left;*/
+            padding: 20px 0;
+        }
+
+        .bdItemsBlock .desc {
+            padding-right: 8px;
+        }
+
+        .bdItemsBlock {
+            /*width: 1200px;*/
+            clear: both;
+            border-bottom: 3px solid;
+            padding-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .totalWt {
+            margin-bottom: 15px;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .bdDesc {
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+            .bdDesc .value {
+                width: 100%;
+                height: 380px;
+                overflow: hidden;
+                font-size: 13px;
+                border: none;
+                font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            }
+    </style>
+</head>
+<body>
+    <page>
+        <div class="invoicePDF page0 nopagebreak">
+            <table style="width:100%">
+                <tr>
+                    <td style="text-align:center">
+                        <h1>Invoice</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="clientDetailsBlock" style="vertical-align:top; width: 100%;">
+                            <tr>
+                                <td class="left-block" style="vertical-align:top; width: 75%;">
+                                    <img width="300px" src="@Url.Content("~/images/InvoicePDFLogo.png")" class="logo" />
+                                </td>
+                                @if (Model.InvoiceInfo != null && Model.InvoiceInfo.InvoiceId > 0)
+                                {
+                                    <td class="right-block" style="width: 25%;">
+                                        <table style="width: 100%;">
+                                            <tr>
+                                                <td class="clientDetails" style="vertical-align: top;">
+                                                    <div class="Region">
+                                                        <span class="myLabel">Region: </span><span class="value">@Model.InvoiceInfo.Region</span>
+                                                    </div>
+                                                    <div class="InvoiceNo">
+                                                        <span class="myLabel">Invoice#: </span><span class="value">@Model.InvoiceInfo.Invoice</span>
+                                                    </div>
+                                                    <div class="InvoiceDate">
+                                                        <span class="myLabel">Invoice Date: </span><span class="value">@Model.InvoiceInfo.InvoiceDate.ToString("d")</span>
+                                                    </div>
+                                                    <div class="DueDate">
+                                                        <span class="myLabel">Due Date: </span><span class="value">@Model.InvoiceInfo.DueDate.ToString("d")</span>
+                                                    </div>
+                                                    <div class="InvoiceStatus">
+                                                        <span class="myLabel">Invoice Status: </span><span class="value">@Model.InvoiceInfo.InvoiceStatus.ToUpper()</span>
+                                                    </div>
+                                                    <div class="clientName"><b>@(Model.InvoiceInfo.Company ?? "")</b></div>
+                                                    <div class="clientAddress">
+                                                        <div>@(Model.InvoiceInfo.Address1 ?? "")</div>
+                                                        @Html.Raw(!string.IsNullOrWhiteSpace(Model.InvoiceInfo.Address2) ? Model.InvoiceInfo.Address2 : "")
+                                                        <div>
+                                                            @(!string.IsNullOrWhiteSpace(Model.InvoiceInfo.City) ? Model.InvoiceInfo.City + @Html.Raw(", ") : "")  @(Model.InvoiceInfo.State ?? "") @(Model.InvoiceInfo.ZipCode ?? "")
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                }
+                            </tr>
+                            <tr class="amountSection">
+                                <td class="left-block uppercase " style="vertical-align:top; width: 60%;">
+                                    <b>Amount Due: </b><span class="value">@String.Format("{0:n}", Model.AmountDue) USD</span>
+                                </td>
+                                <td class="right-block uppercase" style="width: 40%;">
+                                    <b>Amount Paid: </b><span class="value">@String.Format("{0:n}", Model.AmountPaid)</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @{
+                decimal totalRevRecovered = 0;
+            }
+            @{
+                decimal totalRevRecoveredUSD = 0;
+            }
+            @{
+                decimal totalDueArg = 0;
+            }
+            @if (Model.BDInvoices != null && Model.BDInvoices.Count > 0)
+            {
+                <table class="bdItemsBlock" style="width:100%">
+                    <thead class="labels text-center">
+                        <tr>
+                            <td class="myLabel customer">Customer</td>
+                            <td class="myLabel invoiceType">Invoice Type</td>
+                            <td class="myLabel bolId">BOL#</td>
+                            <td class="myLabel widItem origin">ORIGIN</td>
+                            <td class="myLabel widItem dest">DEST</td>
+                            <td class="myLabel bolExecDate">BOL Exec Date</td>
+                            <td class="myLabel revRec" style="text-align:right">Rev Rec</td>
+                            <td class="myLabel curr" style="text-align:right">CURR</td>
+                            <td class="myLabel revRec" style="text-align:right">Rev Rec (USD)</td>
+                            <td class="myLabel dueArg" style="text-align:right">Due Arg</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.BDInvoices)
+                        {
+                            <tr class="values text-center">
+                                <td class="value">@item.Customer.Left(15)</td>
+                                <td class="value">@item.InvoiceType</td>
+
+                                <td class="value">@item.Bol</td>
+                                <td class="value">@item.OriginLocationCode.Left(15)</td>
+                                <td class="value">@item.DestinationLocationCode.Left(15)</td>
+                                <td class="value">@item.BolExecutionDate.ToString("d")</td>
+                                <td class="value" style="text-align:right">@String.Format("{0:n}", item.RevenueRecovered)</td>
+                                <td class="value" style="text-align:right">@item.Currency</td>
+                                <td class="value" style="text-align:right">@String.Format("{0:n}", item.RevenueRecoveredUSD)</td>
+                                <td class="value" style="text-align:right">@String.Format("{0:n}", item.AmountDueUSD) USD</td>
+                            </tr>
+                            totalRevRecovered += @item.RevenueRecovered;
+                            totalRevRecoveredUSD += @item.RevenueRecoveredUSD;
+                            totalDueArg += @item.AmountDueUSD;
+                        }
+                        <tr class="totalAmountDueBlock topBorder">
+                            <td class="myLabel" colspan="1">TOTAL</td>
+                            <td class="value" colspan="6" style="text-align:right"><b>@String.Format("{0:n}", totalRevRecovered)</b></td>
+                            <td class="value" colspan="2" style="text-align:right"><b>@String.Format("{0:n}", totalRevRecoveredUSD)</b></td>
+                            <td class="value" colspan="2" style="text-align:right"><b>@String.Format("{0:n}", totalDueArg) USD</b></td>
+                        </tr>
+                        <tr class="totalAmountDueBlock topBorder">
+                            <td class="myLabel" colspan="1">TOTAL AMOUNT DUE</td>
+                            <td class="value" colspan="10" style="text-align:right"><b>@String.Format("{0:n}", totalDueArg) USD</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+            <table style="width:100%;text-align:center">
+                <tr>
+                    <td>
+                        <b>Please remit to: ARG Ocean LLC, 520 Stokes Rd, Suite D1, Medford, NJ 08055</b>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </page>
+</body>
+</html>

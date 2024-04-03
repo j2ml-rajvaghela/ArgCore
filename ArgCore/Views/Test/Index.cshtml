@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "";
+}
+
+<b>Ip Address:</b> @ViewBag.Ip 
+<br />
+
+@Html.Raw(ViewBag.UsersClientIpAddress)
+
+<b>User's Public Ip Address:</b> @ViewBag.UsersPublicIpAddress
+<br />
+
+<b>Ipv4 Address:</b>@ViewBag.IpAddress

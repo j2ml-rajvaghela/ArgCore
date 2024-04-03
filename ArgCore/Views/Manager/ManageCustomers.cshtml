@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = Arg.Terms.Resource1.pgTitleManageCustomers;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    fieldset.fieldsethdr {
+        border: 1px solid dodgerblue;
+        padding: 8px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+    }
+
+    .zlegend {
+        margin-top: 0;
+        border: 0;
+        padding-left: 20px;
+        margin-left: 20px;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    legend {
+        z-index: 1;
+        margin-top: -20px !important;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: dodgerblue;
+        text-transform: lowercase;
+        font-size: 18px;
+        opacity: 1.0;
+        width: 200px;
+        border: 0;
+        padding-left: 10px;
+    }
+
+    .legendwide {
+        width: 300px;
+    }
+
+    .legend img {
+        margin-left: 10px;
+    }
+
+    legend.title {
+        margin-left: 20px;
+    }
+
+    fieldset.row {
+        margin-bottom: 8px !important;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>
+<div id="divclientinfo">
+    <fieldset class="fieldsethdr">
+        <legend>@Arg.Terms.Resource1.lblClientInfo</legend>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-1" data-bind="text:clientid"></div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblClient</div>
+            <div class="col-md-6"><span data-bind="text:clientname"></span> (<span data-bind="text:nickname"></span>)</div>
+        </div>
+    </fieldset>
+</div>
+
+<div id="divmain">
+    <fieldset>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblEdit</div>
+            <div class="col-md-3">@Arg.Terms.Resource1.lblClient</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblCity</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblBillofLadings</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1" data-bind="text:customerid"></div>
+                <div class="col-md-1"><i class="mdi mdi-pencil-box-outline icngrn elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i></div>
+                <div class="col-md-3" data-bind="text:customername"></div>
+                <div class="col-md-2" data-bind="text:city"></div>
+                <div class="col-md-2"><a href="#" class="lnk" data-bind="click: function () { linkBOL(customerid); }">@Arg.Terms.Resource1.lblViewList</a></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@section Scripts {
+    <script>
+        var clientid = "@ViewBag.clientid";
+        var clnt;
+        $(document).ready(function () {
+            setProgressBar();
+            InitializeViewModel();
+            getDataX("client", clientDataResponse, clientid);
+            getData("customers", clientid);
+        });
+
+        function InitializeViewModel() {
+            ko.applyBindings(viewModel, $("#divmain")[0]);
+        }
+
+        function linkBOL(customerid) {
+            log.info("linkBOL: custid=" + customerid);
+            var url = '@Url.Action("ManageBillofLadings", "Manager")';
+            url += "/" + clientid + "/" + customerid;
+            location.href = url;
+        }
+
+        //function editClient(x) {
+        //    var sid = event.target.id;
+        //    var id = sid.substr(1);
+        //    log.info("edit task: id=" + id);
+        //    window.location.href = "/Clients/ClientEdit/" + id;
+        //}
+        //function addClient() {
+        //    log.info("add client");
+        //    window.location.href = "ClientEdit/0";
+        //}
+
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            try {
+                for (i = 0; i < response.length; i++) {
+                    viewModel.items.push(response[i]);
+                }
+                finishProgressBar();
+                //                var jdata = ko.mapping.toJSON(viewModel.items());
+                //                log.info("data recv: jdata=" + jdata);
+                //$("#btnaddclient").on("click", addClient);
+                $(".elnk").on("click", function () { editClient(this); });
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        }
+
+        class clientModel {
+            constructor(rec) {
+                this.clientid = ko.observable(rec.clientid || 0);
+                this.clientname = ko.observable(rec.clientname || "");
+                this.nickname = ko.observable(rec.nickname || "");
+                this.isactive = ko.observable(rec.isactive || false);
+            }
+        }
+
+        function clientDataResponse(response) {
+            log.info("client data response");
+            try {
+                clnt = new clientModel(response);
+                ko.cleanNode($("#divclientinfo")[0])
+                ko.applyBindings(clnt, $("#divclientinfo")[0]);
+            } catch (e) {
+                log.error("clientDataResponse: " + e.message);
+                setMessage("clientDataResponse: " + e.message, "error");
+            }
+        }
+    </script>
+}

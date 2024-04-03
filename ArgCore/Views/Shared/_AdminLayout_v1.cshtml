@@ -1,0 +1,166 @@
+﻿@using ArgCore.Helpers
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/png" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.13.2.min.js"></script>
+    <script src="~/Scripts/knockout-3.5.1.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script src="~/Scripts/site.js"></script>
+    <style>
+        body {
+            /*background-color: #293D4E;*/
+            background: url("/res/graphics/LoginBg.jpg");
+            font-family: 'Montserrat', Helvetica, Arial, Lucida, sans-serif !important;
+        }
+
+        #main-container {
+            background-image: url("../../res/graphics/LoginBg.jpg");
+            padding: 100px 50px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-size: cover;
+        }
+
+        .logo {
+            margin-top: 200px;
+            padding-left: 200px;
+        }
+
+        .rightContent {
+            margin-top: 120px;
+        }
+
+        .form-control {
+            height: 60px;
+            font-size: 18px;
+            color: #fff;
+            background-color: transparent !important;
+            border-color: #fff !important;
+        }
+
+        #forgotPassword input {
+            max-width: 55% !important;
+        }
+
+        #forgotPassword .form-control {
+            margin: 0 auto;
+            margin-top: 35px;
+        }
+
+        .btn {
+            color: #fff;
+            background-color: #2a93bd;
+            height: 60px;
+            margin-top: 20px;
+            width: 70%;
+            font-weight: 700;
+        }
+        /*.btn {
+                    background-color: #5fce9b;
+                    height: 60px;
+                    margin-top: 20px;
+                    color: #fff;
+                }*/
+
+        .validation-summary-errors ul {
+            list-style-type: none;
+        }
+
+        #error, #LoginFailure, #LockOut {
+            margin-top: 90px;
+        }
+
+        #ResetPassword .resetForm, .verifyCodeForm, .sendCodeForm {
+            margin-top: 45px;
+        }
+
+        #RememberBrowser {
+            margin-left: 0;
+            width: 20px;
+            height: 20px;
+            padding-right: 6px;
+        }
+
+        .txtVerificationCode, .ddlProviderOptions {
+            margin: 0 auto;
+        }
+
+        #SendCode {
+            margin-top: 40px;
+        }
+
+        .sendCodeForm option {
+            background: #293d4e;
+        }
+
+        .ddlProviderOptions {
+            margin-top: 6px;
+        }
+
+        .lblRememberBrowser {
+            margin-left: 9px;
+            vertical-align: middle;
+        }
+
+        .btn:hover, .btn:visited, .btn:focus {
+            color: #fff;
+            background-color: #2a93bd;
+        }
+
+        #forgotPassword .btnResetPwd {
+            width: 55%;
+        }
+
+        .form-horizontal .control-label {
+            font-weight: normal;
+            font-size: 16px;
+        }
+
+        #ResetPassword .btnResetYourPwd, #RegisterForm .btnRegister, .btnVerifyCode, .btnSendCode {
+            width: 62%;
+        }
+
+        .adminLayout {
+            color: #fff;
+        }
+
+        #RegisterForm {
+            margin-top: -140px;
+        }
+
+            #RegisterForm .registerFrm {
+                margin-top: 40px;
+            }
+    </style>
+</head>
+<body>
+    <div id="main-container" class="row adminLayout">
+        <div class="col-md-6 logo">
+            <a href="@(Common.MyRoot)/?companyId=@ViewBag.CompanyID">
+                <img src="~/images/ARG-logo-.png">
+                </a>
+        </div>
+        <div class="col-md-6 rightContent">
+            @RenderBody()
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+    <link href="~/Content/blackbird.css" rel="stylesheet" />
+    <link href="~/res/css/Style.css" rel="stylesheet" />
+    <script src="~/Scripts/blackbird.js"></script>
+</body>
+</html>

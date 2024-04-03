@@ -1,0 +1,1795 @@
+﻿@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Montserrat-Bold'),url(https://fonts.gstatic.com/s/montserrat/v7/IQHow_FEYlDC4Gzy_m8fcoWiMMZ7xLd792ULpGE4W_Y.woff2) format('woff2');
+    unicode-range: U+0-FF,U+131,U+152-153,U+2C6,U+2DA,U+2DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Montserrat-Regular'),url(https://fonts.gstatic.com/s/montserrat/v7/zhcz-_WihjSQC0oHJ9TCYPk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+    unicode-range: U+0-FF,U+131,U+152-153,U+2C6,U+2DA,U+2DC,U+2000-206F,U+2074,U+20AC,U+2212,U+2215,U+E0FF,U+EFFD,U+F000
+}
+
+body, div, p, a, h1, span:not(.fa), h2, button {
+    font-family: 'Montserrat' !important;
+    font-weight: normal
+}
+
+    div#holder {
+        margin-bottom: 120px
+    }
+
+.field-validation-error {
+    color: #c00000
+}
+
+body {
+    overflow-x: hidden;
+    background: #fff !important
+}
+
+.form-control {
+    border-radius: 4px
+}
+
+.exportIcon {
+    display: none
+}
+
+#logo {
+    background-color: #212d39;
+    text-align: center;
+    padding: 5%
+}
+
+.chosen-container-multi .chosen-choices {
+    background-color: #e9eaec;
+    border: none;
+    font-size: 19px;
+    min-height: 48px
+}
+
+#lblMsg a:hover, #lblMsg a:visited, #lblMsg a:focus {
+    color: #5a738e
+}
+
+.frmAddPayment {
+    margin-top: 50px;
+    border: 1px solid #eaeaea;
+    padding: 20px
+}
+
+.CollectionStatusDialog .modal-dialog, .InvoiceStatusDialog .modal-dialog, .ClientGLStatusDialog .modal-dialog, .PaymentAmountDialog .modal-dialog {
+    width: 100% !important
+}
+
+div#AddInvoice {
+    padding: 20px;
+    background-color: #fff
+}
+
+    div#AddInvoice h2 {
+        font-weight: 700
+    }
+
+.admin-info {
+    background-image: url("/images/LeftMenu-Bg.jpg")
+}
+
+img.admin-img {
+    margin-top: 5%;
+    border: 5px solid #fff;
+    border-radius: 65px
+}
+
+h4, h5 {
+    color: #fff
+}
+
+    h5.lastLogin {
+        color: #7b828b
+    }
+
+.admin-image {
+    text-align: center;
+    margin-bottom: 8%
+}
+
+h5.site-admin {
+    background-color: #475a6c;
+    width: 25%;
+    margin-left: 37%;
+    padding: 2px;
+    border-radius: 3px
+}
+
+span.col-md-3 {
+    text-align: right;
+    color: #fff
+}
+
+.dataTables_wrapper a {
+    color: #23527c !important
+}
+
+.main-dashboard {
+    padding-left: 18px;
+    background-color: #fff
+}
+
+    .main-dashboard li {
+        float: left;
+        list-style-type: none;
+        line-height: 67px
+    }
+
+        .main-dashboard li img {
+            margin: 0 20px
+        }
+
+    .main-dashboard .clientsDropdown {
+        float: right;
+        margin-right: 20px;
+        margin-top: 17px
+    }
+
+.nav > li {
+    position: relative;
+    display: block
+}
+
+.techno.col-md-2 {
+    margin-top: 2%;
+    margin-left: -5%;
+    color: #a3a2a3
+}
+
+.bell.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #a3a2a3
+}
+
+.search.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #a3a2a3
+}
+
+.logout1 {
+    float: right
+}
+
+    .logout1 a, .logout1 a:hover {
+        color: #9e9e9e
+    }
+
+.col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    padding-right: 0 !important;
+    padding-left: 0 !important
+}
+
+h5.second-content {
+    font-style: italic;
+    color: #7f7d7e;
+    font-size: 15px
+}
+
+li.static:active {
+    background-color: #263643;
+    border-right: 1px solid #5fce9b
+}
+
+.monthlyStats {
+    width: 100%;
+    background-color: #fff !important;
+    border: 3px solid #eaebec !important;
+    padding: 25px
+}
+
+.heading {
+    padding-bottom: 50px
+}
+
+.countDetails {
+    text-align: center
+}
+
+.label {
+    width: 100%;
+    top: 22.5%;
+    position: absolute;
+    left: 0;
+    line-height: 34px
+}
+
+    .label .labelName {
+        font-size: 23px;
+        font-weight: normal
+    }
+
+    .label .count {
+        font-weight: normal;
+        font-size: 40px
+    }
+
+.labelText {
+    font-size: 16px;
+    line-height: 3;
+    font-weight: normal;
+    width: 65%;
+    margin-left: 19%
+}
+
+#searchBlock {
+    margin-bottom: 40px
+}
+
+.main-content {
+    min-height: 1100px;
+    padding-top: 30px
+}
+
+.content-container {
+    padding-right: 35px;
+    padding-left: 35px;
+    background-color: #f4f5f7
+}
+
+li.right.text-right.rightOptions {
+    float: right;
+    font-size: 20px
+}
+
+    li.right.text-right.rightOptions a:focus, li.right.text-right.rightOptions a:hover {
+        color: #23527c
+    }
+
+.btnReasrItemInfo, .btnClientInfo {
+    margin-right: -4px;
+    padding-top: 65px
+}
+
+.btnSave, .btnSaveGlStatus {
+    background-color: #2c8fd4;
+    margin-right: 34px;
+    color: #fff
+}
+
+button img {
+    padding-right: 6px
+}
+
+.btnLoadData, .btnGetResults {
+    color: #fff;
+    margin-right: 34px;
+    background-color: #2c8fd4
+}
+
+    .btnLoadData:hover, .btnGetResults:hover {
+        color: #fff
+    }
+
+.btnCancel, .CancelButton {
+    background-color: #919193 !important
+}
+
+.btnDelete {
+    background-color: #cc3151
+}
+
+.btnSave, .btnCancel, .btnDelete, .CancelButton {
+    color: #fff;
+    width: 120px
+}
+
+    .btnSave, .btnCancel.btnDelete {
+        font-size: 20px
+    }
+
+        .btnSave:hover, .btnCancel:hover, .btnDelete:hover {
+            color: #fff
+        }
+
+#AddClientData #BtnMngMappings, #AddClientData #BtnMngTableSettings {
+    cursor: pointer
+}
+
+#AddClientData .lblChooseFile {
+    font-size: 18px;
+    vertical-align: middle;
+    color: #676666
+}
+
+#AddClientData .lblMultipleFile {
+    color: #b5b5b5;
+    margin-left: 25px;
+    font-size: 15px
+}
+
+#AddClientData #Load_Multiple_Files__in_same_directory_ {
+    height: 20px;
+    margin-left: 0;
+    width: 20px
+}
+
+.nav.side-menu li {
+    text-transform: uppercase
+}
+
+    .nav.side-menu li .menuDash {
+        display: inline-block;
+        padding: 0
+    }
+
+    .nav.side-menu li .dashboardIcon {
+        padding: 13px 9px 12px 18px
+    }
+
+    .nav.side-menu li a {
+        font-size: 18px;
+        color: #e7e7e7 !important
+    }
+
+.nav.child_menu li {
+    padding-top: 10px;
+    padding-bottom: 10px
+}
+
+    .nav.child_menu li a {
+        font-size: 16px;
+        vertical-align: middle;
+        color: #e7e7e7 !important;
+        display: inline;
+        text-transform: none
+    }
+
+    .nav.child_menu li img {
+        height: 23px
+    }
+
+.balDueSearchForm input[type=checkbox], #SearchInvoicesBalanceResults input[type=checkbox] {
+    height: 22px;
+    width: 22px
+}
+
+#regions-list .description {
+    width: 70%
+}
+
+#regions-list .company {
+    width: 15% !important
+}
+
+#CustomersList .searchBlock {
+    padding: 0
+}
+
+.QueryTotal {
+    font-size: 18px;
+    padding: 0
+}
+
+    .QueryTotal .count {
+        font-weight: 700;
+        color: #73879c;
+        font-size: 20px
+    }
+
+#balDueSearch {
+    margin-top: 100px;
+    margin-bottom: 62px
+}
+
+    #balDueSearch .exportDataIcon {
+        padding-right: 0
+    }
+
+#balance-list .invoice {
+    width: 16% !important
+}
+
+#balance-list .balDue {
+    width: 16% !important
+}
+
+#StatusResults .declaration, #EmailInvoiceResults .declaration {
+    color: #847f7d;
+    font-size: 20px;
+    margin-top: 20px
+}
+
+#StatusResults h3, #EmailInvoiceResults h3 {
+    color: #847f7d;
+    font-size: 20px
+}
+
+#StatusResults #results-list .results-details td, #EmailInvoiceResults #results-list .results-details td {
+    font-size: 18px
+}
+
+#ClientSMTPAccounts {
+    margin-top: 40px
+}
+
+    #ClientSMTPAccounts .btnReasrItemInfo {
+        padding-top: 0
+    }
+
+#InvoiceStatusDetails .UpdateInvoiceStatus, #ClientGLStatusDetails .UpdateInvoiceStatus, #bdPaymentDetails .UpdateInvoiceStatus {
+    margin-bottom: 20px;
+    margin-top: 20px
+}
+
+.headingBlock {
+    margin-bottom: 20px
+}
+
+    .headingBlock .heading {
+        font-size: 25px;
+        color: #000;
+        font-weight: 700;
+        padding-right: 20px
+    }
+
+    .headingBlock .head-details {
+        font-size: 17px;
+        color: #868686
+    }
+
+#animatedModal #BDDetails .bdlabel {
+    color: #252525
+}
+
+#animatedModal #BDDetails .value {
+    color: #5f5d5d
+}
+
+#animatedModal #BDDetails .btnGenSuppBill, #animatedModal #BDDetails .btnCopyToClipboard {
+    background-color: #2c8fd3 !important;
+    border-radius: 4px;
+    border-color: #2c8fd3;
+    width: 338px
+}
+
+#animatedModal #BDDetails .bdDesc {
+    width: 1500px;
+    height: 350px;
+    font-size: 11px;
+    font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+    border: none;
+    background: transparent
+}
+
+#animatedModal #BDDetails .row {
+    margin-bottom: 12px
+}
+
+#animatedModal #BDDetails #SupplimentaryBilling {
+    margin-top: 12px;
+    color: #5f5d5d;
+    margin-bottom: 20px;
+    font-size: 17px
+}
+
+    #animatedModal #BDDetails #SupplimentaryBilling .totalCharges {
+        margin-top: 12px
+    }
+
+    #animatedModal #BDDetails #SupplimentaryBilling .bdErrorCode {
+        margin-bottom: 12px;
+        margin-top: 12px
+    }
+
+#animatedModal #BalDueDetails, #animatedModal #collectionStatusDetails, #animatedModal #InvoiceStatusDetails, #animatedModal #bdPaymentDetails, #animatedModal #ClientGLStatusDetails, #animatedModal #ResearchForDetails, #animatedModal #AddResearchReasonCode, #animatedModal #AddCustomer, #animatedModal #CustomerContacts {
+    padding-top: 12px;
+    padding-left: 40px;
+    padding-right: 40px
+}
+
+    #animatedModal #BalDueDetails h2, #animatedModal #collectionStatusDetails h2, #animatedModal #InvoiceStatusDetails h2, #animatedModal #bdPaymentDetails h2, #animatedModal #ClientGLStatusDetails h2, #animatedModal #ResearchForDetails h2, #animatedModal #AddResearchReasonCode h2, #animatedModal #AddCustomer h2, #animatedModal #CustomerContacts h2 {
+        margin-bottom: 30px !important
+    }
+
+    #animatedModal #BalDueDetails #commentsBlock, #animatedModal #collectionStatusDetails #commentsBlock, #animatedModal #InvoiceStatusDetails #commentsBlock, #animatedModal #bdPaymentDetails #commentsBlock, #animatedModal #ClientGLStatusDetails #commentsBlock, #animatedModal #ResearchForDetails #commentsBlock, #animatedModal #AddResearchReasonCode #commentsBlock, #animatedModal #AddCustomer #commentsBlock, #animatedModal #CustomerContacts #commentsBlock {
+        margin-bottom: 30px
+    }
+
+        #animatedModal #BalDueDetails #commentsBlock .loadComments, #animatedModal #collectionStatusDetails #commentsBlock .loadComments, #animatedModal #InvoiceStatusDetails #commentsBlock .loadComments, #animatedModal #bdPaymentDetails #commentsBlock .loadComments, #animatedModal #ClientGLStatusDetails #commentsBlock .loadComments, #animatedModal #ResearchForDetails #commentsBlock .loadComments, #animatedModal #AddResearchReasonCode #commentsBlock .loadComments, #animatedModal #AddCustomer #commentsBlock .loadComments, #animatedModal #CustomerContacts #commentsBlock .loadComments {
+            float: right
+        }
+
+        #animatedModal #BalDueDetails #commentsBlock a:focus, #animatedModal #collectionStatusDetails #commentsBlock a:focus, #animatedModal #InvoiceStatusDetails #commentsBlock a:focus, #animatedModal #bdPaymentDetails #commentsBlock a:focus, #animatedModal #ClientGLStatusDetails #commentsBlock a:focus, #animatedModal #ResearchForDetails #commentsBlock a:focus, #animatedModal #AddResearchReasonCode #commentsBlock a:focus, #animatedModal #AddCustomer #commentsBlock a:focus, #animatedModal #CustomerContacts #commentsBlock a:focus, #animatedModal #BalDueDetails #commentsBlock a:hover, #animatedModal #collectionStatusDetails #commentsBlock a:hover, #animatedModal #InvoiceStatusDetails #commentsBlock a:hover, #animatedModal #bdPaymentDetails #commentsBlock a:hover, #animatedModal #ClientGLStatusDetails #commentsBlock a:hover, #animatedModal #ResearchForDetails #commentsBlock a:hover, #animatedModal #AddResearchReasonCode #commentsBlock a:hover, #animatedModal #AddCustomer #commentsBlock a:hover, #animatedModal #CustomerContacts #commentsBlock a:hover {
+            color: #23527c !important
+        }
+
+        #animatedModal #BalDueDetails #commentsBlock .fa-refresh, #animatedModal #collectionStatusDetails #commentsBlock .fa-refresh, #animatedModal #InvoiceStatusDetails #commentsBlock .fa-refresh, #animatedModal #bdPaymentDetails #commentsBlock .fa-refresh, #animatedModal #ClientGLStatusDetails #commentsBlock .fa-refresh, #animatedModal #ResearchForDetails #commentsBlock .fa-refresh, #animatedModal #AddResearchReasonCode #commentsBlock .fa-refresh, #animatedModal #AddCustomer #commentsBlock .fa-refresh, #animatedModal #CustomerContacts #commentsBlock .fa-refresh {
+            font-size: 20px !important
+        }
+
+        #animatedModal #BalDueDetails #commentsBlock .collectionComment, #animatedModal #collectionStatusDetails #commentsBlock .collectionComment, #animatedModal #InvoiceStatusDetails #commentsBlock .collectionComment, #animatedModal #bdPaymentDetails #commentsBlock .collectionComment, #animatedModal #ClientGLStatusDetails #commentsBlock .collectionComment, #animatedModal #ResearchForDetails #commentsBlock .collectionComment, #animatedModal #AddResearchReasonCode #commentsBlock .collectionComment, #animatedModal #AddCustomer #commentsBlock .collectionComment, #animatedModal #CustomerContacts #commentsBlock .collectionComment {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea
+        }
+
+            #animatedModal #BalDueDetails #commentsBlock .collectionComment .comment, #animatedModal #collectionStatusDetails #commentsBlock .collectionComment .comment, #animatedModal #InvoiceStatusDetails #commentsBlock .collectionComment .comment, #animatedModal #bdPaymentDetails #commentsBlock .collectionComment .comment, #animatedModal #ClientGLStatusDetails #commentsBlock .collectionComment .comment, #animatedModal #ResearchForDetails #commentsBlock .collectionComment .comment, #animatedModal #AddResearchReasonCode #commentsBlock .collectionComment .comment, #animatedModal #AddCustomer #commentsBlock .collectionComment .comment, #animatedModal #CustomerContacts #commentsBlock .collectionComment .comment {
+                font-size: 18px
+            }
+
+            #animatedModal #BalDueDetails #commentsBlock .collectionComment .details, #animatedModal #collectionStatusDetails #commentsBlock .collectionComment .details, #animatedModal #InvoiceStatusDetails #commentsBlock .collectionComment .details, #animatedModal #bdPaymentDetails #commentsBlock .collectionComment .details, #animatedModal #ClientGLStatusDetails #commentsBlock .collectionComment .details, #animatedModal #ResearchForDetails #commentsBlock .collectionComment .details, #animatedModal #AddResearchReasonCode #commentsBlock .collectionComment .details, #animatedModal #AddCustomer #commentsBlock .collectionComment .details, #animatedModal #CustomerContacts #commentsBlock .collectionComment .details {
+                font-size: 13px;
+                margin-bottom: 4px
+            }
+
+        #animatedModal #BalDueDetails #commentsBlock h4, #animatedModal #collectionStatusDetails #commentsBlock h4, #animatedModal #InvoiceStatusDetails #commentsBlock h4, #animatedModal #bdPaymentDetails #commentsBlock h4, #animatedModal #ClientGLStatusDetails #commentsBlock h4, #animatedModal #ResearchForDetails #commentsBlock h4, #animatedModal #AddResearchReasonCode #commentsBlock h4, #animatedModal #AddCustomer #commentsBlock h4, #animatedModal #CustomerContacts #commentsBlock h4 {
+            color: #6b6b6b
+        }
+
+        #animatedModal #BalDueDetails #commentsBlock h3, #animatedModal #collectionStatusDetails #commentsBlock h3, #animatedModal #InvoiceStatusDetails #commentsBlock h3, #animatedModal #bdPaymentDetails #commentsBlock h3, #animatedModal #ClientGLStatusDetails #commentsBlock h3, #animatedModal #ResearchForDetails #commentsBlock h3, #animatedModal #AddResearchReasonCode #commentsBlock h3, #animatedModal #AddCustomer #commentsBlock h3, #animatedModal #CustomerContacts #commentsBlock h3 {
+            border-bottom: 1px solid #efefef;
+            padding-top: 0;
+            font-size: 20px;
+            color: #82797b
+        }
+
+#SmtpAccountsList-list {
+    margin-top: 60px
+}
+
+#research-list, #activityStats-list, #stats-list, #collComments-list, #SmtpAccountsList-list, #results-list, #BOLAuditResults-list, #templates-list, #templateCats-list, #settings-list, #commissions-list, #clients-list, #balance-list, #bdInvoicesSearch-list, #balanceSearch-list, #ClientsReportList, #invoices-list, #BdChargeCodes-list, #BdErrorCodes-list, #regions-list, #customers-list, #customerContacts-list, #users-list, #menus-list {
+    border: 2px solid #dfdfdf
+}
+
+    #research-list a, #activityStats-list a, #stats-list a, #collComments-list a, #SmtpAccountsList-list a, #results-list a, #BOLAuditResults-list a, #templates-list a, #templateCats-list a, #settings-list a, #commissions-list a, #clients-list a, #balance-list a, #bdInvoicesSearch-list a, #balanceSearch-list a, #ClientsReportList a, #invoices-list a, #BdChargeCodes-list a, #BdErrorCodes-list a, #regions-list a, #customers-list a, #customerContacts-list a, #users-list a, #menus-list a {
+        color: #23527c !important
+    }
+
+    #research-list th, #activityStats-list th, #stats-list th, #collComments-list th, #SmtpAccountsList-list th, #results-list th, #BOLAuditResults-list th, #templates-list th, #templateCats-list th, #settings-list th, #commissions-list th, #clients-list th, #balance-list th, #bdInvoicesSearch-list th, #balanceSearch-list th, #ClientsReportList th, #invoices-list th, #BdChargeCodes-list th, #BdErrorCodes-list th, #regions-list th, #customers-list th, #customerContacts-list th, #users-list th, #menus-list th {
+        color: #4c4c4c;
+        border-right: 1px solid #949393;
+        font-size: 17px;
+        vertical-align: middle;
+        background-color: #f5f5f5;
+        font-weight: normal;
+        border: none;
+        text-align: center;
+        padding: 16px
+    }
+
+    #research-list td, #activityStats-list td, #stats-list td, #collComments-list td, #SmtpAccountsList-list td, #results-list td, #BOLAuditResults-list td, #templates-list td, #templateCats-list td, #settings-list td, #commissions-list td, #clients-list td, #balance-list td, #bdInvoicesSearch-list td, #balanceSearch-list td, #ClientsReportList td, #invoices-list td, #BdChargeCodes-list td, #BdErrorCodes-list td, #regions-list td, #customers-list td, #customerContacts-list td, #users-list td, #menus-list td {
+        font-size: 16px;
+        color: #737373;
+        background-color: #fff;
+        border: none;
+        padding: 25px 16px
+    }
+
+    #research-list .research-details .company, #activityStats-list .research-details .company, #stats-list .research-details .company, #collComments-list .research-details .company, #SmtpAccountsList-list .research-details .company, #results-list .research-details .company, #BOLAuditResults-list .research-details .company, #templates-list .research-details .company, #templateCats-list .research-details .company, #settings-list .research-details .company, #commissions-list .research-details .company, #clients-list .research-details .company, #balance-list .research-details .company, #bdInvoicesSearch-list .research-details .company, #balanceSearch-list .research-details .company, #ClientsReportList .research-details .company, #invoices-list .research-details .company, #BdChargeCodes-list .research-details .company, #BdErrorCodes-list .research-details .company, #regions-list .research-details .company, #customers-list .research-details .company, #customerContacts-list .research-details .company, #users-list .research-details .company, #menus-list .research-details .company, #research-list .research-details .lastModOn, #activityStats-list .research-details .lastModOn, #stats-list .research-details .lastModOn, #collComments-list .research-details .lastModOn, #SmtpAccountsList-list .research-details .lastModOn, #results-list .research-details .lastModOn, #BOLAuditResults-list .research-details .lastModOn, #templates-list .research-details .lastModOn, #templateCats-list .research-details .lastModOn, #settings-list .research-details .lastModOn, #commissions-list .research-details .lastModOn, #clients-list .research-details .lastModOn, #balance-list .research-details .lastModOn, #bdInvoicesSearch-list .research-details .lastModOn, #balanceSearch-list .research-details .lastModOn, #ClientsReportList .research-details .lastModOn, #invoices-list .research-details .lastModOn, #BdChargeCodes-list .research-details .lastModOn, #BdErrorCodes-list .research-details .lastModOn, #regions-list .research-details .lastModOn, #customers-list .research-details .lastModOn, #customerContacts-list .research-details .lastModOn, #users-list .research-details .lastModOn, #menus-list .research-details .lastModOn, #research-list .research-details .lastModBy, #activityStats-list .research-details .lastModBy, #stats-list .research-details .lastModBy, #collComments-list .research-details .lastModBy, #SmtpAccountsList-list .research-details .lastModBy, #results-list .research-details .lastModBy, #BOLAuditResults-list .research-details .lastModBy, #templates-list .research-details .lastModBy, #templateCats-list .research-details .lastModBy, #settings-list .research-details .lastModBy, #commissions-list .research-details .lastModBy, #clients-list .research-details .lastModBy, #balance-list .research-details .lastModBy, #bdInvoicesSearch-list .research-details .lastModBy, #balanceSearch-list .research-details .lastModBy, #ClientsReportList .research-details .lastModBy, #invoices-list .research-details .lastModBy, #BdChargeCodes-list .research-details .lastModBy, #BdErrorCodes-list .research-details .lastModBy, #regions-list .research-details .lastModBy, #customers-list .research-details .lastModBy, #customerContacts-list .research-details .lastModBy, #users-list .research-details .lastModBy, #menus-list .research-details .lastModBy {
+        color: #a0a0a0
+    }
+
+    #research-list .research-details .lastModOn, #activityStats-list .research-details .lastModOn, #stats-list .research-details .lastModOn, #collComments-list .research-details .lastModOn, #SmtpAccountsList-list .research-details .lastModOn, #results-list .research-details .lastModOn, #BOLAuditResults-list .research-details .lastModOn, #templates-list .research-details .lastModOn, #templateCats-list .research-details .lastModOn, #settings-list .research-details .lastModOn, #commissions-list .research-details .lastModOn, #clients-list .research-details .lastModOn, #balance-list .research-details .lastModOn, #bdInvoicesSearch-list .research-details .lastModOn, #balanceSearch-list .research-details .lastModOn, #ClientsReportList .research-details .lastModOn, #invoices-list .research-details .lastModOn, #BdChargeCodes-list .research-details .lastModOn, #BdErrorCodes-list .research-details .lastModOn, #regions-list .research-details .lastModOn, #customers-list .research-details .lastModOn, #customerContacts-list .research-details .lastModOn, #users-list .research-details .lastModOn, #menus-list .research-details .lastModOn {
+        width: 24%
+    }
+
+    #research-list .balance-details .invDate, #activityStats-list .balance-details .invDate, #stats-list .balance-details .invDate, #collComments-list .balance-details .invDate, #SmtpAccountsList-list .balance-details .invDate, #results-list .balance-details .invDate, #BOLAuditResults-list .balance-details .invDate, #templates-list .balance-details .invDate, #templateCats-list .balance-details .invDate, #settings-list .balance-details .invDate, #commissions-list .balance-details .invDate, #clients-list .balance-details .invDate, #balance-list .balance-details .invDate, #bdInvoicesSearch-list .balance-details .invDate, #balanceSearch-list .balance-details .invDate, #ClientsReportList .balance-details .invDate, #invoices-list .balance-details .invDate, #BdChargeCodes-list .balance-details .invDate, #BdErrorCodes-list .balance-details .invDate, #regions-list .balance-details .invDate, #customers-list .balance-details .invDate, #customerContacts-list .balance-details .invDate, #users-list .balance-details .invDate, #menus-list .balance-details .invDate {
+        width: 20%
+    }
+
+.cName {
+    padding-right: 4px;
+    padding-left: 4px
+}
+
+    .cName .clientPic img {
+        border: 4px solid #a4a3a1;
+        border-radius: 65px;
+        padding: 0;
+        width: 70px
+    }
+
+#invoices-list .region {
+    width: 1% !important
+}
+
+#invoices-list .invoice {
+    width: 14% !important
+}
+
+#invoices-list .company {
+    width: 15% !important
+}
+
+#invoices-list .invDate, #invoices-list .amtDue, #invoices-list .customer {
+    width: 16% !important
+}
+
+#clients-list .phone {
+    width: 15% !important
+}
+
+#clients-list .cName, #clients-list .email {
+    width: 16% !important
+}
+
+#clients-list .location, #clients-list .lastAccessDate {
+    color: #a0a0a0;
+    width: 22% !important
+}
+
+.note {
+    font-size: 14px;
+    color: #949393
+}
+
+    .note .noteLabel {
+        color: #c7b72e
+    }
+
+#frmSaveTemplate .note {
+    color: #4c4c4c;
+    margin-top: 20px
+}
+
+.declar {
+    font-size: 12px;
+    margin-top: 6px;
+    color: #949393;
+    float: right
+}
+
+    .declar i {
+        margin-right: 3px
+    }
+
+.addItem {
+    margin-top: 8px
+}
+
+    .addItem a {
+        color: #4c4c4c;
+        font-size: 18px
+    }
+
+        .addItem a:hover {
+            text-decoration: none
+        }
+
+.dash2 {
+    background-color: #fff;
+    padding: 10px 0;
+    border-bottom: 3px solid #eaebec
+}
+
+h3.heading {
+    color: #949393
+}
+
+.count {
+    color: #9a9a9a;
+    font-size: 40px;
+    margin-top: 6%
+}
+
+.labelText h4 {
+    color: #9a9a9a
+}
+
+.welcome, .dash1 {
+    color: #5f5f5f;
+    font-size: 30px !important
+}
+
+.dash1 {
+    margin-left: 1%
+}
+
+.recent-sign {
+    background-color: #fff !important;
+    border: 3px solid #eaebec !important;
+    padding: 25px !important
+}
+
+.auditDetails .head-online {
+    font-size: 20px;
+    font-weight: 700
+}
+
+.auditDetails .listStyle {
+    top: 18px
+}
+
+.auditDetails .name {
+    font-size: 18px
+}
+
+.auditDetails .auditDet {
+    margin-bottom: 4%
+}
+
+h3.heading-sign {
+    color: #5a5a5a;
+    font-size: 21px;
+    margin-bottom: 45px
+}
+
+    h3.heading-sign img {
+        margin-right: 6px
+    }
+
+.logout {
+    padding-right: 4%;
+    padding-top: 1%;
+    font-size: 20px
+}
+
+#BDDailyData {
+    margin-bottom: 12px
+}
+
+#RevenueCollected, #PendingBD {
+    margin-top: 12px
+}
+
+    #BDDailyData .headings, #BDWeeklyData .headings, #RevenueCollected .headings, #OpenInvoices .headings, #PendingBD .headings {
+        text-transform: uppercase;
+        background-color: #f4f5f7;
+        padding-top: 12px;
+        padding-bottom: 12px
+    }
+
+    #BDDailyData .details, #BDWeeklyData .details, #RevenueCollected .details, #OpenInvoices .details, #PendingBD .details {
+        margin-top: 12px
+    }
+
+    #BDDailyData .items, #BDWeeklyData .items, #RevenueCollected .items, #OpenInvoices .items, #PendingBD .items {
+        color: #838182;
+        background-color: #fff !important;
+        border: 3px solid #eaebec !important;
+        width: 49%;
+        margin-left: 12px;
+        min-height: 180px;
+        padding-bottom: 6px
+    }
+
+        #BDDailyData .items .row, #BDWeeklyData .items .row, #RevenueCollected .items .row, #OpenInvoices .items .row, #PendingBD .items .row {
+            padding-left: 10px;
+            padding-right: 10px
+        }
+
+    #BDDailyData h3.heading-sign, #BDWeeklyData h3.heading-sign, #RevenueCollected h3.heading-sign, #OpenInvoices h3.heading-sign, #PendingBD h3.heading-sign {
+        font-size: 18px;
+        margin-bottom: 20px
+    }
+
+.activity-log {
+    background-color: #fff !important;
+    border: 3px solid #eaebec !important;
+    color: #949393
+}
+
+    .activity-log .webPage, .activity-log .note {
+        overflow: hidden
+    }
+
+    .activity-log a:hover {
+        color: #5a738e
+    }
+
+    .activity-log .tooltip-inner {
+        max-width: 100% !important
+    }
+
+    .activity-log h3.heading-sign {
+        margin-bottom: 25px !important;
+        padding: 10px 25px
+    }
+
+    .activity-log .headings {
+        text-transform: uppercase;
+        background-color: #f4f5f7;
+        padding-top: 12px;
+        padding-bottom: 12px
+    }
+
+    .activity-log .row {
+        margin: 0;
+        margin-bottom: 20px
+    }
+
+    .activity-log .date {
+        font-size: 17px
+    }
+
+table th {
+    text-transform: uppercase
+}
+
+.searchBlock {
+    position: relative
+}
+
+    .searchBlock .fa-search {
+        position: absolute;
+        top: 6px;
+        float: right;
+        font-size: 16px;
+        color: #a8a8a8
+    }
+
+    .searchBlock .txtSearch {
+        font-size: 17px;
+        border-radius: 4px;
+        height: 35px !important;
+        border-color: #a8a8a8;
+        color: #a8a8a8
+    }
+
+#AddClient .leftContent {
+    width: 62%;
+    margin-right: 52px
+}
+
+#BOLAudResultStats .viewingAuditStats td {
+    background-color: #f8b7b7
+}
+
+#BOLAudResultStats #stats-list .sorting:after, #BOLAudResultStats #stats-list .sorting_asc:after, #BOLAudResultStats #stats-list .sorting_desc:after, #BOLAudResultStats #stats-list .sorting_asc_disabled:after, #BOLAudResultStats #stats-list .sorting_desc_disabled:after {
+    display: none
+}
+
+#customers-list .sorting:after, #customers-list .sorting_asc:after, #customers-list .sorting_desc:after, #customers-list .sorting_asc_disabled:after, #customers-list .sorting_desc_disabled:after {
+    display: none
+}
+
+#AddUserRole .form-control {
+    width: 50%
+}
+
+#AddUserRole .row {
+    margin: 0
+}
+
+#Companies h2, #Menus h2, #AppActions h2, #Companies th, #Menus th, #AppActions th {
+    color: #4c4c4c;
+    margin-bottom: 60px;
+    margin-top: 35px;
+    font-size: 28px
+}
+
+#Companies th, #Menus th, #AppActions th {
+    font-weight: normal
+}
+
+#Companies td, #Menus td, #AppActions td {
+    padding: 14px 8px;
+    font-size: 20px
+}
+
+#Companies .assignIcons, #Menus .assignIcons, #AppActions .assignIcons {
+    text-align: center;
+    font-size: 40px;
+    top: 200px
+}
+
+    #Companies .assignIcons .fa-chevron-left, #Menus .assignIcons .fa-chevron-left, #AppActions .assignIcons .fa-chevron-left {
+        margin-bottom: 20px
+    }
+
+    #Companies .assignIcons a:focus, #Menus .assignIcons a:focus, #AppActions .assignIcons a:focus, #Companies .assignIcons a:hover, #Menus .assignIcons a:hover, #AppActions .assignIcons a:hover {
+        color: #5a738e
+    }
+
+#AppActions {
+    margin-top: 50px !important
+}
+
+    #AppActions h2 {
+        margin-bottom: 20px !important
+    }
+
+h1, .glyphicon-menu-hamburger {
+    color: #4c4c4c
+}
+
+#AddUser .assignCompLink {
+    float: right;
+    font-size: 20px;
+    margin-top: -70px
+}
+
+    #AddUser .assignCompLink a:focus, #AddUser .assignCompLink a:hover {
+        color: #23527c
+    }
+
+#AddUserRole .assignMenuLink {
+    float: right;
+    font-size: 20px;
+    margin-top: -90px
+}
+
+    #AddUserRole .assignMenuLink a:focus, #AddUserRole .assignMenuLink a:hover {
+        color: #23527c
+    }
+
+.manage-item {
+    margin-top: 12px
+}
+
+#SearchActivity {
+    margin-bottom: 100px
+}
+
+#SearchBalanceResults .checkBox label, #SearchResearchResults .checkBox label, #SearchCustomersResults .checkBox label, #SearchCommissionResults .checkBox label, #ClientManagementReports .checkBox label {
+    vertical-align: top
+}
+
+.chosen-container-multi .chosen-choices li.search-field {
+    padding-top: 9px;
+    font-size: 16px
+}
+
+.dateBlock {
+    padding: 0
+}
+
+    .dateBlock label {
+        margin-top: 8px;
+        text-align: center
+    }
+
+#SearchResearchResults, #SearchCustomersResults, #SearchCommissionResults {
+    margin-bottom: 120px
+}
+
+#SearchBalanceResults .generateBlock, #SearchInvoicesBalanceResults .generateBlock {
+    margin-top: 40px;
+    border-top: 1px solid #ccc;
+    padding-top: 40px
+}
+
+    #SearchBalanceResults .generateBlock .message, #SearchInvoicesBalanceResults .generateBlock .message {
+        font-size: 20px;
+        color: #008000
+    }
+
+#SearchBalanceResults #ProcessResults, #SearchInvoicesBalanceResults #ProcessResults {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: #fff;
+    width: 150px;
+    background-color: #cc3151
+}
+
+#ClientManagementReports h3 {
+    margin-bottom: 0;
+    font-size: 20px;
+    margin-top: 30px;
+    color: #252525
+}
+
+#ClientManagementReports #ClientsReportList {
+    margin-top: 12px
+}
+
+#ClientManagementReports .DetailInfo {
+    border: 2px solid #dfdfdf;
+    background: #fff;
+    margin-top: 12px;
+    color: #000;
+    padding: 16px
+}
+
+    #ClientManagementReports .DetailInfo th {
+        background-color: #efeeee
+    }
+
+    #ClientManagementReports .DetailInfo td {
+        border-top: none
+    }
+
+    #ClientManagementReports .DetailInfo .value {
+        text-align: right
+    }
+
+.AddTableSettings {
+    margin-bottom: 50px
+}
+
+    .AddTableSettings input[type=checkbox] {
+        height: 22px;
+        vertical-align: text-bottom;
+        width: 22px
+    }
+
+    #AddResearchItem h2, #SearchActivity h2, .AddTableSettings h2, .frmAddPayment h2, #AddClientSMTPAccount h2, #BolAuditing h2, #ClientGLStatusDetails h2, #InvoiceStatusDetails h2, #collectionStatusDetails h2, #AddCommission h2, #AddBalanceDue h2, #AddClient h2, #ClientSMTPAccounts h2, #AddBalance h2, #SearchCommissionResults h2, #SearchResearchResults h2, #SearchCustomersResults h2, #SearchInvoicesBalanceResults h2, #SearchBalanceResults h2, #AddSetting h2, #AddSettingGroup h2, #AddTemplate h2, #AddTemplateCat h2, #AddBdOtherChargeCode h2, #AddBdErrorCode h2, #AddClientData h2, #AddInvoice h2, #AddCustomerContact h2, #ResearchForDetails h2, #AddResearchReasonCode h2, #AddRegion h2, #AddCustomer h2, #AddUser h2, #AddUserRole h2, #AddMenuItem h2, #ClientManagementReports h2 {
+        color: #797979;
+        margin-bottom: 40px;
+        margin-top: 15px;
+        font-size: 24px
+    }
+
+    #AddResearchItem #AddItem, #SearchActivity #AddItem, .AddTableSettings #AddItem, .frmAddPayment #AddItem, #AddClientSMTPAccount #AddItem, #BolAuditing #AddItem, #ClientGLStatusDetails #AddItem, #InvoiceStatusDetails #AddItem, #collectionStatusDetails #AddItem, #AddCommission #AddItem, #AddBalanceDue #AddItem, #AddClient #AddItem, #ClientSMTPAccounts #AddItem, #AddBalance #AddItem, #SearchCommissionResults #AddItem, #SearchResearchResults #AddItem, #SearchCustomersResults #AddItem, #SearchInvoicesBalanceResults #AddItem, #SearchBalanceResults #AddItem, #AddSetting #AddItem, #AddSettingGroup #AddItem, #AddTemplate #AddItem, #AddTemplateCat #AddItem, #AddBdOtherChargeCode #AddItem, #AddBdErrorCode #AddItem, #AddClientData #AddItem, #AddInvoice #AddItem, #AddCustomerContact #AddItem, #ResearchForDetails #AddItem, #AddResearchReasonCode #AddItem, #AddRegion #AddItem, #AddCustomer #AddItem, #AddUser #AddItem, #AddUserRole #AddItem, #AddMenuItem #AddItem, #ClientManagementReports #AddItem {
+        padding-left: 12px
+    }
+
+    #AddResearchItem label, #SearchActivity label, .AddTableSettings label, .frmAddPayment label, #AddClientSMTPAccount label, #BolAuditing label, #ClientGLStatusDetails label, #InvoiceStatusDetails label, #collectionStatusDetails label, #AddCommission label, #AddBalanceDue label, #AddClient label, #ClientSMTPAccounts label, #AddBalance label, #SearchCommissionResults label, #SearchResearchResults label, #SearchCustomersResults label, #SearchInvoicesBalanceResults label, #SearchBalanceResults label, #AddSetting label, #AddSettingGroup label, #AddTemplate label, #AddTemplateCat label, #AddBdOtherChargeCode label, #AddBdErrorCode label, #AddClientData label, #AddInvoice label, #AddCustomerContact label, #ResearchForDetails label, #AddResearchReasonCode label, #AddRegion label, #AddCustomer label, #AddUser label, #AddUserRole label, #AddMenuItem label, #ClientManagementReports label {
+        color: #6e6d6d;
+        font-weight: normal;
+        font-size: 19px
+    }
+
+    #AddResearchItem .row, #SearchActivity .row, .AddTableSettings .row, .frmAddPayment .row, #AddClientSMTPAccount .row, #BolAuditing .row, #ClientGLStatusDetails .row, #InvoiceStatusDetails .row, #collectionStatusDetails .row, #AddCommission .row, #AddBalanceDue .row, #AddClient .row, #ClientSMTPAccounts .row, #AddBalance .row, #SearchCommissionResults .row, #SearchResearchResults .row, #SearchCustomersResults .row, #SearchInvoicesBalanceResults .row, #SearchBalanceResults .row, #AddSetting .row, #AddSettingGroup .row, #AddTemplate .row, #AddTemplateCat .row, #AddBdOtherChargeCode .row, #AddBdErrorCode .row, #AddClientData .row, #AddInvoice .row, #AddCustomerContact .row, #ResearchForDetails .row, #AddResearchReasonCode .row, #AddRegion .row, #AddCustomer .row, #AddUser .row, #AddUserRole .row, #AddMenuItem .row, #ClientManagementReports .row {
+        margin-bottom: 15px
+    }
+
+    #AddResearchItem .form-control, #SearchActivity .form-control, .AddTableSettings .form-control, .frmAddPayment .form-control, #AddClientSMTPAccount .form-control, #BolAuditing .form-control, #ClientGLStatusDetails .form-control, #InvoiceStatusDetails .form-control, #collectionStatusDetails .form-control, #AddCommission .form-control, #AddBalanceDue .form-control, #AddClient .form-control, #ClientSMTPAccounts .form-control, #AddBalance .form-control, #SearchCommissionResults .form-control, #SearchResearchResults .form-control, #SearchCustomersResults .form-control, #SearchInvoicesBalanceResults .form-control, #SearchBalanceResults .form-control, #AddSetting .form-control, #AddSettingGroup .form-control, #AddTemplate .form-control, #AddTemplateCat .form-control, #AddBdOtherChargeCode .form-control, #AddBdErrorCode .form-control, #AddClientData .form-control, #AddInvoice .form-control, #AddCustomerContact .form-control, #ResearchForDetails .form-control, #AddResearchReasonCode .form-control, #AddRegion .form-control, #AddCustomer .form-control, #AddUser .form-control, #AddUserRole .form-control, #AddMenuItem .form-control, #ClientManagementReports .form-control {
+        background-color: #e9eaec;
+        border: none;
+        font-size: 19px;
+        height: 48px
+    }
+
+#AddInvoice h2, #AddCommission h2, #SearchInvoicesBalanceResults h2 {
+    margin-bottom: 30px
+}
+
+.editProfilePic {
+    position: absolute;
+    right: 3%;
+    bottom: 0
+}
+
+.userPic {
+    border: 8px solid #e2e3e5
+}
+
+.addItem a:hover {
+    color: #4c4c4c !important
+}
+
+#BolAuditing {
+    margin-bottom: 50px
+}
+
+    #BolAuditing .reLogin:hover {
+        color: #23527c !important
+    }
+
+    #BolAuditing h2 {
+        margin-bottom: 0
+    }
+
+    #BolAuditing h4 {
+        color: #808080;
+        font-size: 20px;
+        margin-top: 14px;
+        margin-bottom: 50px
+    }
+
+#ClearForm, #ClearBDForm {
+    color: #fff;
+    background-color: #757576;
+    float: right
+}
+
+    #ClearForm .clearFormIcon, #ClearBDForm .clearFormIcon {
+        padding-right: 6px
+    }
+
+#BOLAudFilters #BOLChargesFilter, #BOLAudFilters #BOLPaymentsFilter, #BOLAudFilters #DocumentImagesFilter, #BOLAudFilters #eliminateCheckboxFilter {
+    padding-top: 20px;
+    margin-bottom: 20px;
+    border-top: 1px dotted #eaeaea
+}
+
+#BOLAudFilters .chkSitFlag {
+    height: 24px;
+    width: 24px;
+    margin-top: 9px
+}
+
+#BOLAudFilters #GetAuditResults .getResultsIcon {
+    padding-right: 6px
+}
+
+#BOLAudFilters #GetStats {
+    background-repeat: no-repeat;
+    background-position: left
+}
+
+#BOLAudFilters #ClearForm {
+    margin-top: -49px
+}
+
+#BOLAudFilters input[type=checkbox] {
+    height: 22px;
+    vertical-align: text-bottom;
+    width: 22px
+}
+
+#BOLAudFilters .chosen-container-multi .chosen-choices li.search-field {
+    padding-top: 9px;
+    font-size: 16px
+}
+
+#BOLAudFilters .message {
+    color: #808080;
+    font-size: 18px
+}
+
+#balanceSearch-list .highlight td {
+    background-color: #fba98a
+}
+
+#balanceSearch-list .viewingBDPaymentAmount td {
+    background-color: #f3e74e
+}
+
+#balanceSearch-list .viewingBDDetail td {
+    background-color: #f1c4e4
+}
+
+#balanceSearch-list .viewingCustomer td {
+    background-color: #abd0ec
+}
+
+#balanceSearch-list .viewingCollStatus td {
+    background-color: #f4cc8e
+}
+
+#balanceSearch-list .rejectedStaus td {
+    background-color: #f99191
+}
+
+#balanceSearch-list .viewingInvoiceStatus td {
+    background-color: #b4ecfd
+}
+
+#balanceSearch-list .viewingGLStatus td {
+    background-color: #b3efc5
+}
+
+#balanceSearch-list th, #research-list th, #BOLAuditResults-list th, #bdInvoicesSearch-list th, #ClientsReportList th {
+    padding: 8px 4px;
+    font-size: 15px;
+    vertical-align: middle
+}
+
+#balanceSearch-list td, #research-list td, #BOLAuditResults-list td, #bdInvoicesSearch-list td, #ClientsReportList td {
+    padding: 8px !important
+}
+
+#balanceSearch-list .invDate, #research-list .invDate, #BOLAuditResults-list .invDate, #bdInvoicesSearch-list .invDate, #ClientsReportList .invDate {
+    width: 0
+}
+
+#BOLAuditResults-list th {
+    padding: 14px
+}
+
+@media(min-width:800px) {
+    .searchBlock .txtSearch {
+        width: 500px
+    }
+
+    .searchBlock .fa-search {
+        left: 475px;
+        top: 8px
+    }
+}
+
+li.nv {
+    cursor: pointer
+}
+
+.main_menu_side {
+    padding-left: 8px
+}
+
+.leftBlock {
+    padding: 0;
+    min-height: 1500px
+}
+
+.nav.side-menu > li.current-page, .nav.side-menu > li.active {
+    border-right: unset !important
+}
+
+.right-txt {
+    font-size: 15px;
+    margin-left: 6px;
+    color: #000
+}
+
+.manage-menu {
+    margin-top: 35px
+}
+
+.btnResrItemInfo {
+    margin-top: 50px
+}
+
+.right-border {
+    border: 1px solid #ccc
+}
+
+.head {
+    padding-left: 0 !important
+}
+
+#clients-list a, #users-list a, #commissions-list a, #SmtpAccountsList-list a, #research-list a, #BdChargeCodes-list a, #BdErrorCodes-list a, #customers-list a, #customerContacts-list a, #invoices-list a, #regions-list a, #balance-list a, #balanceSearch-list a, #bdInvoicesSearch-list a, #research-list a, #menus-list a, #activityStats-list a, #templates-list a, #templateCats-list a, #settings-list a {
+    color: #23527c !important
+}
+
+#activityStats-list .email {
+    color: #949393
+}
+
+#activityStats-list .ipAddr {
+    width: 16% !important
+}
+
+#activityStats-list .addedOn {
+    width: 18% !important
+}
+
+#users-list .firstName {
+    width: 20% !important
+}
+
+#users-list .userName, #users-list .email {
+    width: 10% !important
+}
+
+#users-list .company {
+    width: 24% !important
+}
+
+#menus-list .link {
+    width: 25% !important
+}
+
+#research-list .researchReasonCode {
+    width: 24% !important
+}
+
+#research-list .comments {
+    width: 18% !important
+}
+
+#CustomerContacts {
+    margin-top: 50px;
+    border-top: 1px dotted #ccc
+}
+
+    #CustomerContacts h2 {
+        color: #797979;
+        margin-bottom: 60px;
+        margin-top: 35px;
+        font-size: 28px
+    }
+
+    #CustomerContacts h4 {
+        color: #797979;
+        font-size: 15px
+    }
+
+#BOLAudResults-PopUp {
+    padding: 30px 20px;
+    max-height: 1430px
+}
+
+    #BOLAudResults-PopUp #ARGBalDue {
+        margin-bottom: 20px
+    }
+
+        #BOLAudResults-PopUp #ARGBalDue .bdDescWindowBox {
+            overflow: scroll;
+            overflow-y: hidden
+        }
+
+        #BOLAudResults-PopUp #ARGBalDue .heading {
+            font-size: 14px;
+            background-color: #a40809;
+            color: #fff;
+            padding: 8px 6px 8px 15px;
+            text-transform: uppercase
+        }
+
+        #BOLAudResults-PopUp #ARGBalDue .bdDesc {
+            width: 1000px;
+            height: 300px;
+            font-size: 11px;
+            font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+            border: none;
+            background: transparent
+        }
+
+        #BOLAudResults-PopUp #ARGBalDue .item {
+            margin-bottom: 12px
+        }
+
+        #BOLAudResults-PopUp #ARGBalDue .bolLabel {
+            font-weight: 700
+        }
+
+        #BOLAudResults-PopUp #ARGBalDue .balDueDetails {
+            background-color: #b40708;
+            border-radius: 0 0 14px 14px;
+            border-top: none;
+            padding: 8px 6px 8px 15px;
+            font-size: 13px;
+            color: #fff
+        }
+
+    #BOLAudResults-PopUp .detailsBlock {
+        font-size: 13px;
+        color: #585858
+    }
+
+        #BOLAudResults-PopUp .detailsBlock .bolLabel {
+            font-weight: 700
+        }
+
+        #BOLAudResults-PopUp .detailsBlock h5 {
+            font-size: 14px;
+            color: #585858;
+            margin-bottom: 4px;
+            text-decoration: underline
+        }
+
+    #BOLAudResults-PopUp .closeIcon {
+        opacity: .6;
+        font-size: 12px;
+        font-weight: 700;
+        color: #000;
+        float: right
+    }
+
+    #BOLAudResults-PopUp .heading {
+        padding-bottom: 12px;
+        font-size: 20px;
+        color: #000
+    }
+
+    #BOLAudResults-PopUp .leftBlock {
+        padding-right: 20px;
+        padding-left: 10px
+    }
+
+        #BOLAudResults-PopUp .leftBlock #navBlock {
+            background-color: #909090;
+            width: 47%;
+            color: #f5f5f5;
+            position: fixed;
+            font-size: 11px;
+            bottom: 0;
+            z-index: 99;
+            border-bottom: none;
+            right: 20px;
+            border-radius: 8px 8px 0 0
+        }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .records {
+                padding-left: 12px;
+                padding-right: 12px
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .fa-arrow-right:hover {
+                color: #f5f5f5
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .stepToBegin, #BOLAudResults-PopUp .leftBlock #navBlock .stepToLast, #BOLAudResults-PopUp .leftBlock #navBlock .stepToPrev, #BOLAudResults-PopUp .leftBlock #navBlock .stepToNext {
+                border: 1px solid #ccc;
+                padding: 3px 16px 3px 16px;
+                border-radius: 10px
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock a {
+                color: #f3f2f2 !important
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .recordsDetailBlock {
+                border-top: 1px solid #787878;
+                border-radius: 0 8px 0 0;
+                padding: 10px 12px 2px 12px;
+                border-right: 1px solid #787878
+            }
+
+                #BOLAudResults-PopUp .leftBlock #navBlock .recordsDetailBlock .btnAddBalDue, #BOLAudResults-PopUp .leftBlock #navBlock .recordsDetailBlock .btnPullForResearch {
+                    font-size: 12px;
+                    padding: 3px 10px 4px 10px;
+                    background-color: #2c8fd3 !important;
+                    border: none;
+                    border-radius: 6px
+                }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .actStatByEventType {
+                background-color: #339967;
+                border: 1px solid #339967;
+                color: #fff;
+                border-radius: 8px 0 0 0;
+                min-height: 93px;
+                padding: 2px 14px;
+                height: 60px;
+                overflow: scroll;
+                overflow-x: hidden
+            }
+
+                #BOLAudResults-PopUp .leftBlock #navBlock .actStatByEventType #activityStatsEvent {
+                    overflow: scroll;
+                    overflow-x: hidden
+                }
+
+                    #BOLAudResults-PopUp .leftBlock #navBlock .actStatByEventType #activityStatsEvent td {
+                        border: none
+                    }
+
+                #BOLAudResults-PopUp .leftBlock #navBlock .actStatByEventType h5 {
+                    text-transform: uppercase;
+                    font-size: 11px;
+                    margin-bottom: 2px
+                }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .JumpToBlock .control-label {
+                padding-top: 4px;
+                padding-right: 0;
+                text-align: right
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .JumpToBlock .col-md-3 {
+                padding-right: 0
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .JumpToBlock .jumpText {
+                width: 20%
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .JumpToBlock .jumpToIcon {
+                text-align: right
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .JumpToBlock .btnGetRecord {
+                background: transparent;
+                border: 2px solid #ccc;
+                border-radius: 24px;
+                margin-top: 2px
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .JumpToBlock #idx {
+                height: 20px;
+                width: 48px;
+                margin-top: 3px;
+                background-color: #ccc;
+                padding: 4px
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .lastItem {
+                text-align: right
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .prevItem {
+                margin-right: 6px
+            }
+
+            #BOLAudResults-PopUp .leftBlock #navBlock .secondRow {
+                margin-top: 10px
+            }
+
+                #BOLAudResults-PopUp .leftBlock #navBlock .secondRow .recordDetail {
+                    padding-top: 6px
+                }
+
+    #BOLAudResults-PopUp .rightBlock {
+        border-left: 1px solid #e3e4e5;
+        padding-left: 20px;
+        min-height: 1240px
+    }
+
+        #BOLAudResults-PopUp .rightBlock .noImg {
+            color: #fff;
+            padding: 20px
+        }
+
+        #BOLAudResults-PopUp .rightBlock .nextFileExtension, #BOLAudResults-PopUp .rightBlock .prevFileExtension {
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            color: #adadad
+        }
+
+        #BOLAudResults-PopUp .rightBlock .fileDesc {
+            font-size: 14px;
+            margin-top: 12px
+        }
+
+        #BOLAudResults-PopUp .rightBlock .previousPdf a, #BOLAudResults-PopUp .rightBlock .nextPdf a {
+            border: 1px solid #ccc;
+            padding: 3px 16px 3px 16px;
+            border-radius: 18px;
+            color: #868484
+        }
+
+        #BOLAudResults-PopUp .rightBlock .pdfFilesDetails {
+            margin-bottom: 12px
+        }
+
+            #BOLAudResults-PopUp .rightBlock .pdfFilesDetails .fileDetail {
+                font-size: 13px
+            }
+
+        #BOLAudResults-PopUp .rightBlock .pdfView {
+            width: 100%;
+            padding: 0 4px 4px 4px
+        }
+
+    #BOLAudResults-PopUp #BOLHeader .value {
+        font-weight: 700
+    }
+
+    #BOLAudResults-PopUp #BOLCommodity .itemsBlock, #BOLAudResults-PopUp #BOLCharges .itemsBlock, #BOLAudResults-PopUp #ContEvntHist .itemsBlock, #BOLAudResults-PopUp #InvoiceSummary .itemsBlock {
+        overflow: scroll;
+        overflow-x: hidden
+    }
+
+    #BOLAudResults-PopUp #BOLCommodity .headerItems, #BOLAudResults-PopUp #BOLCharges .headerItems, #BOLAudResults-PopUp #ContEvntHist .headerItems, #BOLAudResults-PopUp #InvoiceSummary .headerItems {
+        border-bottom: 1px solid #eaeaea;
+        margin-top: 8px
+    }
+
+    #BOLAudResults-PopUp #ContEvntHist .itemsBlock {
+        max-height: 175px
+    }
+
+    #BOLAudResults-PopUp #BOLCharges .itemsBlock {
+        max-height: 180px
+    }
+
+    #BOLAudResults-PopUp #BOLCharges .boldItems .value {
+        font-weight: 700
+    }
+
+    #BOLAudResults-PopUp #BOLCommodity .itemsBlock {
+        max-height: 150px
+    }
+
+    #BOLAudResults-PopUp .bookNotes, #BOLAudResults-PopUp .bookRemarks, #BOLAudResults-PopUp .bolRemarks {
+        cursor: pointer;
+        padding-top: 6px;
+        color: #5a738e;
+        font-size: 14px
+    }
+
+        #BOLAudResults-PopUp .bookNotes:hover, #BOLAudResults-PopUp .bookRemarks:hover, #BOLAudResults-PopUp .bolRemarks:hover {
+            text-decoration: underline
+        }
+
+    #BOLAudResults-PopUp #Notes .item {
+        margin-bottom: 12px
+    }
+
+    #BOLAudResults-PopUp #BOLRemarks, #BOLAudResults-PopUp #Remarks, #BOLAudResults-PopUp #Notes {
+        border: 1px solid #eaeaea;
+        margin-bottom: 4px;
+        padding: 5px
+    }
+
+        #BOLAudResults-PopUp #BOLRemarks .heading, #BOLAudResults-PopUp #Remarks .heading, #BOLAudResults-PopUp #Notes .heading {
+            font-size: 17px !important;
+            color: #383838
+        }
+
+    #BOLAudResults-PopUp #BookingInfo, #BOLAudResults-PopUp #BookingItemDetails, #BOLAudResults-PopUp #BOLRemarksBlock, #BOLAudResults-PopUp #BOLReferences, #BOLAudResults-PopUp #RemarksNotes, #BOLAudResults-PopUp #InvoiceSummary, #BOLAudResults-PopUp #BOLHeader, #BOLAudResults-PopUp #BOLCommodity, #BOLAudResults-PopUp #BOLCharges, #BOLAudResults-PopUp #ContEvntHist {
+        margin-bottom: 20px
+    }
+
+        #BOLAudResults-PopUp #BookingInfo .row, #BOLAudResults-PopUp #BookingItemDetails .row, #BOLAudResults-PopUp #BOLRemarksBlock .row, #BOLAudResults-PopUp #BOLReferences .row, #BOLAudResults-PopUp #RemarksNotes .row, #BOLAudResults-PopUp #InvoiceSummary .row, #BOLAudResults-PopUp #BOLHeader .row, #BOLAudResults-PopUp #BOLCommodity .row, #BOLAudResults-PopUp #BOLCharges .row, #BOLAudResults-PopUp #ContEvntHist .row {
+            margin-bottom: 6px
+        }
+
+        #BOLAudResults-PopUp #BookingInfo .item .bolLabel, #BOLAudResults-PopUp #BookingItemDetails .item .bolLabel, #BOLAudResults-PopUp #BOLRemarksBlock .item .bolLabel, #BOLAudResults-PopUp #BOLReferences .item .bolLabel, #BOLAudResults-PopUp #RemarksNotes .item .bolLabel, #BOLAudResults-PopUp #InvoiceSummary .item .bolLabel, #BOLAudResults-PopUp #BOLHeader .item .bolLabel, #BOLAudResults-PopUp #BOLCommodity .item .bolLabel, #BOLAudResults-PopUp #BOLCharges .item .bolLabel, #BOLAudResults-PopUp #ContEvntHist .item .bolLabel {
+            font-weight: 700;
+            color: #585858;
+            font-size: 13px
+        }
+
+        #BOLAudResults-PopUp #BookingInfo .item .value, #BOLAudResults-PopUp #BookingItemDetails .item .value, #BOLAudResults-PopUp #BOLRemarksBlock .item .value, #BOLAudResults-PopUp #BOLReferences .item .value, #BOLAudResults-PopUp #RemarksNotes .item .value, #BOLAudResults-PopUp #InvoiceSummary .item .value, #BOLAudResults-PopUp #BOLHeader .item .value, #BOLAudResults-PopUp #BOLCommodity .item .value, #BOLAudResults-PopUp #BOLCharges .item .value, #BOLAudResults-PopUp #ContEvntHist .item .value {
+            font-size: 13px;
+            color: #585858
+        }
+
+#SortByBlock {
+    margin-top: 40px
+}
+
+    #SortByBlock .col-md-12 {
+        margin-bottom: 30px
+    }
+
+    #SortByBlock i.fa.fa-arrows.ui-sortable-handle {
+        font-size: 18px;
+        margin-left: 12px
+    }
+
+    #SortByBlock label {
+        width: 270px
+    }
+
+#RemarksNotes .heading {
+    font-size: 15px;
+    padding-bottom: 4px
+}
+
+#RemarksNotes #Notes .heading {
+    margin: 0;
+    margin-bottom: 4px;
+    font-size: 15px !important
+}
+
+#AddBalanceDue #BolHeaderBlock {
+    margin-top: 40px
+}
+
+    #AddBalanceDue #BolHeaderBlock .block-heading {
+        color: #272727;
+        font-weight: 700;
+        font-size: 18px
+    }
+
+    #AddBalanceDue #BolHeaderBlock .AddBolHeader {
+        border: 3px solid #e8e8e8;
+        padding: 50px
+    }
+
+#balanceSearch-list .status-label, #bdInvoicesSearch-list .status-label, #research-list .status-label {
+    width: 110px !important;
+    display: inline-block;
+    line-height: 20px;
+    color: #fff
+}
+
+#balanceSearch-list .status-paid, #bdInvoicesSearch-list .status-paid, #research-list .status-paid {
+    background-color: #337ab7
+}
+
+#balanceSearch-list .status-closed, #bdInvoicesSearch-list .status-closed, #research-list .status-closed {
+    background-color: #5cb85c
+}
+
+#balanceSearch-list .status-no_response, #bdInvoicesSearch-list .status-no_response, #research-list .status-no_response {
+    background-color: #878787
+}
+
+#balanceSearch-list .status-arginv, #bdInvoicesSearch-list .status-arginv, #research-list .status-arginv {
+    background-color: #517c95
+}
+
+#balanceSearch-list .status-invoiced_rec, #bdInvoicesSearch-list .status-invoiced_rec, #research-list .status-invoiced_rec {
+    background-color: #626262
+}
+
+#balanceSearch-list .status-invoiced_nr, #bdInvoicesSearch-list .status-invoiced_nr, #research-list .status-invoiced_nr {
+    background-color: #937070
+}
+
+#balanceSearch-list .status-open, #bdInvoicesSearch-list .status-open, #research-list .status-open {
+    background-color: #d9534f
+}
+
+#balanceSearch-list .status-short_paid, #bdInvoicesSearch-list .status-short_paid, #research-list .status-short_paid {
+    background-color: #5bc0de
+}
+
+#balanceSearch-list .status-pending, #bdInvoicesSearch-list .status-pending, #research-list .status-pending {
+    background-color: #1ca2b6
+}
+
+#balanceSearch-list .status-rejected_age, #bdInvoicesSearch-list .status-rejected_age, #research-list .status-rejected_age {
+    background-color: #9c3b3b
+}
+
+#balanceSearch-list .status-approved_short, #bdInvoicesSearch-list .status-approved_short, #research-list .status-approved_short {
+    background-color: #ec693b
+}
+
+#balanceSearch-list .status-approved_full, #bdInvoicesSearch-list .status-approved_full, #research-list .status-approved_full {
+    background-color: #d34d1e
+}
+
+#balanceSearch-list .status-in_cust_review, #bdInvoicesSearch-list .status-in_cust_review, #research-list .status-in_cust_review {
+    background-color: #937039
+}
+
+#balanceSearch-list .status-rejected_dispute, #bdInvoicesSearch-list .status-rejected_dispute, #research-list .status-rejected_dispute {
+    background-color: #b65b5b
+}
+
+#balanceSearch-list .status-approved_full, #bdInvoicesSearch-list .status-approved_full, #research-list .status-approved_full, #balanceSearch-list .status-rejected_dispute, #bdInvoicesSearch-list .status-rejected_dispute, #research-list .status-rejected_dispute, #balanceSearch-list .status-in_cust_review, #bdInvoicesSearch-list .status-in_cust_review, #research-list .status-in_cust_review, #balanceSearch-list .status-approved_short, #bdInvoicesSearch-list .status-approved_short, #research-list .status-approved_short, #balanceSearch-list .status-approved_full, #bdInvoicesSearch-list .status-approved_full, #research-list .status-approved_full, #balanceSearch-list .status-rejected_age, #bdInvoicesSearch-list .status-rejected_age, #research-list .status-rejected_age, #balanceSearch-list .status-paid, #bdInvoicesSearch-list .status-paid, #research-list .status-paid, #balanceSearch-list .status-arginv, #bdInvoicesSearch-list .status-arginv, #research-list .status-arginv, #balanceSearch-list .status-pending, #bdInvoicesSearch-list .status-pending, #research-list .status-pending, #balanceSearch-list .status-invoiced_nr, #bdInvoicesSearch-list .status-invoiced_nr, #research-list .status-invoiced_nr, #balanceSearch-list .status-open, #bdInvoicesSearch-list .status-open, #research-list .status-open, #balanceSearch-list .status-closed, #bdInvoicesSearch-list .status-closed, #research-list .status-closed, #balanceSearch-list .status-invoiced_rec, #bdInvoicesSearch-list .status-invoiced_rec, #research-list .status-invoiced_rec, #balanceSearch-list .status-no_response, #bdInvoicesSearch-list .status-no_response, #research-list .status-no_response, #balanceSearch-list .status-short_paid, #bdInvoicesSearch-list .status-short_paid, #research-list .status-short_paid {
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase
+}
+
+    #balanceSearch-list .status-approved_full a, #bdInvoicesSearch-list .status-approved_full a, #research-list .status-approved_full a, #balanceSearch-list .status-rejected_dispute a, #bdInvoicesSearch-list .status-rejected_dispute a, #research-list .status-rejected_dispute a, #balanceSearch-list .status-in_cust_review a, #bdInvoicesSearch-list .status-in_cust_review a, #research-list .status-in_cust_review a, #balanceSearch-list .status-approved_short a, #bdInvoicesSearch-list .status-approved_short a, #research-list .status-approved_short a, #balanceSearch-list .status-approved_full a, #bdInvoicesSearch-list .status-approved_full a, #research-list .status-approved_full a, #balanceSearch-list .status-rejected_age a, #bdInvoicesSearch-list .status-rejected_age a, #research-list .status-rejected_age a, #balanceSearch-list .status-paid a, #bdInvoicesSearch-list .status-paid a, #research-list .status-paid a, #balanceSearch-list .status-arginv a, #bdInvoicesSearch-list .status-arginv a, #research-list .status-arginv a, #balanceSearch-list .status-pending a, #bdInvoicesSearch-list .status-pending a, #research-list .status-pending a, #balanceSearch-list .status-invoiced_nr a, #bdInvoicesSearch-list .status-invoiced_nr a, #research-list .status-invoiced_nr a, #balanceSearch-list .status-open a, #bdInvoicesSearch-list .status-open a, #research-list .status-open a, #balanceSearch-list .status-closed a, #bdInvoicesSearch-list .status-closed a, #research-list .status-closed a, #balanceSearch-list .status-invoiced_rec a, #bdInvoicesSearch-list .status-invoiced_rec a, #research-list .status-invoiced_rec a, #balanceSearch-list .status-no_response a, #bdInvoicesSearch-list .status-no_response a, #research-list .status-no_response a, #balanceSearch-list .status-short_paid a, #bdInvoicesSearch-list .status-short_paid a, #research-list .status-short_paid a {
+        color: #fff !important
+    }
+
+.btnSave img {
+    vertical-align: text-top
+}
+
+#SearchByBOL {
+    padding-top: 20px;
+    margin-bottom: 20px;
+    border-top: 1px dotted #eaeaea
+}
+
+    #SearchByBOL h4 {
+        color: #808080;
+        font-size: 20px;
+        margin-top: 14px;
+        margin-bottom: 50px
+    }
+
+#balDueSearch .dataTables_wrapper > .row, #activityStats-list_wrapper .dataTables_wrapper > .row {
+    overflow: inherit !important
+}
+
+#balanceSearch-list_wrapper .paging_full_numbers, #activityStats-list_wrapper .paging_full_numbers {
+    float: none !important;
+    width: 100%;
+    height: auto
+}
+
+#balanceSearch-list_wrapper div.dataTables_info, #activityStats-list_wrapper div.dataTables_info {
+    padding-top: 20px !important
+}
+
+#balanceSearch-list_wrapper .dataTables_paginate .paginate_button, #activityStats-list_wrapper .dataTables_paginate .paginate_button {
+    padding-left: 12px !important;
+    padding-right: 12px !important
+}
+
+#stats-list_wrapper {
+    padding: 20px
+}
+
+#noty_layout__topRight {
+    width: auto !important
+}
+
+#ClientManagementReports .table {
+    margin: 0 !important
+}
+
+#MappingsInfo h4 {
+    color: #3c3c3c
+}
+
+#MappingsInfo h2 {
+    color: #000;
+    display: inline;
+    font-size: 24px
+}
+
+#MappingsInfo td {
+    padding: 20px
+}
+
+#MappingsInfo .SaveMappings {
+    margin-bottom: 40px;
+    margin-top: 40px
+}
+
+#lblLoadClientsDataMsg {
+    height: 500px;
+    margin-top: 50px
+}

@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = Arg.Terms.Resource1.pgTitleManageMembers;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divmain">
+    <fieldset>
+        <div class="row">
+            <div class="col-sm-4">
+                <select class="form-control" id="ddlgroups"></select>
+            </div>
+            <div class="col-sm-2">
+                <button id="btnupdate" class="btn btn-primary">
+                    <i class="mdi mdi-check-circle icnwht"></i> @Arg.Terms.Resource1.btnUpdate
+                </button>
+            </div>
+            <div class="col-sm-2 reccount"><span class="reccount" id="reccount"></span></div>
+        </div>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-3">@Arg.Terms.Resource1.lblMemberName</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblIsActive</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblIsMember</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1" data-bind="text:userid"></div>
+                <div class="col-md-3" data-bind="text:membername"></div>
+                <div class="col-md-1" data-bind="if: isactive=true"><i class="mdi mdi-check icngrn"></i></div>
+                <div class="col-md-1"><input type="checkbox" data-bind="checked:ismember" value="1" /></div>
+                <div class="col-md-1"><input type="text" class="smbox hide" data-bind="value:userid" /></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@section Scripts {
+    <script>
+        var groupid = "@ViewBag.groupid";
+        $(document).ready(function () {
+            InitializeViewModel();
+            getDataX("ddlgroups", loadDDLGroups);
+            initPage();
+        });
+
+        // load view model so Knockout can bind to it
+        function loadDDLGroups(response) {
+            try {
+                log.info("get response: load ddl groups");
+                $('#ddlgroups').find('option').remove().end().append('<option value="">** Select Group **</option>');
+
+                for (i = 0; i < response.length; i++) {
+                    var opt = "<option value='" + response[i].id + "'>" + response[i].txt + "</option>";
+                    $("#ddlgroups").append(opt);
+                }
+                $("#ddlgroups").val(groupid);
+                $("#ddlgroups").prop("width:300px;");
+                $("#ddlgroups").on("change", switchGroup);
+            } catch (e) {
+                log.error("load ddl : " + e.message);
+                setMessage("load ddl : " + e.message, "error");
+            }
+        }
+        function initPage() {
+            setProgressBar();
+            getData("groupmembers", groupid);
+        }
+
+        function switchGroup() {
+            var gid = $("#ddlgroups").val();
+            var url = '@Url.Action("ManageMembers", "Admin")';
+            url = url.substring(0, url.lastIndexOf("/"));
+            location.href = url + "/" + gid;
+        }
+
+        function InitializeViewModel() {
+            ko.applyBindings(viewModel, $("#divmain")[0]);
+        }
+
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            viewModel.items([]);
+            try {
+                for (i = 0; i < response.length; i++) {
+                    viewModel.items.push(response[i]);
+                }
+                $("#reccount").text("Records: " + response.length);
+                $("#btnupdate").on("click", sendData);
+                finishProgressBar();
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        }
+        // send record to web service for insert or update
+        function sendData() {
+            log.info("sendData");
+            // send update: convert data set to JSON
+            try {
+                var jdata = ko.toJSON(viewModel.items);
+                log.info("ready to submit changes:");
+                $.ajax({
+                    url: "/api/groupmembers/" + groupid,
+                    type: "POST",
+                    data: jdata,
+                    processData: true,
+                    contentType: "application/json",
+                    dataType: "json",
+                    length: jdata.length,
+                    success: function (result) {
+                        setDBMessage(result, "#divmessage");
+                        initPage();
+                    },
+                    error: function (result) {
+                        setDBMessage(result, "#divmessage");
+                    }
+                });
+            } catch (e) { log.info(e.message); }
+        }
+    </script>
+}

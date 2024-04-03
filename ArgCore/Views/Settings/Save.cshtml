@@ -1,0 +1,64 @@
+﻿@model ArgCore.Models.Settings
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Save Setting";
+}
+<div id="AddSetting" class="main-content row">
+    @using (Html.BeginForm("Save", "Settings", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.SettingDetail.SettingId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-1">Label</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => m.SettingDetail.Label, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.SettingDetail.Label)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-1">Key</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => m.SettingDetail.Key, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.SettingDetail.Key)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-1">Type</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => m.SettingDetail.Type, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.SettingDetail.Type)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-1">Value</label>
+            <div class="col-md-5">
+                @Html.TextAreaFor(m => m.SettingDetail.Value, 7, 50, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.SettingDetail.Value)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-1">Group</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.SettingDetail.GroupId, Model.SettingGroups, "--select group--", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.SettingDetail.GroupId)
+            </div>
+            <div class="col-md-6 manage-item">
+                <a href="~/SettingGroups/Index">
+                    <span><img src="~/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Groups</span>
+                </a>
+            </div>
+        </div>
+        <div class="btnReasrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "Settings", new { settingId = @Model.SettingDetail.SettingId }, new { @class = "btn btn-lg btnDelete" })
+                @*<button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

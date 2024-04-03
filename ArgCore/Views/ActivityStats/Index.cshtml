@@ -1,0 +1,101 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.ActivityStats
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@if (Model == null)
+{
+    return;
+}
+<div id="UserStat-details" class="main-content row">
+    @using (Html.BeginForm("Index", "ActivityStats", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+      @*   Html.EnableClientValidation(false); *@
+        <div id="SearchActivity">
+            <h2>User Audit</h2>
+            <div class="form-group row">
+                <label for="inputUrl" class="mylabel control-label col-md-3">Select Client</label>
+                <div class="col-md-5">
+                    @Html.DropDownListFor(x => x.SearchOptions.ClientId, Model.Clients, null, new { id = "ddlClients", multiple = "", @class = "form-control  chzn-select", @selectedvals = Model.SearchOptions.ClientId != null ? String.Join(" ,", Model.SearchOptions.ClientId) : "" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputUrl" class="mylabel control-label col-md-3">Select Web Page</label>
+                <div class="col-md-5">
+                    @Html.DropDownListFor(x => x.SearchOptions.WebPages, Model.WebPages, new { id = "ddlWebPage", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.WebPages != null ? String.Join(" ,", Model.SearchOptions.WebPages) : "" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputUrl" class="mylabel control-label col-md-3">Begin Date</label>
+                <div class="col-md-5">
+                    @Html.TextBoxFor(x => x.SearchOptions.BeginDate, new { @class = "form-control datepicker", required = false })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputUrl" class="mylabel control-label col-md-3">End Date</label>
+                <div class="col-md-5">
+                    @Html.TextBoxFor(x => x.SearchOptions.EndDate, new { @class = "form-control datepicker", required = false })
+                </div>
+            </div>
+            @if (Common.CurrentUserInfo.IsAdmin || Common.CurrentUserInfo.IsARGManager)
+            {
+                <div class="form-group row">
+                    <label for="inputUrl" class="mylabel control-label col-md-3">User</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.SearchOptions.UserIds, Model.Users, new { id = "ddlActivityUsers", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.UserIds != null ? String.Join(",", Model.SearchOptions.UserIds) : "" })
+                    </div>
+                </div>
+            }
+            <div class="form-group row">
+                <label for="inputUrl" class="mylabel control-label col-md-3">User Role</label>
+                <div class="col-md-5">
+                    @Html.DropDownListFor(x => x.SearchOptions.Roles, Model.UserRoles, new { id = "ddlUserRoles", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Roles != null ? String.Join(",", Model.SearchOptions.Roles) : "" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputUrl" class="mylabel control-label col-md-3">IP Address</label>
+                <div class="col-md-5">
+                    @Html.DropDownListFor(x => x.SearchOptions.IpAddresses, Model.IPAddresses, new { id = "ddlIPAddress", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.IpAddresses != null ? String.Join(" ,", Model.SearchOptions.IpAddresses) : "" })
+                </div>
+            </div>
+            <button id="GetActivityResults" type="submit" class="btn btn-lg btnGetResults"><img src="~/images/GetResults.png" /> Get Results</button>
+        </div>
+    }
+    @if (Model.ActivityStatsList != null && Model.ActivityStatsList.Count > 0)
+    {
+        <table id="activityStats-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="userName">User</th>
+                    <th class="userRole">Role</th>
+                    <th class="client">Client</th>
+                    <th class="webPage">Web Page</th>
+                    <th class="note">Activity</th>
+                    <th class="addedOn">Activity Date</th>
+                    <th class="ipAddr">IP Address</th>
+                </tr>
+            </thead>
+            <tbody class="actStat-details">
+                @foreach (var stat in Model.ActivityStatsList)
+                {
+                    <tr>
+                        <td class="userName">
+                            <div class="firstLastName">@Html.Raw(stat.FirstName + " " + stat.LastName)</div>
+                            <div class="email">@stat.UserName</div>
+                        </td>
+                        <td class="userRole">@stat.RoleName</td>
+                        <td class="client">@Html.Raw(!string.IsNullOrWhiteSpace(stat.ClientName) ? stat.ClientName : "-")</td>
+                        <td class="webPage">@stat.WebPage</td>
+                        <td class="note">@Html.Raw(stat.Note)</td>
+                        <td class="addedOn">@stat.AddedOn.ToString("f")</td>
+                        <td class="ipAddr">@stat.IpAddress</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No activity found related to your search!</h3>")
+    }
+</div>

@@ -1,0 +1,223 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.BDDetails
+<div id="BalDueDetails">
+    <div class="headingBlock row">
+        <span class="heading">Balance Due Detail </span>
+        @if (Model.BalanceDueInfo != null && Model.BalanceDueInfo.BalanceId > 0)
+        {
+        <span class="head-details">Balance ID: @Model.BalanceDueInfo.BalanceId | Cust. ID: @Model.BalanceDueInfo.CustomerId | Bol#: @Model.BalanceDueInfo.Bol</span>
+        }
+    </div>
+    @if (Model.BalanceDueInfo != null && Model.BalanceDueInfo.BalanceId > 0)
+    {
+    <div id="BDDetails">
+        @Html.HiddenFor(x => x.BalanceDueInfo.BalanceId)
+        <div class="row">
+            <div class="item col-md-3">
+                <span class="bdlabel">Region:</span>
+                <span class="value">@Model.BalanceDueInfo.Region</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Customer:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.Customer)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">BookingId:</span>
+                <span class="value">@Model.BalanceDueInfo.BookingId</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Bol#:</span>
+                <span class="value">@Model.BalanceDueInfo.Bol</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="item col-md-3">
+                <span class="bdlabel">Bol Execution Date:</span>
+                <span class="value">@Model.BalanceDueInfo.BolExecutionDate.ToString("d")</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Invoice Status:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.InvoiceStatus)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Collection Status:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.CollectionStatus)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Client GLStatus:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.ClientGlStatus)</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="item col-md-3">
+                <span class="bdlabel">Invoice#:</span>
+                <span class="value">@Model.BalanceDueInfo.BalanceDueInvoice</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Invoice Date:</span>
+                <span class="value">@Convert.ToDateTime(Model.BalanceDueInfo.BalanceDueInvoiceDate).ToString("d")</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Move Type:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.MoveType)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Origin:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.OriginLocationCode)</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="item col-md-3">
+                <span class="bdlabel">POL / POD:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.PortOfLoading) / @CheckNull(Model.BalanceDueInfo.PortOfDischarge)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Destination:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.DestinationLocationCode)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">BD ErrorCode:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.BDErrorCode)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">CloseReasonCode:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.CloseReasonCode)</span>
+                @*<span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(Model.BalanceDueInfo.CloseReasonCode) ? Model.BalanceDueInfo.CloseReasonCode : "-")</span>*@
+            </div>
+        </div>
+        <div class="item row">
+            <div class="bdlabel col-md-12">BDDescription:</div>
+            <textarea class="value bdDesc" readonly>@Model.BalanceDueInfo.BDDescription</textarea>
+        </div>
+        <div class="row">
+            <div class="item col-md-3">
+                <span class="bdlabel">BD Amount:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.BalanceDueAmountWithCurrency)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">BD AmountPaid:</span>
+                <span class="value">@Html.Raw(Model.BalanceDueInfo.BalanceDueAmountPaid)</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Revenue Analyst Auditor:</span>
+                @if (Common.CanRunAction.EditBDRevenueAnalystFields)
+                    {
+                @Html.DropDownListFor(x => x.BalanceDueInfo.RevenueAnalystAuditor, Model.RevenueAnalystAuditors, null, new { id = "ddlRevAnalystAuditor", @class = "form-control" })
+                <div id="lblRevAnalystAuditorMsg" style="color:#ff7000"></div>
+                    }
+                    else
+                    {
+                <span class="value">@CheckNull(Model.BalanceDueInfo.RevenueAnalystAuditorName)</span>
+                    }
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Revenue Analyst Collector:</span>
+                @if (Common.CanRunAction.EditBDRevenueAnalystFields)
+                    {
+                @Html.DropDownListFor(x => x.BalanceDueInfo.RevenueAnalystCollector, Model.RevenueAnalystCollectors, null, new { id = "ddlRevAnalystCollector", @class = "form-control" })
+                <div id="lblRevAnalystCollectorMsg" style="color:#ff7000"></div>
+                    }
+                    else
+                    {
+                <span class="value">@CheckNull(Model.BalanceDueInfo.RevenueAnalystCollectorName)</span>
+                    }
+            </div>
+        </div>
+        <div class="row">
+            <div class="item col-md-3">
+                <span class="bdlabel">Date Added:</span>
+                <span class="value">@Model.BalanceDueInfo.DateAdded.ToString("g")</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">Last Modified:</span>
+                <span class="value">@Model.BalanceDueInfo.LastModified.ToString("g")</span>
+            </div>
+            <div class="item col-md-3">
+                <span class="bdlabel">LastModified By:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.LastModifiedBy)</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="item col-md-12">
+                <span class="bdlabel">Comments:</span>
+                <span class="value">@CheckNull(Model.BalanceDueInfo.Comments)</span>
+            </div>
+        </div>
+        <div class="row btnSuppButtons">
+            <button class="btn btn-primary btn-lg btnGenSuppBill col-md-6"><i class="fa fa-magic"></i> Generate Supplimentary Billing</button>
+            <button type="button" value="Exit" class="close-animatedModal btnExit col-md-6 btn btn-lg btn-default text-right right" style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+        </div>
+        <div id="SupplimentaryBilling" class="hidden">
+            <textarea id="suppBillDesc" class="bdDesc" style="font-size:16px;" readonly>@Html.Raw(Model.BDDesc)</textarea>
+        </div>
+        <div class="row copyButton hidden">
+            <button class="btn btn-primary btn-lg btnCopyToClipboard col-md-6"><i class="fa fa-clipboard"></i> Copy Description to Clipboard</button>
+            <button type="button" value="Exit" class="close-animatedModal col-md-6 btn btn-lg btn-default text-right right" style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+        </div>
+        <div class="row">
+            <div id="lblBDMsg" style="color:green;"></div>
+        </div>
+    </div>
+    }
+    else
+    {
+    @Html.Raw("No Balance Due found!")
+    }
+</div>
+
+@functions {
+    string CheckNull(string value)
+    {
+        return !string.IsNullOrWhiteSpace(value) ? value : "-";
+    }
+}
+
+<script>
+    function copyToClipboard(element) {
+        var $temp = $("<textarea>");
+        $("body").append($temp);
+        var val = $(element).text();
+        $temp.val(val).select();
+        document.execCommand("copy");
+        $temp.remove();
+    }
+
+    $("body").on("click", ".btnGenSuppBill", null, function () {
+        $("#SupplimentaryBilling").removeClass("hidden");
+        $(".copyButton").removeClass("hidden");
+        $(".btnExit").addClass("hidden");
+    });
+    $("body").on("click", ".btnCopyToClipboard", null, function () {
+        //executeCopy2($("#suppBillDesc").val())
+        copyToClipboard("#suppBillDesc");
+        $("#lblBDMsg").html("Description copied to clipboard!");
+    });
+    var balId = $("#BalanceDueInfo_BalanceId").val();
+    $("#ddlRevAnalystAuditor").change(function () {
+        var auditor = $("#ddlRevAnalystAuditor").val();
+        console.log(balId);
+        console.log(auditor);
+        if (auditor.length <= 0) {
+            $("#lblRevAnalystAuditorMsg").html("Please select Analyst Auditor!");
+            return;
+        }
+        $.post(SiteRoot + "BalanceDues/UpdateBDRevAnalyst?balanceId=" + balId + "&revenueAnalyst=" + auditor + "&isAuditor=true", null, function (data) {
+            $("#lblRevAnalystAuditorMsg").html(data);
+        });
+    });
+    $("#ddlRevAnalystCollector").change(function () {
+        var collector = $("#ddlRevAnalystCollector").val();
+        console.log(balId);
+        console.log(collector);
+        if (collector.length <= 0) {
+            $("#lblRevAnalystCollectorMsg").html("Please select Analyst Collector!");
+            return;
+        }
+        $.post(SiteRoot + "BalanceDues/UpdateBDRevAnalyst?balanceId=" + balId + "&revenueAnalyst=" + collector + "&isAuditor=false", null, function (data) {
+            $("#lblRevAnalystCollectorMsg").html(data);
+        });
+    });
+</script>

@@ -1,0 +1,21 @@
+﻿@model ArgCore.Models.SendCodeViewModel
+@{
+    ViewBag.Title = "Send";
+}
+@{
+    Layout = "~/Views/Shared/_AdminLayout_v1.cshtml";
+}
+
+<div id="SendCode" class="text-center">
+    @using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, false, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("rememberMe", @Model.RememberMe)
+        <h1>Send verification code</h1>
+        <div class="sendCodeForm">
+            <h4>Select Two-Factor Authentication Provider</h4>
+            @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers, new { @class = "form-control ddlProviderOptions" })
+            <input type="submit" value="Submit" class="btn btn-lg btnSendCode" />
+        </div>
+    }
+</div>

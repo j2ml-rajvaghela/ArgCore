@@ -1,0 +1,884 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.ClientManagementReports
+@using ArgCore.Helpers
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ARG Management Snapshot</title>
+    <link rel="stylesheet" href="~/res/css/chart.css" />
+    @*<script src="https://atlas-st.nextpageit.com/res/js/Chart.bundle.min.js?c=13" type="text/javascript"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.2/Chart.bundle.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.bundle.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>*@
+    @*<link rel="stylesheet" href="https://atlas-st.nextpageit.com/res/css/Chart.css?c=13" />*@
+    @*<script src="https://atlas-st.nextpageit.com/res/js/Chart.js?c=13" type="text/javascript"></script>*@
+    @*<script type="text/javascript" src="@(Common.MyRoot)res/js/jquery.min.js"></script>*@
+    <script type="text/javascript" src="https://atlas-st.nextpageit.com/res/js/jquery.min.js?c=12"></script>
+    @*<script type="text/javascript" src="https://atlas-st.nextpageit.com/res/js/Chart_1.1.1.min.js?c=23"></script>*@
+    <script src="@(Common.MyRoot)res/js/Chart_1.1.1.min.js" type="text/javascript"></script>
+    @*<script src="http://www.chartjs.org/assets/Chart.min.js" type="text/javascript"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.0/Chart.bundle.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js"></script>*@
+    @*<script src="https://atlas-st.nextpageit.com/res/js/Chart.bundle.min.js?c=13" type="text/javascript"></script>*@
+
+    <style type="text/css">
+        body {
+            font-family: 'Courier New';
+        }
+
+        .reportPDF {
+            /*padding: 10px 20px;*/
+            width: 1200px;
+        }
+
+        .pagebreak {
+            page-break-after: always;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            text-align: center;
+            padding-bottom: 2px;
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+
+        .period {
+            font-size: 20px;
+        }
+
+        .myLabel {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .dateDetailsBlock {
+            padding-bottom: 20px;
+        }
+
+        #RevenueRecovList {
+            text-align: center;
+        }
+
+        #RevenueRecovList th {
+            font-size: 17px;
+            padding: 8px;
+        }
+
+        #RevenueRecovList td {
+            padding: 8px;
+            font-size: 17px;
+        }
+
+        .revRec .value {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .revRec td {
+            padding-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .revRec td .myLabel {
+            font-weight: 700;
+        }
+
+        .revRec {
+            border-top: 3px solid #000;
+            padding-top: 15px;
+        }
+
+        .table-bordered {
+            border: 1px solid #ddd;
+        }
+
+        .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+            border-top: 0;
+            border-right: 0;
+        }
+
+        .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            padding: 8px;
+            line-height: 1.42857143;
+        }
+
+        .DetailInfo th {
+            background-color: #efeeee;
+            font-size: 18px;
+        }
+
+        .DetailInfo td {
+            font-size: 17px;
+            border-top: none !important;
+            border-left: none !important;
+        }
+    </style>
+</head>
+<body>
+    @{string regions = "";}
+    <page>
+        <div class="reportPDF page0 pagebreak">
+            <table style="width:100%">
+                <tr>
+                    <td style="text-align:center;border-bottom: 1px solid #ccc;padding-bottom: 6px;">
+                        <h1 id="h1">ARG Management Snapshot</h1> <span class="period">(@Html.Raw(Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate))</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: 1px solid #ccc;">
+                        <table class="dateDetailsBlock" style="vertical-align:top; width: 100%;">
+                            <tr>
+                                <td class="left-block" style="vertical-align:top; width: 60%;">
+                                    <img width="300px" src="https://atlas-st.nextpageit.com/images/InvoicePDFLogo.png" class="logo" />
+                                    @*<img width="300px" src="@Server.MapPath("~/images/InvoicePDFLogo.png")" class="logo" />*@
+                                </td>
+                                <td class="right-block" style="width: 40%;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td class="clientDetails" style="vertical-align: top;">
+                                                @if (!string.IsNullOrWhiteSpace(Model.Company))
+                                                {
+                                                <div class="client">
+                                                    <span class="myLabel">Client: </span><span class="value">@Model.Company.ToUpper()</span>
+                                                </div>
+                                                }
+                                                <div class="reportPeriod">
+                                                    <span class="myLabel">Period: </span><span class="value">@Html.Raw(@Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate)</span>
+                                                </div>
+                                                @if (Model.SearchOptions.Regions == null || !Model.SearchOptions.Regions.Any())
+                                                {
+                                                    regions = "All";
+                                                }
+                                                else
+                                                {
+                                                    regions = string.Join(",", Model.SearchOptions.Regions);
+                                                }
+                                                <div class="region">
+                                                    <span class="myLabel">Region: </span><span class="value">@Html.Raw(regions)</span>
+                                                </div>
+                                                <div class="reportGen">
+                                                    <span class="myLabel">Report Generated: </span><span class="value">@DateTime.Now.ToLongDateString()</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @if (Model.RevenueRecovered != null && Model.RevenueRecovered.Any())
+            {
+                var firstDateOfYear = new DateTime(DateTime.Now.Year, 1, 1);
+            <h2>Report Summary</h2>
+            <table id="RevenueRecovList" class="table row DetailInfo" style="width:100%;border: 2px solid #DFDFDF;">
+                <thead>
+                    <tr>
+                        <th style="width:10%;">Region</th>
+                        <th style="width:30%;">Revenue Recovered for Period <br /> @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</th>
+                        <th style="width:30%;">Revenue Recovered for YTD <br />@firstDateOfYear.ToString("MM-dd-yyy") to @Model.SearchOptions.ClientEndDate</th>
+                        <th style="width:30%;">Revenue Recovered for Past Year <br />@DateTime.Now.AddYears(-1).ToString("MM-dd-yyy") to @Model.SearchOptions.ClientEndDate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RevenueRecovered)
+                        {
+                    <tr>
+                        <td>@item.Region</td>
+                        <td>@item.RevenueRecoveredForPeriodFormatted</td>
+                        <td>@item.RevenueRecoveredForYTDFormatted</td>
+                        <td>@item.RevenueRecoveredForPastYearFormatted</td>
+                    </tr>
+                        }
+                </tbody>
+            </table>
+            }
+        </div>
+    </page>
+    @{var idx = 0;}
+    @if (Model.RevenueRecovered != null && Model.RevenueRecovered.Count > 0)
+    {
+        var pbClass = "pagebreak";
+        var totalRevRec = Model.RevenueRecovered.Count;
+        foreach (var item in Model.RevenueRecovered)
+        {
+            idx++;
+            if (idx >= totalRevRec)
+            {
+                pbClass = "";
+            }
+    <page>
+        <div class="reportPDF page@(idx) @pbClass">
+            <table style="width:100%">
+                <tr>
+                    <td style="text-align: center;border-bottom: 1px solid #ccc;padding-bottom: 6px;">
+                        <h1>ARG Management Snapshot (Detail)</h1> <span class="period">(@Html.Raw(@Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate))</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="dateDetailsBlock" style="vertical-align:top; width: 100%;">
+                            <tr>
+                                <td class="left-block" style="vertical-align:top; width: 60%;">
+                                    @*<img width="300px" src="@Server.MapPath("~/images/InvoicePDFLogo.png")" class="logo" />*@
+                                    <img width="300px" src="https://atlas-st.nextpageit.com/images/InvoicePDFLogo.png" class="logo" />
+                                </td>
+                                <td class="right-block" style="width: 40%;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td class="clientDetails" style="vertical-align: top;">
+                                                @if (!string.IsNullOrWhiteSpace(Model.Company))
+                                                        {
+                                                <div class="client">
+                                                    <span class="myLabel">Client: </span><span class="value">@Model.Company.ToUpper()</span>
+                                                </div>
+                                                        }
+                                                <div class="reportPeriod">
+                                                    <span class="myLabel">Period: </span><span class="value">@Html.Raw(@Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate)</span>
+                                                </div>
+                                                <div class="region">
+                                                    <span class="myLabel">Region: </span><span class="value">@Html.Raw(regions)</span>
+                                                </div>
+                                                <div class="reportGen">
+                                                    <span class="myLabel">Report Generated: </span><span class="value">@DateTime.Now.ToLongDateString()</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @{var firstDateOfYear = new DateTime(DateTime.Now.Year, 1, 1);}
+            <table class="row revRec" style="width:100%">
+                <tr>
+                    <td class="myLabel"><b>Region</b></td>
+                    <td class="value"><b>@item.Region</b></td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Revenue Recovered for period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</td>
+                    <td class="value">@item.RevenueRecoveredForPeriodFormatted</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Revenue Recovered for YTD @firstDateOfYear.ToString("MM-dd-yyy") to @Model.SearchOptions.ClientEndDate</td>
+                    <td class="value">@item.RevenueRecoveredForYTDFormatted</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Current Open Balance (collection efforts continue)</td>
+                    <td class="value">@StringExtensions.FormattedValue(Model.CurrentOpenBal)</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Collection Rate (past 12 months)</td>
+                    <td class="value">@(Model.CollectionRate)@Html.Raw("%")</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Revenue Recovered Rate as % of Scope (past 12 months)</td>
+                    <td class="value">@(Model.RevenueLossRate)@Html.Raw("%")</td>
+                </tr>
+            </table>
+
+            @{var nineHundredDaysAgo = DateTime.Today.AddDays(-900);
+                    var ninetyDaysAgo = DateTime.Today.AddDays(-90);}
+            <table class="row revLossTrend pagebreak" style="width:100%;margin-top:50px;">
+                <tr>
+                    <td class="myLabel" style="font-size: 25px;"><b>Revenue Recovered Trend (% of scope)</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        @*<div class="canvas-holder" style="width: 818px; height: 409px;">
+                                <canvas id="revenueLossTrend" width="1636" height="818" style="width: 818px; height: 409px;"></canvas>
+                            </div>*@
+                        <canvas id="revenueLossTrend" width="1200" height="600" style="margin-top: 50px;"></canvas>
+                    </td>
+                </tr>
+            </table>
+            <table class="row revLossByBDErrorCode pagebreak" style="width:100%;margin-top:30px;min-height:900px !important;">
+                <tr>
+                    <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Revenue Recovered by Balance Due Error Code for Period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        @*<div class="canvas-holder" style="width: 818px; height: 409px;">
+                                <canvas id="revLossByBDErrorCode" width="818" height="409" style="width: 818px; height: 409px;"></canvas>
+                            </div>*@
+                        <canvas id="revLossByBDErrorCode" width="1200" height="600" style="margin-top: 50px;"></canvas>
+                    </td>
+                </tr>
+                @if (Model.RevLossByBDErrorCode != null && Model.RevLossByBDErrorCode.Any())
+                        {
+                <tr>
+                    <td>
+                        <table style="width:100%;margin-top: 40px;" class="table table-bordered table-striped DetailInfo">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">BD Error Code</th>
+                                    <th class="text-right">Revenue Recovered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var revLoss in Model.RevLossByBDErrorCode)
+                                            {
+                                <tr>
+                                    <td>@revLoss.BDErrorCode (@revLoss.ShortDescription)</td>
+                                    <td class="text-right">@(String.Format("{0:n}", revLoss.PaymentAmount)) @revLoss.Currency</td>
+                                </tr>
+                                            }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                        }
+            </table>
+            <table class="row revByCustomer pagebreak" style="width:100%;margin-top:30px;min-height:900px !important;">
+                <tr>
+                    <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Revenue Recovered by Customer (top 20) for Period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        @*<div style="width:900px; height:500px;">*@
+                        <canvas id="revenueByCustomer" width="1200" height="600" style="margin-top: 50px;"></canvas>
+                        @*</div>*@
+                    </td>
+                </tr>
+
+                @if (Model.RevByCustomer != null && Model.RevByCustomer.Any())
+                        {
+                <tr>
+                    <td>
+                        <table style="width:100%;margin-top: 40px;" class="table table-bordered table-striped DetailInfo">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Customer ID</th>
+                                    <th class="text-left">Customer</th>
+                                    <th class="text-right">Revenue Recovered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var revByCust in Model.RevByCustomer)
+                                            {
+                                <tr>
+                                    <td>@revByCust.CustomerID</td>
+                                    <td>@revByCust.CustomerName</td>
+                                    <td class="text-right">@(String.Format("{0:n}", revByCust.PaymentTotal)) @revByCust.Currency</td>
+                                </tr>
+                                            }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                        }
+            </table>
+            @{var pageBreakClass = "";}
+            @if (Model.RevRecoveredByOrigin != null && Model.RevRecoveredByOrigin.Count > 20)
+                    {
+                        pageBreakClass = "pagebreak";
+                    }
+            <table class="row revRecByOrigin @pageBreakClass" style="width:100%;margin-top:50px;min-height:900px !important;">
+                <tr>
+                    <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Revenue Recovered by Origin  for Period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <canvas id="revenueRecByOrigin" width="1200" height="600" style="margin-top: 50px;"></canvas>
+                    </td>
+                </tr>
+            </table>
+            @if (Model.RevRecoveredByOrigin != null && Model.RevRecoveredByOrigin.Any())
+                    {
+            <table style="width:100%;margin-top: 30px;" class="table table-bordered table-striped DetailInfo">
+                <thead>
+                    <tr>
+                        <th class="text-left">Origin Location Code</th>
+                        <th class="text-right">Revenue Recovered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var revRec in Model.RevRecoveredByOrigin)
+                                {
+                    <tr>
+                        <td>@revRec.OriginLocationCode</td>
+                        <td class="text-right">@(String.Format("{0:n}", revRec.PaymentAmount)) @revRec.Currency</td>
+                    </tr>
+                                }
+                </tbody>
+            </table>
+                    }
+        </div>
+    </page>
+        }
+    }
+
+    @*<script>
+            Chart.pluginService.register({
+                beforeRender: function (chart) {
+                    if (chart.config.options.showAllTooltips) {
+                        // create an array of tooltips
+                        // we can't use the chart tooltip because there is only one tooltip per chart
+                        chart.pluginTooltips = [];
+                        chart.config.data.datasets.forEach(function (dataset, i) {
+                            chart.getDatasetMeta(i).data.forEach(function (sector, j) {
+                                chart.pluginTooltips.push(new Chart.Tooltip({
+                                    _chart: chart.chart,
+                                    _chartInstance: chart,
+                                    _data: chart.data,
+                                    _options: chart.options,
+                                    _active: [sector]
+                                }, chart));
+                            });
+                        });
+
+                        // turn off normal tooltips
+                        chart.options.tooltips.enabled = false;
+                    }
+                },
+                afterDraw: function (chart, easing) {
+                    if (chart.config.options.showAllTooltips) {
+                        // we don't want the permanent tooltips to animate, so don't do anything till the animation runs atleast once
+                        if (!chart.allTooltipsOnce) {
+                            if (easing !== 1)
+                                return;
+                            chart.allTooltipsOnce = true;
+                        }
+
+                        // turn on tooltips
+                        chart.options.tooltips.enabled = true;
+                        Chart.helpers.each(chart.pluginTooltips, function (tooltip) {
+                            tooltip.initialize();
+                            tooltip.update();
+                            // we don't actually need this since we are not animating tooltips
+                            tooltip.pivot();
+                            tooltip.transition(easing).draw();
+                        });
+                        chart.options.tooltips.enabled = false;
+
+                        window.status = 'ready_to_print';
+                    }
+                }
+            })
+        </script>*@
+
+    <script>
+        //Line Chart
+        var lineXAxisData;
+        var lineYAxisData;
+        var lineXAxisData = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.ScopeDate)));
+        var lineYAxisData = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.RevenueLossTrendValue)));
+        if (lineXAxisData.length > 0 && lineYAxisData.length > 0)
+        {
+            Chart.types.Line.extend({
+                name: "LineAlt",
+                initialize: function (data) {
+                    this.chart.height -= 30;
+
+                    Chart.types.Line.prototype.initialize.apply(this, arguments);
+
+                    var ctx = this.chart.ctx;
+                    ctx.save();
+                    // text alignment and color
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "bottom";
+                    ctx.fillStyle = this.options.scaleFontColor;
+                    // position
+                    var x = this.chart.width / 2;
+                    var y = this.chart.height + 15 + 5;
+                    // change origin
+                    ctx.translate(x, y)
+                    ctx.fillText("Scope Date", 0, 0);
+                    ctx.restore();
+                }
+            });
+            var lineData= {
+                labels:lineXAxisData,
+                datasets: [
+                    {
+                        label: 'Loss Rate',
+                        data: lineYAxisData,
+                        fillColor: "rgba(142, 223, 223, 1)",
+                        strokeColor: "rgba(76, 192, 192, 1)",
+                        pointColor: "rgba(76, 192, 192, 1)",
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            var myoptions =
+           {
+               tooltipTemplate:"ScopeDate: "+"<%= label%>"+" | Loss Rate: "+ "<%=value %>",
+
+               showTooltips: true,
+
+               onAnimationComplete: function()
+               {
+                   this.showTooltip(this.datasets[0].points, true);
+               },
+               tooltipEvents: [],
+           };
+            //var context = $('#revenueLossTrend').get(0).getContext('2d');
+            //var chart = new Chart(context).Line(lineData, myoptions);
+            var ctx = document.getElementById('revenueLossTrend').getContext('2d');
+            new Chart(ctx).LineAlt(lineData,myoptions);
+        }
+    </script>
+    @if (Model.RevLossByBDErrorCode == null)
+    {
+        return;
+    }
+    <script>
+        var colors = ["#FF5A5E", "#FDB45C", "#46BFBD", "#2ecc71","#3498db","#95a5a6","#9b59b6","#f1c40f","#e74c3c","#34495e"]
+        var pieLabels; var pieData;
+        pieLabels = @Html.Raw(JavaScript.Serialize(Model.RevLossByBDErrorCode.Select(x => x.BDErrorCode)));
+        pieData = @Html.Raw(JavaScript.Serialize(Model.RevLossByBDErrorCode.Select(x => x.PaymentAmount)));
+        var pieDataFormatted = [];
+        for(var i=0;i<pieData.length;i++){
+            var pie = {};
+            pie.color =colors[i];
+            pie.value = pieData[i];
+            pie.highlight= "#FFC870";
+            pie.label = pieLabels[i];
+            pieDataFormatted.push(pie);
+        }
+        console.log(pieDataFormatted);
+        var options =
+            {
+                tooltipTemplate: "<%= label%>"+": "+"<%=value %>",
+                onAnimationComplete: function()
+                {
+                    this.showTooltip(this.segments, true);
+                },
+                tooltipEvents: [],
+                animation:false,
+                showTooltips: true
+            };
+        var context = $('#revLossByBDErrorCode').get(0).getContext('2d');
+        var chart = new Chart(context).Doughnut(pieDataFormatted, options);
+        //context.height=500;
+        //context.width=500;
+        //var myChart = new Chart(context, {
+        //    type: 'doughnut',
+        //    data: {
+        //        labels: ["M", "T", "W", "T", "F", "S", "S"],
+        //        datasets: [{
+        //            backgroundColor: [
+        //              "#2ecc71",
+        //              "#3498db",
+        //              "#95a5a6",
+        //              "#9b59b6",
+        //              "#f1c40f",
+        //              "#e74c3c",
+        //              "#34495e"
+        //            ],
+        //            data: [22, 19, 3, 17, 28, 24, 7]
+        //        }]
+        //    },
+        //    options:  {
+        //        events: true,
+        //        animation: {
+        //            duration: 0
+        //        ,
+        //            onComplete: function () {
+        //                var self = this;
+
+        //                var elementsArray = [];
+        //                Chart.helpers.each(self.data.datasets, function (dataset, datasetIndex) {
+        //                    Chart.helpers.each(dataset.metaData, function (element, index) {
+        //                        var tooltip = new Chart.Tooltip({
+        //                            _chart: self.chart,
+        //                            _data: self.data,
+        //                            _options: self.options,
+        //                            _active: [element]
+        //                        }, self);
+
+        //                        tooltip.update();
+        //                        tooltip.transition(Chart.helpers.easingEffects.linear).draw();
+        //                    }, self);
+        //                }, self);
+        //            }},
+
+        //        responsive: false,
+        //        responsiveAnimationDuration: 0,
+        //        //tooltips: enabled
+        //    }
+        //});
+        //var myPieChart = new Chart(context,{
+        //    type: 'pie',
+        //    data: pieDataFormatted,
+        //    options: options
+        //});
+    </script>
+    @if (Model.RevByCustomer == null)
+    {
+        return;
+    }
+    <script>
+        var custColors = ["#FF5A5E", "#FDB45C", "#46BFBD", "#2ecc71","#3498db","#95a5a6","#9b59b6","#f1c40f","#e74c3c","#34495e"]
+        var pieCustLabels; var pieCustData;
+        pieCustLabels = @Html.Raw(JavaScript.Serialize(Model.RevByCustomer.Select(x => x.CustomerID)));
+        pieCustData = @Html.Raw(JavaScript.Serialize(Model.RevByCustomer.Select(x => x.PaymentTotal)));
+        var pieCustDataFormatted = [];
+        for(var i=0;i<pieData.length;i++){
+            var pie = {};
+            pie.color =custColors[i];
+            pie.value = pieCustData[i];
+            pie.highlight= "#FFC870";
+            pie.label = pieCustLabels[i];
+            pieCustDataFormatted.push(pie);
+        }
+        console.log(pieCustDataFormatted);
+        var options =
+            {
+                tooltipTemplate: "<%= label%>"+": "+"<%=value %>",
+                onAnimationComplete: function()
+                {
+                    this.showTooltip(this.segments, true);
+                },
+                tooltipEvents: [],animation : false,
+                showTooltips: true
+            };
+        var context = $('#revenueByCustomer').get(0).getContext('2d');
+        var chart = new Chart(context).Doughnut(pieCustDataFormatted, options);
+        //var myPieChart = new Chart(context,{
+        //    type: 'pie',
+        //    data: pieCustDataFormatted,
+        //    options: options
+        //});
+    </script>
+
+    @if (Model.RevRecoveredByOrigin == null)
+    {
+        return;
+    }
+    <script src="https://atlas-st.nextpageit.com/res/js/Chart.bundle.min.js?c=13" type="text/javascript"></script>
+    @*<script>
+            //Line Chart
+            var lineXAxisData;
+            var lineYAxisData;
+            var lineXAxisData = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.ScopeDate)));
+            //var lineXAxisDataLabel = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.ScopeDateTooltipLabel)));
+            var lineYAxisData = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.RevenueLossTrendValue)));
+            if (lineXAxisData.length > 0 && lineYAxisData.length > 0)
+            {
+                //function ToJavaScriptDate(value) {
+                //    var pattern = /Date\(([^)]+)\)/;
+                //    var results = pattern.exec(value);
+                //    var dt = new Date(parseFloat(results[1]));
+                //    return dt.getDate() + "/" + (dt.getMonth() + 1) + "/" + dt.getFullYear();
+                //}
+                //for (var i = 0; i < lineXAxisData.length; i++) {
+                //    lineXAxisData[i] = ToJavaScriptDate(lineXAxisData[i]);
+                //    //console.log(lineXAxisData[i]);
+                //}
+                var lineOptions = {
+                    type: 'line',
+                    animation : false,
+                    data: {
+                        labels:lineXAxisData,
+                        datasets: [
+                            {
+                                label: 'Loss Rate',
+                                data: lineYAxisData,
+                                borderColor: '#4CC0C0',
+                                backgroundColor: '#d0f8f8',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        tooltips: {
+                            callbacks: {
+                                title: function (tooltipItem, data) { return 'Scope Date: '+ data.labels[tooltipItem[0].index]; }
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        showAllTooltips: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    padding: 20,
+                                    fontSize: 20,
+                                    beginAtZero: true
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Revenue Loss Rate (%)',
+                                    fontColor: "black",
+                                    fontSize: 25
+                                }
+                            }],
+                            xAxes: [{
+                                ticks: {
+                                    fontSize: 20,
+                                    padding: 20,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Scope Date',
+                                    fontColor: "black",
+                                    fontSize: 25
+                                }
+                            }]
+                        }
+                    }
+                }
+
+                var lineCtx = document.getElementById('revenueLossTrend').getContext('2d');
+                new Chart(lineCtx, lineOptions);
+            }
+        </script>*@
+    <script>
+        //function numberWithCommas(x) {
+        //    var parts = x.toString().split(".");
+        //    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        //    return parts.join(".");
+        //}
+        //Bar Chart
+        var barXAxisData;
+        var barYAxisData;
+
+        barXAxisData = @Html.Raw(JavaScript.Serialize(Model.RevRecoveredByOrigin.Select(x => x.OriginLocationCode)));
+        barYAxisData = @Html.Raw(JavaScript.Serialize(Model.RevRecoveredByOrigin.Select(x => x.PaymentAmount)));
+        //for (var i = 0; i < barYAxisData.length; i++) {
+        //    barYAxisData[i] = numberWithCommas(barYAxisData[i]);
+        //    //console.log(barYAxisData[i]);
+        //}
+        if (barXAxisData.length > 0 && barYAxisData.length > 0)
+        {
+            var barData = {
+                labels: barXAxisData,
+                datasets: [
+                    {
+                        label: 'Revenue Recovered',
+                        backgroundColor: "#8edfdf",
+                        borderColor: "#4CC0C0",
+                        borderWidth: 2,
+                        hoverBackgroundColor: "#8edfdf",
+                        hoverBorderColor: "#4CC0C0",
+                        data: barYAxisData,
+                    }
+                ]
+            };
+            var barOption = {
+                legend: {
+                    display: false
+                },
+                animation : false,
+                scaleLabel:
+              function(label){return  label.value.toString().replace(/\B(?=(\d{2})+(?!\d))/g, ",");},
+                //tooltips:{
+                //    callbacks: {
+                //        label: function(tooltipItem, barYAxisData) {
+                //            var value = barYAxisData.datasets[0].data[tooltipItem.index];
+                //            var label = barYAxisData.labels[tooltipItem.index];
+                //            return label + ' ' + percentage + '%';
+                //        }
+                //    }
+                //},
+                scales: {
+                    yAxes:[{
+                        //valueFormatString:  "#,##0.##",
+                        stacked:true,
+                        gridLines: {
+                            display:false
+                        }, ticks: {
+                            fontSize: 20,
+                            beginAtZero: true
+                        },
+                        //scaleLabel: function (valuePayload) {
+                        //    return Number(valuePayload.value).toFixed(2).replace('.',',');
+                        //},
+                        //         scaleLabel:
+                        //function(label){return  label.value.toString().replace(/\B(?=(\d{2})+(?!\d))/g, ",");}
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Recovered',
+                            fontColor: "black",
+                            fontSize: 25
+                        }
+                    }],
+                    xAxes:[{
+                        gridLines: {
+                            display:false
+                        },
+                        ticks: {
+                            fontSize: 20
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Origin',
+                            fontColor: "black",
+                            fontSize: 25
+                        }
+                    }]
+                }
+            };
+            var barCanvas = document.getElementById('revenueRecByOrigin');
+            var myBarChart = Chart.Bar(barCanvas,{
+                data:barData,
+                options:barOption
+            });
+        }
+        @*var barXAxisData;
+        var barYAxisData;
+        barXAxisData = @Html.Raw(JavaScript.Serialize(Model.RevRecoveredByOrigin.Select(x => x.OriginLocationCode)));
+        barYAxisData = @Html.Raw(JavaScript.Serialize(Model.RevRecoveredByOrigin.Select(x => x.PaymentAmount)));
+        var barChartData = {
+            labels: barXAxisData,
+            datasets: [
+                {
+                    label: 'Revenue Recovered',
+                    backgroundColor: "#8edfdf",
+                    borderColor: "#4CC0C0",
+                    borderWidth: 2,
+                    hoverBackgroundColor: "#8edfdf",
+                    hoverBorderColor: "#4CC0C0",
+                    data: barYAxisData,
+                }
+            ]
+        };
+        //var ctx = document.getElementById("revenueRecByOrigin").getContext("2d");
+        var barContext = $('#revenueRecByOrigin').get(0).getContext('2d');
+        var BarChart = new Chart(barContext).Bar(barChartData, lineOptions);
+        //var barChart = new Chart(ctx,{
+        //    type: 'bar',
+        //    data: barChartData,
+        //    options: {
+        //        tooltipTemplate: "<%= label+value %>",
+        //        onAnimationComplete: function()
+        //        {
+        //            this.showTooltip(this.segments, true);
+        //        },
+        //        tooltipEvents: [],
+        //        showTooltips: true,
+        //        animation:false
+        //    }
+        //});*@
+    </script>
+</body>
+</html>

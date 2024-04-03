@@ -1,0 +1,54 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@* @using Dashboard *@
+@* @using ARG *@
+<div id="MenuItemsList" class="main-content row">
+    <div class="row text-right right options exportIcon">
+        <img src="~/images/export.png" />
+    </div>
+    <div id="searchBlock" class="row">
+        <div class="col-md-10 searchBlock">
+            <input id="txtSearch" type="text" name="searchquery" class="form-control txtSearch" placeholder="Type here to search...">
+            <a id="btnSearch" lass="Search" href="javascript:void(0);"><span class="fa fa-search"></span></a>
+        </div>
+        <div class="col-md-2 text-right right addItem">
+            <a href="@(Common.MyRoot)MenuItems/Save?itemId=0" title="Add Menu Item">+ Add Menu Item</a>
+        </div>
+    </div>
+    @if (Model.MenuItemsList != null && Model.MenuItemsList.Count > 0)
+    {
+        <table id="menus-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="name right-border">ITEM ID</th>
+                    <th class="menu right-border">MENU</th>
+                    <th class="dispName right-border">DISPLAY NAME</th>
+                    @*<th class="parent">Parent</th>*@
+                    <th class="link">LINK</th>
+                    <th class="imgSrc">IMG SRC</th>
+                </tr>
+            </thead>
+            <tbody class="menu-details">
+                @foreach (var item in Model.MenuItemsList)
+                {
+                    <tr>
+                        <td class="name">@item.ItemId</td>
+                        <td class="menu">@item.MenuItemDisName</td>
+                        <td class="dispName">
+                            <a href="@(Common.MyRoot)MenuItems/Save?itemId=@item.ItemId" title="Edit menu Item">@item.DisplayName</a>
+                        </td>
+                        @*<td class="parent">@item.Parent</td>*@
+                        <td class="link">@item.Link</td>
+                        <td class="imgSrc">@item.ImgSrc</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No items found!</h3>")
+    }
+</div>

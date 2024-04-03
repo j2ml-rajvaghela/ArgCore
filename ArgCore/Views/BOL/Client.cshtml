@@ -1,0 +1,55 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.BOLAuditing
+<div id="BOLAudFilters" class="main-content row">
+
+    <div id="BolAuditing">
+        @using (Html.BeginForm("Client", "BOL", FormMethod.Post, new { @id = "frmBOLAuditing", @class = "form-horizontal" }))
+        {
+            <h2>@Model.CommonObjects.Heading</h2>
+            <h4>General Filters</h4>
+
+            <div class="form-group">
+                <label for="inputUrl" class="mylabel control-label col-md-4">Select Client</label>
+                <div class="col-md-5">
+                    @{
+                        var noClearClass = "";
+                    }
+                    @if (Model.CompanyId > 0)
+                    {
+                        noClearClass = "neverclear";
+                    }
+                    else
+                    {
+                        noClearClass = "clearDDL";
+                    }
+                    @Html.DropDownListFor(x => x.CompanyId, Model.Companies, null, new { id = "ddlClients", @class = "form-control SelectActiveClient " + @noClearClass })
+                </div>
+            </div>
+            if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.BolBilltype)
+            {
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">Invoice Type</label>
+                    <div class="col-md-5">
+
+                        @Html.DropDownListFor(x => x.InvoiceType, Common.InvoiceTypeforClientDemo, null, new { id = "invoicetype", @class = "form-control" })
+                    </div>
+                </div>
+            }
+            if (Model.CompanyId <= 0)
+            {
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="clientLabel col-md-5">Please select client to get filters for searching results!</div>
+                </div>
+            }
+
+            <div class="btnReasrItemInfo">
+                <button id="GetAuditResults" type="submit" class="btn btn-lg btnLoadData" name="ButtonType"><img src="/images/GetResults.png" class="getResultsIcon" />Get Results</button>
+            </div>
+
+        }
+    </div>
+</div>

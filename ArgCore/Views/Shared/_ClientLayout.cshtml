@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ARG ATLAS</title>
+     @RenderSection("~/Content/css")
+    @* @Styles.Render("~/Content/css") *@
+    <link href="~/Content/materialdesignicons.min.css" rel="stylesheet" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <link href="~/Content/easyzoom.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.13.2.min.js"></script>
+    <script src="~/Scripts/knockout-3.5.1.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script src="~/Scripts/site.js"></script>
+</head>
+<body>
+    <!-- header -->
+    <div class="navbar navbar-inverse navbar-fixed-top client">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img src="~/images/arg_web.jpg" />
+            </div>
+            <!-- menu -->
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("ARGManager"))
+                    {
+                        <partial name="_ClientMenu" />
+                    }
+                </ul>
+                <partial name="_LoginPartial" />
+                @ViewBag.clientname
+            </div>
+        </div>
+    </div>
+
+    <!-- subheader-->
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-sm-5"><h2>@Html.Raw(ViewBag.Title)</h2></div>
+            <div class="col-sm-6">
+                <div id="progressouter" class="progress progress-striped" style="margin-top:10px; width:400px; display:none;">
+                    <div id="progress" class="progress-bar" style="width: 0;"><span id="progtext " class="sr-only">0% Complete</span></div>
+                </div>
+                <div id="divmessagerow" class="row">
+                    <div id="divmessage" class="col-lg-10 alert alert-success" style="display:none;">
+                        @if (ViewBag.message != null)
+                        {
+                            @ViewBag.message
+                            ;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - ARGOcean</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalNotYet" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Feature Not Yet Implemented</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This feature has not yet been implemented.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @RenderSection("~/bundles/bootstrap")
+    @* @Scripts.Render("~/bundles/bootstrap") *@
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src=""></script>
+    @*<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+    <script src="~/Scripts/bootstrap-dialog.js"></script>*@
+    <script src="~/Scripts/easyzoom.js"></script>
+    <link href="~/Content/blackbird.css" rel="stylesheet" />
+    <script src="~/Scripts/blackbird.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

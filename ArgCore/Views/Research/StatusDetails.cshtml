@@ -1,0 +1,49 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.ResearchStatusDetails
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Research Status Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="ClientGLStatusDetails">
+        <div class="headingBlock row">
+            <span class="heading">Change Research Status </span>
+            <span class="head-details">Bol#: @Model.ResearchInfo.BOL | Booking ID: @Model.ResearchInfo.BookingId</span>
+        </div>
+        <div class="UpdateResearchStatus" style="margin-top: 50px;">
+            @Html.HiddenFor(x => x.ResearchInfo.ResearchId)
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-1">Status</label>
+                    <div class="col-md-5">
+                        @Html.DropDownListFor(x => x.ResearchInfo.Status, Model.Statuses, new { @class = "form-control", id = "ddlResStatus" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5" id="lblResearchStatusMsg" style="color: green; font-size: 20px;"></div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/ReasearchStatus.js?c=@Common.VersionNo"></script>
+</body>
+</html>

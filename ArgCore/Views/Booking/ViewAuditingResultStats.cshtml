@@ -1,0 +1,100 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.BookingAuditingResult
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BOL Auditing Result Stats</title>
+    <partial name="PageHeader" />
+    <style>
+        body {
+            padding: 0;
+            background-color: #F4F5F7 !important;
+        }
+    </style>
+    <script src="https://rawgit.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
+    <script src="https://rawgit.com/mozilla/pdf.js/master/web/compatibility.js"></script>
+</head>
+<body>
+    <div id="BOLAudResultStats" class="main-content row">
+        @{
+            var queryId = Context.Request.Query["queryId"];
+            var groupType = Context.Request.Query["group"];
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Message))
+        {
+            @Html.Raw(Model.Message)
+            return;
+        }
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2 stats-Filter">Select Filter</label>
+            <div class="col-md-3">@Html.DropDownList("Booking-Stats-filter-list", new SelectList(Common.StatsBookingFilterList, "Value", "Text", groupType), "---Select---", new { data_queryid = queryId, @class = "form-control" })</div>
+        </div>
+        @if (Model.BolAuditResultStats != null && Model.BolAuditResultStats.Any())
+        {
+            <div class="right pull-right">
+                @if (Model.SpreedSheetUrl.Contains("re-login"))
+                {
+                    @Html.Raw(Model.SpreedSheetUrl)
+                }
+                else
+                {
+                    <a class="btn btn-primary" target="_blank" href="@Model.SpreedSheetUrl">Output to Spreadsheet</a>
+                }
+            </div>
+            <table id="stats-list" class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="options">Options</th>
+                        <th class="shipperId">CUSTOMER</th>
+                        <th class="origin">ORIGIN PORT</th>
+                        <th class="destination">DEST PORT</th>
+                        <th class="shippCount">SHIPMENT COUNT</th>
+                        <th class="minCharge">MIN CHARGES</th>
+                        <th class="maxCharge">Max. Charges</th>
+                        <th class="difference">DIFFERENCE</th>
+                        <th class="stndDvation">STANDARD DEVIATION</th>
+                        <th class="currency">Currency</th>
+                    </tr>
+                </thead>
+                <tbody class="client-details">
+                    @foreach (var item in Model.BolAuditResultStats)
+                    {
+                        <tr>
+                            <td>
+                                @if (string.IsNullOrEmpty(item.CustomerID))
+                                {
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Booking/Index?CustId=null&orig=@item.MATRCLOCA&dest=@item.MATRDLOCA&queryId=@queryId">View </a>
+
+                                }
+                                else
+                                {
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Booking/Index?CustId=@item.CustomerID&orig=@item.MATRCLOCA&dest=@item.MATRDLOCA&queryId=@queryId">View </a>
+
+                                }
+                                |
+                                <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Booking/AuditingResults?CustId=@item.CustomerID&orig=@item.MATRCLOCA&dest=@item.MATRDLOCA&stats=stats&queryId=@queryId&idx=1"> Auditing results screen </a>|
+                                <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Booking/ViewAuditingResultTableFormat?CustId=@item.CustomerID&orig=@item.MATRCLOCA&dest=@item.MATRDLOCA&stats=stats&queryId=@queryId"> Auditing table results</a>
+                            </td>
+                            @*<td class="shipperId">@item.SHPRNO</td>*@
+                            <td class="partName">@item.Customer</td>
+                            <td class="origin">@item.MATRCLOCA</td>
+                            <td class="destination">@item.MATRDLOCA</td>
+                            <td class="shippCount">@item.ShipmentCount</td>
+                            <td class="minCharge">@item.MinCharges.ToString("F")</td>
+                            <td class="maxCharge">@item.MaxCharges.ToString("F")</td>
+                            <td class="difference">@item.Difference.ToString("F")</td>
+                            <td class="stndDvation">@item.StandardDeviation.ToString("F")</td>
+                            <td class="currency">@item.Currency</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <partial name="PageFooter" />
+</body>
+</html>

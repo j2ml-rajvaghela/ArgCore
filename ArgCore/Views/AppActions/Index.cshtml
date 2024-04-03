@@ -1,0 +1,42 @@
+﻿@model ArgCore.Models.AppActions
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@* @using Dashboard *@
+<div class="main-content row">
+    <div class="row">
+        <div class="col-md-8 addItem">
+        </div>
+        <div class="col-md-4 text-right right addItem">
+            <a href="~/AppActions/Save?appActionId=0" title="Add App Action">+ Add App Action</a>
+        </div>
+    </div>
+    @if (Model.AppActionsList != null && Model.AppActionsList.Count > 0)
+    {
+        <table id="clients-list" class="table text-center" style="margin-top: 30px;">
+            <thead>
+                <tr>
+                    <th class="id">Id</th>
+                    <th class="name">Action Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="client-details">
+                @foreach (var item in Model.AppActionsList)
+                {
+                    <tr>
+                        <td class="id">@item.AppActionId</td>
+                        <td class="name">@item.ActionName</td>
+                        <td>
+                            <a href="~/AppActions/Save?appActionId=@item.AppActionId" title="Edit App Action"><i class="fa fa-edit"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No app actions found!</h3>")
+    }
+</div>

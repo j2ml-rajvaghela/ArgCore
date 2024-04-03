@@ -1,0 +1,84 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.IPAddressRestriction
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "IP Address Restriction";
+}
+
+
+<div class="content-container">
+    <div class="main-content row">
+        <div id="ClientManagementReports">
+            @using (Html.BeginForm("Index", "IPAddressRestriction", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+               @*  Html.EnableClientValidation(false); *@
+              
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>@Model.CommonObjects.Heading</h2>
+                    </div>
+                    <div class="col-md-4 text-right right addItem">
+                        <a href="~/IPAddressRestriction/Save?iPAddressRestrictionId=0 title="Add Customer">+ Add IP Address Restriction</a>
+                    </div>
+                </div>
+                <div class="clientSearchForm">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Client</label>
+                        <div class="col-md-5">
+                            @Html.DropDownListFor(x => x.IPAddressRestrictionDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlUserCompanies", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="beginningIp" class="mylabel control-label col-md-2">Beginning IP</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.IPAddressRestrictionDetail.BeginningIp, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="endingIp" class="mylabel control-label col-md-2">Ending IP</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.IPAddressRestrictionDetail.EndingIp, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="options" style="margin-top:20px;">
+                    <button type="submit" id="GetClientReportResults" class="btn btn-lg btn-primary">
+                        <img src="~/images/GetResults.png" /> Get Results
+                    </button>
+                </div>
+            }
+        </div>
+        <div style="margin-top:75px !important;">
+            @if (Model.IPAddressRestrictionList != null && Model.IPAddressRestrictionList.Any())
+            {
+                <table id="currencyConversionRates-list" class="table text-center">
+                    <thead>
+                        <tr>
+                            <th>Client Name</th>
+                            <th>Begining IP Address</th>
+                            <th>Ending IP Address</th>
+                        </tr>
+                    </thead>
+                    <tbody class="currencyConversionRates-details">
+                        @foreach (var item in Model.IPAddressRestrictionList)
+                        {
+                            var clientName = Model.Companies.FirstOrDefault(c => c.Value == item.CompanyId.ToString())?.Text;
+                            <tr>
+                                <td><a href="~/IPAddressRestriction/Save?iPAddressRestrictionId=@item.IPAddressRestrictionId" title="Edit CurrencyConversionRates">@clientName</a></td>
+                                <td>@item.BeginningIp</td>
+                                <td>@item.EndingIp</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                @Html.Raw("<h3>No IP Address Restrictions found!</h3>")
+            }
+        </div>
+    </div>
+</div>

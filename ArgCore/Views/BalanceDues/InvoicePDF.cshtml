@@ -1,0 +1,712 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.GenerateInvoicePDF
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BD Invoice PDF</title>
+    <style type="text/css">
+        body {
+            font-family: 'Courier New';
+        }
+
+        .invoicePDF {
+            padding: 20px;
+            width: 1200px;
+        }
+
+            .invoicePDF.pagebreak {
+                page-break-after: always;
+            }
+
+        h1 {
+            text-transform: uppercase;
+            border-bottom: 3px solid #ccc;
+            text-align: center;
+            padding-bottom: 4px;
+            margin-top: 0;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .clientDetailsBlock {
+            border-bottom: 3px solid #000;
+            /*float: left;*/
+            clear: both;
+            padding-bottom: 8px;
+            /*width: 1200px;*/
+        }
+
+        .invClientdetails {
+            text-transform: uppercase;
+            /*width: 800px;*/
+            /*float: left;*/
+        }
+
+        .remitTo, .billTo {
+            /*margin-bottom: 24px;*/
+        }
+
+        .right-block {
+            /*width: 400px;*/
+            /*float: left;*/
+        }
+
+        .remitTo .myLabel, .billTo .myLabel {
+            padding: 0;
+            /*width: 130px;*/
+            font-size: 18px;
+            /*float: left;*/
+            clear: both;
+        }
+
+        .remitTo .value, .billTo .value {
+            font-size: 17px;
+            color: #1b1b1b;
+            margin-bottom: 12px;
+            /*width: 1050px;*/
+            line-height: 20px;
+        }
+
+        .sailDate .myLabel {
+            font-size: 18px;
+        }
+
+        .value {
+            color: #1b1b1b;
+        }
+
+        /*.logo {
+                    width: 100px;
+                    float: left;
+                    clear: both;
+                }*/
+
+        /*.clientDetails {
+                    line-height: 18px;
+                    width: 200px;
+                    float: left;
+                }*/
+
+        .clientDetails .CVNo {
+            font-size: 18px;
+        }
+
+        .clientDetails .invStatus {
+            font-size: 20px;
+            color: black;
+            margin-top: 4px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .logoBlock {
+            /*margin-bottom: 6px;*/
+            /*width: 350px;*/
+            /*float: left;*/
+            clear: both;
+        }
+
+        .clientName {
+            color: black;
+            padding: 4px 0;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+
+        .invDetBlock .voyage {
+            margin-left: 85px;
+        }
+
+        .invDetBlock .myLabel {
+            /*width: 200px;*/
+            /*float: left;*/
+            clear: both;
+        }
+
+        .invDetBlock {
+            /*float: left;*/
+        }
+
+        .bd-items, .other-charges, .totalAmountBlock {
+            border-top: 3px solid #000;
+            margin-bottom: 20px;
+            padding-top: 16px;
+            font-size: 18px;
+            line-height: 20px;
+            padding-bottom: 40px;
+        }
+
+        .totalsBlock {
+            float: right;
+            text-align: right;
+        }
+
+        .totalAmountBlock .value {
+            font-weight: 700;
+        }
+
+        .totalAmountDue .value {
+            float: right;
+            text-align: right;
+        }
+
+        .totalAmountBlock {
+            /*width: 1200px;*/
+            padding-bottom: 20px;
+            /*float: left;*/
+            border-bottom: 3px solid #000;
+        }
+
+        .bdItemsBlock .labels, .bd-items .labels, .other-charges .labels {
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .bdItemsBlock .amtDue, .bdItemsBlock .curncy {
+            text-align: right;
+        }
+
+        .bd-ItemsBlock, .otherChargesBlock {
+            /*width: 1200px;*/
+            /*float: left;*/
+            margin-bottom: 12px;
+        }
+
+        .bd-items, .other-charges {
+            /*width: 100%;*/
+            padding-bottom: 10px;
+        }
+
+        tr.totalAmountDueBlock.topBorder td {
+            border-top: 3px solid #000;
+            padding-top: 12px;
+        }
+
+        .bdItemsBlock .widItem {
+            font-size: 14px;
+        }
+
+        .bdItemsBlock td {
+            padding-bottom: 12px;
+        }
+
+        .bdDescBlock {
+            /*width: 1200px;*/
+            /*float: left;*/
+            padding: 20px 0;
+        }
+
+        .bdItemsBlock .desc {
+            padding-right: 8px;
+        }
+
+        .bdItemsBlock {
+            /*width: 1200px;*/
+            clear: both;
+            border-bottom: 3px solid;
+            padding-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .totalWt {
+            margin-bottom: 15px;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .bdDesc {
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+            .bdDesc .value {
+                width: 100%;
+                height: 450px;
+                overflow: hidden;
+                font-size: 13px;
+                border: none;
+                font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            }
+    </style>
+</head>
+<body>
+    @{
+        var h1HeadPending = "";
+    }
+    @if (Model.BalanceDueInfo != null && Model.BalanceDueInfo.Any() && Model.BalanceDueInfo.First().InvoiceStatus.ToLower() != "invoiced_rec")
+    {
+        h1HeadPending = "Pending ";
+    }
+    <page>
+        <div class="invoicePDF page0 pagebreak">
+            <table style="width:100%">
+                <tr>
+                    <td style="text-align:center">
+                        <h1>STATEMENT: SUPPLEMENTAL CHARGES(SUMMARY)</h1>
+                        @*<h1>@(h1HeadPending)Supplemental Invoice (Summary)</h1>*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="clientDetailsBlock" style="vertical-align:top; width: 100%;">
+                            <tr>
+                                <td class="left-block invClientdetails" style="vertical-align:top; width: 60%;">
+                                    <table style="width:100%">
+                                        <tr class="remitTo">
+                                            <td class="myLabel" style="width: 20%;vertical-align: top;"><b>Remit To: </b></td>
+                                            <td class="value" style="padding-bottom: 20px;">
+                                                @if (Model.ClientDetails == null || Model.ClientDetails.CompanyId <= 0)
+                                                {
+                                                    @Html.Raw("-")
+                                                }
+                                                else
+                                                {
+                                                    <div>@(Model.ClientDetails.Name ?? "")</div>
+                                                    <div>@(Model.ClientDetails.Address1 ?? "")</div>
+                                                    @Html.Raw(!string.IsNullOrWhiteSpace(Model.ClientDetails.Address2) ? Model.ClientDetails.Address2 : "")
+                                                    <div>@(!string.IsNullOrWhiteSpace(Model.ClientDetails.City) ? Model.ClientDetails.City + @Html.Raw(", ") : "") @(Model.ClientDetails.State ?? "") @(Model.ClientDetails.ZipCode ?? "")</div>
+                                                    <div>@(Model.ClientDetails.Email ?? "")</div>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr class="billTo">
+                                            <td class="myLabel" style="vertical-align: top;"><b>Bill To: </b></td>
+                                            <td class="value" style="padding-bottom: 20px;">
+                                                @if (Model.CustomerDetails == null || string.IsNullOrWhiteSpace(Model.CustomerDetails.CustomerId))
+                                                {
+                                                    @Html.Raw("-")
+                                                }
+                                                else
+                                                {
+                                                    <div>@(Model.CustomerDetails.CustomerName ?? "")</div>
+                                                    <div>@(Model.CustomerDetails.Address1 ?? "")</div>
+                                                    @Html.Raw(!string.IsNullOrWhiteSpace(Model.CustomerDetails.Address2) ? Model.CustomerDetails.Address2 : "")
+                                                    <div>@(!string.IsNullOrWhiteSpace(Model.CustomerDetails.City) ? Model.CustomerDetails.City + @Html.Raw(", ") : "") @(Model.CustomerDetails.State ?? "") @(Model.CustomerDetails.ZipCode ?? "")</div>
+                                                }
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            @*<td class="myLabel"><b>Sail Date: </b></td>
+                                            <td class="value">@Model.BalanceDueInfo.First().ActualDepartureDate.ToString("d")</td>*@
+                                            @if (Model.ClientDetails != null && (!string.IsNullOrWhiteSpace(Model.ClientDetails.CollectorFirstName) || !string.IsNullOrWhiteSpace(Model.ClientDetails.CollectorLastName) || !string.IsNullOrWhiteSpace(Model.ClientDetails.CollectorEmail)))
+                                            {
+                                                <td class="forContact" colspan="2" style="border-top: 1px solid #efefef;padding-top:12px;margin-top:12px;">
+                                                    <b>For questions, please contact:</b>
+                                                    <div>@(Model.ClientDetails.CollectorFirstName ?? "") @(Model.ClientDetails.CollectorLastName ?? "")</div>
+                                                    @(Model.ClientDetails.CollectorEmail ?? "")
+                                                </td>
+                                            }
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="right-block" style="width: 40%;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td class="logo" style="width: 22%;">
+                                                <img src="@Url.Content("~/images/FDG.png")" />
+                                            </td>
+                                            <td class="clientDetails" style="vertical-align: top;">
+                                                @*<div class="CVNo">
+                                                <span class="myLabel">CV#: </span><span class="value">@Model.BalanceDueInfo.First().Bol</span>
+                                                </div>*@
+                                                @if (Model.ClientDetails == null || Model.ClientDetails.CompanyId <= 0)
+                                                {
+                                                    @Html.Raw("-")
+                                                }
+                                                else
+                                                {
+                                                    <div class="clientName"><b>@(Model.ClientDetails.Name ?? "")</b></div>
+                                                    <div class="clientAddress">
+                                                        <div>@(Model.ClientDetails.Address1 ?? "")</div>
+                                                        @Html.Raw(!string.IsNullOrWhiteSpace(Model.ClientDetails.Address2) ? Model.ClientDetails.Address2 : "")
+                                                        <div>@(!string.IsNullOrWhiteSpace(Model.ClientDetails.City) ? Model.ClientDetails.City + @Html.Raw(", ") : "")  @(Model.ClientDetails.State ?? "") @(Model.ClientDetails.ZipCode ?? "")</div>
+                                                    </div>
+                                                    @*if (!string.IsNullOrWhiteSpace(Model.ClientDetails.Contact) || !string.IsNullOrWhiteSpace(Model.ClientDetails.Fax))
+                                                {
+                                                <div class="phone">
+                                                @if (!string.IsNullOrWhiteSpace(Model.ClientDetails.Contact))
+                                                {
+                                                <span class="myLabel">PH: </span><span class="value">@Model.ClientDetails.Contact</span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(Model.ClientDetails.Fax))
+                                                {
+                                                <span class="fax">
+                                                <span class="myLabel">FAX: </span><span class="value">@Model.ClientDetails.Fax</span>
+                                                </span>
+                                                }
+                                                </div>
+                                                }*@
+                                                }
+                                                @*<div class="invStatus">Invoice #######</div>*@
+                                                @*<div class="invStatus">@Model.BalanceDueInfo.First().InvoiceStatus Invoice</div>*@
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            @*<td class="myLabel" style="width: 45%;">Inv. NR.: </td>
+                                            <td class="value">@Html.Raw(!string.IsNullOrWhiteSpace(Model.BalanceDueInfo.First().BalanceDueInvoice) ? Model.BalanceDueInfo.First().BalanceDueInvoice : "-")</td>*@
+                                            <td class="myLabel" style="width: 45%;">STATEMENT DATE: </td>
+                                            <td class="value">@Html.Raw(DateTime.Now.ToString("MM/dd/yyyy"))</td>
+                                        </tr>
+                                        @*<tr>
+                                        <td class="myLabel">Inv. Date: </td>
+                                        <td class="value">@Convert.ToDateTime(Model.BalanceDueInfo.First().BalanceDueInvoiceDate).ToString("d")</td>
+                                        </tr>
+                                        <tr class="dueDate">
+                                        <td class="myLabel">Due Date: </td>
+                                        <td class="value">@Model.DueDate.ToString("d")</td>
+                                        </tr>*@
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @{
+                decimal totalAmountDue = 0;
+            }
+            @if (Model.BalanceDueInfo != null && Model.BalanceDueInfo.Count > 0)
+            {
+                <table class="bdItemsBlock" style="width:100%">
+                    <thead class="labels text-center">
+                        <tr>
+                            <td class="myLabel invNo">INV#</td>
+                            @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("Ceva"))
+                            {
+                                <td class="myLabel bolId">HAWB/HBL</td>
+                            }
+                            else
+                            {
+                                <td class="myLabel bolId">BOL#</td>
+                            }
+                            <td class="myLabel widItem origin">ORIGIN</td>
+                            <td class="myLabel widItem">POL</td>
+                            <td class="myLabel widItem">POD</td>
+                            <td class="myLabel widItem">DEST</td>
+                            <td class="myLabel desc">DESCRIPTION</td>
+                            <td class="amtDue myLabel">AMOUNT DUE</td>
+                            <td class="myLabel curncy">CURRENCY</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.BalanceDueInfo)
+                        {
+                            <tr class="values text-center">
+                                <td class="value invNo">@(!string.IsNullOrWhiteSpace(item.BalanceDueInvoice) ? item.BalanceDueInvoice : "-")</td>
+                                <td class="value bolId">@item.Bol</td>
+                                <td class="value widItem origin">@item.OriginLocationCode.Left(11).Replace(",", " ")</td>
+                                <td class="value widItem">@item.PortOfLoading.Left(11).Replace(",", " ")</td>
+                                <td class="value widItem">@item.PortOfDischarge.Left(11).Replace(",", " ")</td>
+                                <td class="value widItem">@item.DestinationLocationCode.Left(11).Replace(",", " ")</td>
+                                <td class="value desc">@item.ErrorCodeDescription</td>
+                                <td class="amtDue value">@item.BalanceDueAmount</td>
+                                <td class="value curncy">@item.Currency</td>
+                            </tr>
+                            totalAmountDue += @item.BalanceDueAmount;
+                        }
+                        <tr class="totalAmountDueBlock topBorder">
+                            @*<tr class="totalAmountDue">*@
+                            <td class="myLabel" colspan="2">Total Amount Due:</td>
+                            <td class="value" colspan="6" style="text-align:right"><b>@totalAmountDue</b></td>
+                            <td style="text-align:right">USD</td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+    </page>
+    @{
+        var idx = 0;
+    }
+    @if (Model.BalanceDueInfo != null && Model.BalanceDueInfo.Count > 0)
+    {
+        var pbClass = "pagebreak";
+        var totalBalDues = Model.BalanceDueInfo.Count;
+        foreach (var item in Model.BalanceDueInfo)
+        {
+            idx++;
+            if (idx >= totalBalDues)
+            {
+                pbClass = "";
+            }
+            <page>
+                <div class="invoicePDF page@(idx) @pbClass">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="text-align:center">
+                                <h1>SUPPLEMENTAL INVOICE</h1>
+                                @*<h1>@(h1HeadPending)Supplemental Invoice (Detail)</h1>*@
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class="clientDetailsBlock" style="vertical-align:top; width: 100%;">
+                                    <tr>
+                                        <td class="left-block invClientdetails" style="vertical-align:top; width: 50%;">
+                                            <table style="width:100%">
+                                                <tr class="remitTo">
+                                                    <td class="myLabel" style="width: 28%;vertical-align: top;"><b>Remit To: </b></td>
+                                                    <td class="value" style="padding-bottom: 20px;">
+                                                        @if (Model.ClientDetails == null || Model.ClientDetails.CompanyId <= 0)
+                                                        {
+                                                            @Html.Raw("-")
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>@(Model.ClientDetails.Name ?? "")</div>
+                                                            <div>@(Model.ClientDetails.Address1 ?? "")</div>
+                                                            @Html.Raw(!string.IsNullOrWhiteSpace(Model.ClientDetails.Address2) ? Model.ClientDetails.Address2 : "")
+                                                            <div>@(!string.IsNullOrWhiteSpace(Model.ClientDetails.City) ? Model.ClientDetails.City + @Html.Raw(", ") : "") @(Model.ClientDetails.State ?? "") @(Model.ClientDetails.ZipCode ?? "")</div>
+                                                            <div>@(Model.ClientDetails.Email ?? "")</div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr class="billTo">
+                                                    <td class="myLabel" style="vertical-align: top;"><b>Bill To: </b></td>
+                                                    <td class="value" style="padding-bottom: 20px;">
+                                                        @if (Model.CustomerDetails == null || string.IsNullOrWhiteSpace(Model.CustomerDetails.CustomerId))
+                                                        {
+                                                            @Html.Raw("-")
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>@(Model.CustomerDetails.CustomerName ?? "")</div>
+                                                            <div>@(Model.CustomerDetails.Address1 ?? "")</div>
+                                                            @Html.Raw(!string.IsNullOrWhiteSpace(Model.CustomerDetails.Address2) ? Model.CustomerDetails.Address2 : "")
+                                                            <div>@(!string.IsNullOrWhiteSpace(Model.CustomerDetails.City) ? Model.CustomerDetails.City + @Html.Raw(", ") : "") @(Model.CustomerDetails.State ?? "") @(Model.CustomerDetails.ZipCode ?? "")</div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="myLabel"><b>Sail Date: </b></td>
+                                                    <td class="value">@item.ActualDepartureDate.ToString("d")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="myLabel"><b>Shippers Ref#: </b></td>
+                                                    <td class="value">@Html.Raw(item.ShippersRefNumber ?? "-")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="myLabel"><b>Consignee Ref#: </b></td>
+                                                    <td class="value">@Html.Raw(item.ConsigneeRefNumber ?? "-")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="myLabel"><b>Payor Ref#: </b></td>
+                                                    <td class="value">@Html.Raw(item.PayorRefNumber ?? "-")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        @if (Model.ClientDetails != null && (!string.IsNullOrWhiteSpace(Model.ClientDetails.CollectorFirstName) || !string.IsNullOrWhiteSpace(Model.ClientDetails.CollectorLastName) || !string.IsNullOrWhiteSpace(Model.ClientDetails.CollectorEmail)))
+                                                        {
+                                                            <div class="forContact" style="margin-top: 15px;border-top: 1px solid #eaeaea;width: 60%;padding-top:6px;">
+                                                                <b>For questions, please contact:</b>
+                                                                <div>@(Model.ClientDetails.CollectorFirstName ?? "") @(Model.ClientDetails.CollectorLastName ?? "")</div>
+                                                                @(Model.ClientDetails.CollectorEmail ?? "")
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td class="right-block" style="width: 50%;">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td class="logo" style="width: 22%;">
+                                                        <img src="@Url.Content("~/images/FDG.png")" />
+                                                    </td>
+                                                    <td class="clientDetails" style="vertical-align: top;">
+                                                        <div class="CVNo">
+                                                            <span class="myLabel">CV#: </span><span class="value">@item.Bol</span>
+                                                        </div>
+                                                        @if (Model.ClientDetails == null || Model.ClientDetails.CompanyId <= 0)
+                                                        {
+                                                            @Html.Raw("-")
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="clientName"><b>@(Model.ClientDetails.Name ?? "")</b></div>
+                                                            <div class="clientAddress">
+                                                                <div>@(Model.ClientDetails.Address1 ?? "")</div>
+                                                                @Html.Raw(!string.IsNullOrWhiteSpace(Model.ClientDetails.Address2) ? Model.ClientDetails.Address2 : "")
+                                                                <div>@(!string.IsNullOrWhiteSpace(Model.ClientDetails.City) ? Model.ClientDetails.City + @Html.Raw(", ") : "")  @(Model.ClientDetails.State ?? "") @(Model.ClientDetails.ZipCode ?? "")</div>
+                                                            </div>
+                                                            @*if (!string.IsNullOrWhiteSpace(Model.ClientDetails.Contact) || !string.IsNullOrWhiteSpace(Model.ClientDetails.Fax))
+                                                {
+                                                <div class="phone">
+                                                @if (!string.IsNullOrWhiteSpace(Model.ClientDetails.Contact))
+                                                {
+                                                <span class="myLabel">PH: </span><span class="value">@Model.ClientDetails.Contact</span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(Model.ClientDetails.Fax))
+                                                {
+                                                <span class="fax">
+                                                <span class="myLabel">FAX: </span><span class="value">@Model.ClientDetails.Fax</span>
+                                                </span>
+                                                }
+                                                </div>
+                                                }*@
+                                                        }
+                                                        @*<div class="invStatus">@item.InvoiceStatus Invoice</div>*@
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td class="myLabel">Inv. NR.: </td>
+                                                    <td class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.BalanceDueInvoice) ? item.BalanceDueInvoice : "-")@Html.Raw(!string.IsNullOrWhiteSpace(item.OriginalInv) ? " (Original Inv#: " + item.OriginalInv + ")" : "")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="myLabel">Inv. Date: </td>
+                                                    <td class="value">@Convert.ToDateTime(item.BalanceDueInvoiceDate).ToString("d")</td>
+                                                </tr>
+                                                <tr class="dueDate">
+                                                    <td class="myLabel">Due Date: </td>
+                                                    <td class="value">@Model.DueDate.ToString("d")</td>
+                                                </tr>
+                                                <tr class="vsVoy">
+                                                    <td class="myLabel">Ves/Voy: </td>
+                                                    <td class="value">@item.Vessel  <span class="voyage">@item.Voyage</span></td>
+                                                </tr>
+                                                <tr class="bLNr">
+                                                    <td class="myLabel">B/L Nr.: </td>
+                                                    <td class="value">@(item.Bol ?? "")</td>
+                                                </tr>
+                                                <tr class="booking">
+                                                    <td class="myLabel">Booking: </td>
+                                                    <td class="value">@(item.BookingId ?? "")</td>
+                                                </tr>
+                                                <tr class="receiptPlace">
+                                                    <td class="myLabel">Place of Receipt: </td>
+                                                    <td class="value">@(item.OriginLocationCode ?? "")</td>
+                                                </tr>
+                                                <tr class="loadPort">
+                                                    <td class="myLabel" style="width: 38%;">Load Port: </td>
+                                                    <td class="value">@(item.PortOfLoading ?? "")</td>
+                                                </tr>
+                                                <tr class="discPort">
+                                                    <td class="myLabel">Discharge Port: </td>
+                                                    <td class="value">@(item.PortOfDischarge ?? "")</td>
+                                                </tr>
+                                                <tr class="deliveryPlace">
+                                                    <td class="myLabel">Place of Delivery: </td>
+                                                    <td class="value">@(item.DestinationLocationCode ?? "")</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr class="bdDescBlock">
+                            <td style="padding-top:20px;">
+                                <b>BOL#: </b>@item.Bol
+                            </td>
+                        </tr>
+                        @if (!string.IsNullOrWhiteSpace(@item.BDDescription))
+                        {
+                            <tr class="bdDesc">
+                                <td> <textarea class="value" readonly>@item.BDDescription</textarea></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                @{
+                                    decimal totalCharges = 0;
+                                }
+                                @if (Model.BDItems != null && Model.BDItems.Any())
+                                {
+                                    var myItems = Model.BDItems.Where(x => x.Bol == item.Bol).ToList();
+                                    if (myItems != null && myItems.Count > 0)
+                                    {
+                                        @*<div class="bd-ItemsBlock">*@
+                                        @*<div class="itemHeading">Items</div>*@
+                                        <table class="bd-items" style="width:100%">
+                                            <thead>
+                                                <tr class="labels">
+                                                    <th style="width:25%; text-align: left;">Container ID</th>
+                                                    <th style="width:60%; text-align:center">DESCRIPTION OF GOODS</th>
+                                                    <th style="width:15%; text-align:right">Amount Due</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var bdItem in myItems)
+                                                {
+                                                    <tr class="values">
+                                                        <td>@bdItem.Container</td>
+                                                        <td style="text-align:center">@bdItem.CommodityDesc</td>
+                                                        <td style="text-align:right">@bdItem.AmountDue USD</td>
+                                                    </tr>
+                                                    totalCharges += @bdItem.AmountDue;
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @if (Model.BDOtherCharges != null && Model.BDOtherCharges.Any())
+                                {
+                                    var otherCharges = Model.BDOtherCharges.Where(x => x.BOLNo == item.Bol).ToList();
+                                    if (otherCharges != null && otherCharges.Count > 0)
+                                    {
+                                        <div class="otherChargesBlock">
+                                            <table class="other-charges" style="width:100%">
+                                                <thead>
+                                                    <tr class="labels">
+                                                        <th style="width:25%; text-align: left;">Charge Code</th>
+                                                        <th style="width:60%; text-align:center">Charge Description</th>
+                                                        <th style="width:15%; text-align:right">Amount Due</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var charge in otherCharges)
+                                                    {
+                                                        <tr class="values">
+                                                            <td>@charge.ChargeCode</td>
+                                                            <td style="text-align:center">@Html.Raw(!string.IsNullOrWhiteSpace(charge.Description) ? @charge.Description : "-----------")</td>
+                                                            <td style="text-align:right">@charge.AmountDue USD</td>
+                                                        </tr>
+                                                        totalCharges += @charge.AmountDue;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="totalAmountBlock">
+                                <table class="totalsBlock" style="width:100%">
+                                    <tr class="totalCharges">
+                                        <td class="myLabel" style="width: 88%;">
+                                            Total Charges:
+                                        </td>
+                                        <td class="value">@totalCharges USD</td>
+                                    </tr>
+                                    <tr class="amountPaid">
+                                        <td class="myLabel">Amount Paid:</td>
+                                        <td class="value">@item.PaymentAmount USD</td>
+                                    </tr>
+                                    <tr class="amountDue">
+                                        <td class="myLabel">Amount Due:</td>
+                                        <td class="value">@item.BalanceDueAmount USD</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </page>
+        }
+    }
+</body>
+</html>

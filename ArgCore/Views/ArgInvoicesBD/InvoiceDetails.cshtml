@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.ArgInvoicesBDPDF
+@using CustomExtensions;
+<style type="text/css">
+    .bdItemsBlock .labels, .bd-items .labels, .other-charges .labels {
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .bdItemsBlock .amtDue, .bdItemsBlock .curncy {
+        text-align: right;
+    }
+
+    .bdItemsBlock .widItem {
+        font-size: 14px;
+    }
+
+    .bdItemsBlock .myLabel {
+        color: #4c4c4c;
+    }
+
+    .bdItemsBlock .value {
+        color: #737373;
+    }
+
+    .bdItemsBlock td {
+        padding-bottom: 12px;
+        padding-right: 4px;
+    }
+
+    .bdItemsBlock .desc {
+        padding-right: 8px;
+    }
+
+    tr.totalAmountDueBlock.topBorder td {
+        border-top: 3px solid #000;
+        padding-top: 12px;
+    }
+
+    .bdItemsBlock {
+        /*width: 1200px;*/
+        clear: both;
+        /*border-bottom: 3px solid;*/
+        padding-top: 20px;
+        margin-bottom: 20px;
+    }
+</style>
+@{
+    decimal totalRevRecovered = 0;
+}
+@{
+    decimal totalRevRecoveredUSD = 0;
+}
+@{
+    decimal totalDueArg = 0;
+}
+@if (Model.BDInvoices != null && Model.BDInvoices.Count > 0)
+{
+    <h2>Invoice Details</h2>
+    <table class="bdItemsBlock table row" style="width:100%">
+        <thead class="labels">
+            <tr>
+                <td class="myLabel customer">Customer</td>
+                <td class="myLabel invoiceType">Invoice Type</td>
+
+                <td class="myLabel bolId">BOL#</td>
+                <td class="myLabel bolExecDate">BOL Exec Date</td>
+                <td class="myLabel widItem origin">ORIGIN</td>
+                <td class="myLabel widItem dest">DEST</td>
+                <td class="myLabel revRec" style="text-align:right">Rev Rec</td>
+                <td class="myLabel curr" style="text-align:right">CURR</td>
+                <td class="myLabel revRec" style="text-align:right">Rev Rec (USD)</td>
+                <td class="myLabel dueArg" style="text-align:right">Due Arg</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BDInvoices)
+            {
+                <tr class="values">
+                    <td class="value">@item.Customer.Left(15)</td>
+                    <td class="value">@item.InvoiceType</td>
+
+                    <td class="value">@item.Bol</td>
+                    <td class="value">@item.BolExecutionDate.ToString("d")</td>
+                    <td class="value">@item.OriginLocationCode.Left(15)</td>
+                    <td class="value">@item.DestinationLocationCode.Left(15)</td>
+                    <td class="value" style="text-align:right">@String.Format("{0:n}", item.RevenueRecovered)</td>
+                    <td class="value" style="text-align:right">@item.Currency</td>
+                    <td class="value" style="text-align:right">@String.Format("{0:n}", item.RevenueRecoveredUSD)</td>
+                    <td class="value" style="text-align:right">@String.Format("{0:n}", item.AmountDueUSD) USD</td>
+                </tr>
+                totalRevRecovered += @item.RevenueRecovered;
+                totalRevRecoveredUSD += @item.RevenueRecoveredUSD;
+                totalDueArg += @item.AmountDueUSD;
+            }
+            <tr class="totalAmountDueBlock topBorder">
+                <td class="myLabel" colspan="1">TOTAL</td>
+                <td class="value" colspan="6" style="text-align:right"><b>@String.Format("{0:n}", totalRevRecovered)</b></td>
+                <td class="value" colspan="2" style="text-align:right"><b>@String.Format("{0:n}", totalRevRecoveredUSD)</b></td>
+                <td class="value" colspan="2" style="text-align:right"><b>@String.Format("{0:n}", totalDueArg) USD</b></td>
+            </tr>
+            <tr class="totalAmountDueBlock topBorder" style="border-bottom: 3px solid #000;">
+                <td class="myLabel" colspan="1">TOTAL AMOUNT DUE</td>
+                <td class="value" colspan="10" style="text-align:right"><b>@String.Format("{0:n}", totalDueArg) USD</b></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    @Html.Raw("<p style='font-size:15px;'>No invoice details found!</p>")
+}

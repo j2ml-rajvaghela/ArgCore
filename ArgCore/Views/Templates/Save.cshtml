@@ -1,0 +1,70 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Save Template";
+}
+
+@model ArgCore.Models.Templates
+
+<div id="AddTemplate" class="main-content row">
+    @using (Html.BeginForm("Save", "Templates", FormMethod.Post, new { id = "frmSaveTemplate", @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.TemplateDetail.TemplateId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Name</label>
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.TemplateDetail.Name, null, new { @class = "form-control firstSpacetruncate" })
+                @Html.ValidationMessageFor(x => x.TemplateDetail.Name)
+            </div>
+        </div>
+        if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="row errormessage">
+
+                @Html.Raw(Model.ErrorMessage)
+            </div>
+        }
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Email Subject</label>
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.TemplateDetail.EmailSubject, null, new { @class = "form-control firstSpacetruncate" })
+                @Html.ValidationMessageFor(x => x.TemplateDetail.EmailSubject)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Category</label>
+            <div class="col-md-6">
+                @Html.DropDownListFor(x => x.TemplateDetail.CatId, Model.Categories, "-- select category --", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.TemplateDetail.CatId)
+            </div>
+            <div class="col-md-4 manage-item">
+                <a href="TemplateCats/Index">
+                    <span><img src="~/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Categories</span>
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Content</label>
+            <div class="col-md-6">
+                @Html.TextAreaFor(m => m.TemplateDetail.Content, 7, 50, new { @class = "form-control ckeditor" })
+                @Html.ValidationMessageFor(x => x.TemplateDetail.Content)
+            </div>
+        </div>
+        <div class="note">
+            Tags used: {InvoiceNo}, {ContactName}, {SMTPClientName}, {SMTPClientEmail}, {Name}, {UserName}, {PhoneNo}, {Email}, {Link}, {Text}
+        </div>
+        <div class="btnReasrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "Templates", new { templateId = @Model.TemplateDetail.TemplateId }, new { @class = "btn btn-lg btnDelete" })
+                @*<button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

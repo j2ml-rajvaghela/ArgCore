@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = " Confirm Email";
+    Layout = "~/Views/Shared/_AdminLayout_v1.cshtml";
+}
+
+<style>
+    #ConfirmEmail {
+        margin-top: 120px;
+    }
+
+    #loginLink {
+        color: white;
+        text-decoration: underline;
+    }
+</style>
+
+<div id="ConfirmEmail">
+    <h1><img src="~/images/confirm.png" />Confirm Email</h1>
+    <p>
+        Thank you for confirming your email. Please @Html.ActionLink("Click", "LogIn", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) here to Log in
+    </p>
+</div>

@@ -1,0 +1,61 @@
+﻿@model ArgCore.Models.Menus
+@{
+    Layout = "";
+}
+<script>
+    var roleId = "@(Model.RoleId)";
+</script>
+@*class="main-content row"*@
+<div id="Menus" class="row">
+    <h2>Assign Menus</h2>
+    <div class="col-md-5">
+        @if (Model.MenuItemsList != null && Model.MenuItemsList.Any())
+        {
+            <div class="scrolltable">
+                <table id="menusList" class="display dataTable selectableDatatable table table-striped">
+                    <thead>
+                        <tr>
+                            <th><div>Menus</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MenuItemsList)
+                        {
+                            <tr>
+                                <td data-itemid="@item.ItemId" class="menuItemName">@item.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    <div class="col-md-2 assignIcons">
+        <div id="assignMenuItem">
+            <a href="javascript:void(0);" class="assignMenuItem"><i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div id="removeMenuItem">
+            <a href="javascript:void(0);" class="removeMenuItem"><i class="fa fa-chevron-left"></i></a>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <table id="assignedMenuItemsList" class="display dataTable selectableDatatable table table-striped">
+            <thead>
+                <tr>
+                    <th>Assigned Menus</th>
+                </tr>
+            </thead>
+            @if (Model.AssignedMenuItems != null && Model.AssignedMenuItems.Any())
+            {
+                <tbody>
+                    @foreach (var item in Model.AssignedMenuItems)
+                    {
+                        <tr>
+                            <td data-itemid="@item.ItemId" class="menuItemName">@item.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            }
+        </table>
+    </div>
+</div>

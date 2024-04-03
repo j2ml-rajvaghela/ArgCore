@@ -1,0 +1,47 @@
+﻿@model ArgCore.Models.CurrencyConversionRates
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Currency Conversion Rates";
+}
+@if (Model == null)
+{
+    return;
+}
+<div id="CurrencyConversionRatesList" class="main-content row">
+    <div class="row text-right right options exportIcon">
+        <img src="/images/export.png" />
+    </div>
+    <div class="text-right right addItem row addCurrency">
+        <a href="~/CurrencyConversionRates/Save?currencyId=0" title="Add CurrencyConversionRates">+ Add Currency Conversion Rate</a>
+    </div>
+    @if (Model.CurrencyConversionRatesList != null && Model.CurrencyConversionRatesList.Any())
+    {
+        <table id="currencyConversionRates-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th>Base Currency</th>
+                    <th>Currency Converted To</th>
+                    <th>Conversion Rate</th>
+                    <th>Conversion Date</th>
+                </tr>
+            </thead>
+            <tbody class="currencyConversionRates-details">
+                @foreach (var item in Model.CurrencyConversionRatesList)
+                {
+                    <tr>
+                        <td><a href="~/CurrencyConversionRates/Save?currencyId=@item.CurrencyId" title="Edit CurrencyConversionRates">@item.BaseCurrency</a></td>
+                        <td>@item.CurrencyConvertedTo</td>
+                        <td>@item.ConversionRate</td>
+                        <td>@item.ConversionDate.ToString("MM-dd-yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No Currency Conversion Rate found!</h3>")
+    }
+</div>

@@ -1,0 +1,408 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.BOLAuditing
+<div id="BOLAudFilters" class="main-content row">
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        @Html.Raw("<div class='message'>" + Model.Message + "</div>")
+    }
+    else
+    {
+
+        <div id="BolAuditing">
+            @if (Model.CompanyId > 0)
+            {
+                <button id="ClearFormBooking" type="submit" class="btn btn-lg top-clear"><img src="/images/ClearForm.png" class="clearFormIcon" /> Clear Form</button>
+            }
+            @using (Html.AjaxBeginForm("Index", "BOL", new AjaxOptions { OnSuccess = "SubmitSuccess" }, new { @class = "form-horizontal", id = "frmBookingAuditing" }))
+            {
+               @*  Html.EnableClientValidation(false); *@
+                <h2>@Model.CommonObjects.Heading</h2>
+                <h4>General Filters</h4>
+
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">Select Client</label>
+                    <div class="col-md-5">
+                        @{
+                            var noClearClass = "";
+                        }
+                        @if (Model.CompanyId > 0)
+                        {
+                            noClearClass = "neverclear";
+                        }
+                        else
+                        {
+                            noClearClass = "clearDDL";
+                        }
+                        @Html.DropDownListFor(x => x.CompanyId, Model.Companies, null, new { id = "ddlClients", @class = "form-control company SelectActive " + @noClearClass })
+                    </div>
+                </div>
+                if (Model.CompanyId <= 0)
+                {
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="clientLabel col-md-5">Please select client to get filters for searching results!</div>
+                    </div>
+                }
+                else
+                {
+                    if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.BolBilltype)
+                    {
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Invoice type</label>
+                            <div class="col-md-5">
+
+                                @Html.DropDownListFor(x => x.InvoiceType, Common.InvoiceTypeforClientDemo, null, new { id = "invoicetype", @class = "form-control SelectInvoiceType" })
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Region</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.Region, Model.Regions, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Booking type</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.TYPE, Model.Booking, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Mode</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.Mode, Model.Mode, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Branch</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.Branch, Model.Branch, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">HAWB / HBOL / House / Ref #</label>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.Bol, null, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Origin country</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CNTRYCODE, Model.OriginCountryCode, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Origin port (POL)</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.POL, Model.PortOfLoading, new { id = "ddlPOL", multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Destination port (POD)</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.POD, Model.PortOfDischarge, new { id = "ddlPOD", multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Destination country</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CNTRYCOD01, Model.DestinationCountryCode, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Departure date</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.EstimatedStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.EstimatedEndDate, null, new { @class = "form-control DepEndDatepicker", data_val_required = "false" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Ocean carrier</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CARRCODE, Model.OceanCarrier, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Ocean service type</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.ONCSERV, Model.OceanServiceType, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Air carrier</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CARR, Model.AirCarrier, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Air service level</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.SERVLEVEL, Model.AirServiceLevels, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Air service level (detail)</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.SERVLVL, Model.AirServiceLeveldetail, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Air service type</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.SERVTYPE, Model.AirServiceType, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Customer</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CSORNO, Model.Customer, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Shipper</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.SHPRNO, Model.Shipper, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Consignee</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CSEENO, Model.Consignee, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group excludefrombilltype">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Piece count</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMinPieceCount, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMaxPieceCount, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Package type</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.PCKGSCODE, Model.PackageType, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group excludefrombilltype">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Actual weight</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMinActualWeight, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMaxActualWeight, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group excludefrombilltype">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Measure</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMinMeasure, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMaxMeasure, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group excludefrombilltype">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Chargeable weight</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMinChargeableWeight, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingMaxChargeableWeight, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Goods description</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.GoodsDescription, null, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(x => x.SearchOptionsCeva.GoodsDescOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Booking remarks</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.BookingRemarks, null, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(x => x.SearchOptionsCeva.BookingRemarksOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Handling remarks</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.HandlingRemarks, null, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(x => x.SearchOptionsCeva.HandlingRemarksOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Charge description</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.ChargeDesc, null, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(x => x.SearchOptionsCeva.ChargeDescOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Charge amount</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.ChargeMinAmount, null, new { @class = "form-control", placeholder = "Min." })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.ChargeMaxAmount, null, new { @class = "form-control", placeholder = "Max." })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Net rate</label>
+                        <div class="col-md-5 dateBlock">
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.NetRateMinAmount, null, new { @class = "form-control", placeholder = "Min." })
+                            </div>
+                            <label class="col-md-2">and</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptionsCeva.NetRateMaxAmount, null, new { @class = "form-control", placeholder = "Max." })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Container ID</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.ContainerId, null, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.DropDownListFor(x => x.SearchOptionsCeva.ContainerIdOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Container type</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.CNTRTYPE, Model.ContainerDetails, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Document images type</label>
+                        <div class="col-md-5">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.ImageType, Model.ImagedTypes, new { multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    <div class="form-group excludefrombilltype">
+                        <label for="inputUrl" class="mylabel control-label col-md-4">Views </label>
+                        <div class="col-md-1" style="width: 9%;">
+                            @Html.TextBoxFor(x => x.SearchOptionsCeva.BOLViews, null, new { @class = "form-control", placeholder = "Value" })
+                        </div>
+                        <div class="col-md-1" style="padding: 0; width: 2%;">
+                            <label for="inputUrl" class="mylabel control-label">by</label>
+                        </div>
+                        <div class="col-md-3" style="width: 31.5%;">
+                            @Html.ListBoxFor(x => x.SearchOptionsCeva.UserIds, Model.Users, new { id = "ddlUsers", multiple = "", @class = "form-control chzn-select" })
+                        </div>
+                    </div>
+                    if (Model.SearchOptionsCeva.SortOptions != null && Model.SearchOptionsCeva.SortOptions.Any())
+                    {
+                        <div id="SortByBlock" class="sortable">
+                            <h4>Sort By</h4>
+                            @{
+                                var idx = 0;
+                            }
+                            @foreach (var item in Model.SearchOptionsCeva.SortOptions)
+                            {
+                                <div class="col-md-12" data-sortidx="0">
+                                    <input checked="checked" class="neverclear" id="SearchOptions_SortByShipperName@(idx)" name="SearchOptionsCeva.SortOptions[@idx].IsSelected" type="checkbox" value="true">
+                                    <label class="lblCheckBox neverclear" for="SearchOptions_SortByShipperName">@Model.SearchOptionsCeva.SortOptions[@idx].DisplayName</label>
+                                    <input class="chkDesc col-md-1 neverclear" id="SearchOptions_SortByShipperNameDesc" name="SearchOptionsCeva.SortOptions[@idx].IsDesc" type="checkbox" value="true">
+                                    <input class="hidden idx neverclear" name="SearchOptionsCeva.SortOptions[@idx].Idx" type="text" value="@idx">
+                                    <input class="hidden neverclear" name="SearchOptionsCeva.SortOptions[@idx].ColumnName" type="text" value="@Model.SearchOptionsCeva.SortOptions[@idx].ColumnName">
+                                    <i class="fa fa-arrows"></i>
+                                </div>
+                                idx++;
+                            }
+                        </div>
+                    }
+                    <div id="getresulttable">
+                        <div class="form-group">
+                            @Html.CheckBoxFor(m => m.SearchOptionsCeva.ResultTableFormat, new { @class = "chktableresult" })
+                            <label for="inputUrl" class="mylabel control-label">Display results in table format</label>
+                        </div>
+                    </div>
+
+                    <div class="btnReasrItemInfo">
+
+                        <button id="GetAuditResults" type="submit" class="btn btn-lg btnLoadData" name="ButtonType"><img src="/images/GetResults.png" class="getResultsIcon" />Get Results</button>
+                        <button type="submit" value="Stats" id="GetStats" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/stats.png" />Stats</button>
+                        @*<button id="GetAuditPlaybook" type="submit" value="Playbook" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/add.png" />Manage Playbook</button>*@
+                    </div>
+
+                }
+            }
+            @if (Model.CompanyId > 0)
+            {
+                <button id="ClearFormBooking" type="submit" class="btn btn-lg"><img src="/images/ClearForm.png" class="clearFormIcon" /> Clear Form</button>
+            }
+            <div id="message"></div>
+        </div>
+    }
+</div>
+<script>
+    function SubmitSuccess(ajaxContext) {
+        console.log(ajaxContext);
+        if (typeof ajaxContext == "undefined" || typeof ajaxContext.QueryId == "undefined") {
+            $("#message").html("Client not active. Please <a href='@(Common.MyRoot)Account/Login' title='Login' class='reLogin'>re-login</a>");
+            return false;
+        }
+        var url = "";
+        if (ajaxContext.Type == "Stats") {
+            url = SiteRoot + 'Booking/ViewAuditingResultStats?QueryId=' + ajaxContext.QueryId + "&idx=1&group=1";
+            window.open(url);
+        }
+        else if (ajaxContext.Type == "Playbook") {
+            url = SiteRoot + 'Booking/AuditorPlaybook?queryId=' + ajaxContext.QueryId;
+            window.open(url);
+        }
+        else if (ajaxContext.Type == "Message") {
+            $("#message").html("No client is assigned!");
+        }
+        else {
+            if (ajaxContext.ResultTableFormat) {
+                url = SiteRoot + 'Booking/ViewAuditingResultTableFormat?QueryId=' + ajaxContext.QueryId + "&idx=1";
+                window.open(url);
+            }
+            else {
+                url = SiteRoot + 'Booking/AuditingResults?QueryId=' + ajaxContext.QueryId + "&idx=1";
+                window.open(url);
+            }
+
+        }
+    }
+</script>

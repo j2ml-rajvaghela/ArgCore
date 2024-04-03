@@ -1,0 +1,40 @@
+﻿@model ArgCore.Models.UserRoles
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="UsersList" class="main-content row">
+    <div class="row text-right right options exportIcon">
+        <img src="~/images/export.png" />
+    </div>
+    <div id="searchBlock" class="row">
+        <div class="col-md-10 searchBlock">
+            <input id="txtSearch" type="text" name="searchquery" class="form-control txtSearch" placeholder="Type here to search...">
+            <a id="btnSearch" class="Search" href="javascript:void(0);"><span class="fa fa-search"></span></a>
+        </div>
+        <div class="col-md-2 text-right right addItem">
+            <a href="~/UserRoles/Save" title="Add UserRole">+ Add User Role</a>
+        </div>
+    </div>
+    @if (Model.RolesList != null && Model.RolesList.Any())
+    {
+        <table id="users-list" class="table text-center">
+            <tr>
+                <th class="name col-md-4">Roles</th>
+                <th class="name col-md-3">User Count</th>
+            </tr>
+            @foreach (var user in Model.RolesList)
+            {
+                <tr>
+                    <td class="name">
+                        <a href="~/UserRoles/Save?roleId=@user.Id" title="Edit UserRole">@user.Name</a>
+                    </td>
+                    <td class="count">@user.UsersCount</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @Html.Raw("No User Roles found.")
+    }
+</div>

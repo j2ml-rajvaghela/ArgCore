@@ -1,0 +1,500 @@
+﻿@{
+    Layout = "";
+}
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
+@model ArgCore.Models.ClientManagementReports
+@using ArgCore.Helpers
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ARG Management Snapshot</title>
+    <link rel="stylesheet" href="~/res/css/chart.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="~/res/js/Chart_2.5.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        body {
+            font-family: 'Courier New';
+        }
+
+        .reportPDF {
+            /*padding: 10px 20px;*/
+            width: 1200px;
+        }
+
+        .pagebreak {
+            page-break-after: always;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            text-align: center;
+            padding-bottom: 2px;
+            font-size: 30px;
+            margin-bottom: 0;
+        }
+
+        .period {
+            font-size: 20px;
+        }
+
+        .myLabel {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .dateDetailsBlock {
+            padding-bottom: 20px;
+        }
+
+        #RevenueRecovList {
+            text-align: center;
+        }
+
+        #RevenueRecovList th {
+            font-size: 17px;
+            padding: 8px;
+        }
+
+        #RevenueRecovList td {
+            padding: 8px;
+            font-size: 17px;
+        }
+
+        .revRec .value {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .revRec td {
+            padding-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .revRec td .myLabel {
+            font-weight: 700;
+        }
+
+        .revRec {
+            border-top: 3px solid #000;
+            padding-top: 15px;
+        }
+
+        .table-bordered {
+            border: 1px solid #ddd;
+        }
+
+        .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+            border-top: 0;
+            border-right: 0;
+        }
+
+        .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+            border: 1px solid #ddd;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            padding: 8px;
+            line-height: 1.42857143;
+        }
+
+        .DetailInfo th {
+            background-color: #efeeee;
+            font-size: 18px;
+        }
+
+        .DetailInfo td {
+            font-size: 17px;
+            border-top: none !important;
+            border-left: none !important;
+        }
+    </style>
+</head>
+<body>
+    @{string regions = "";}
+    <page>
+        <div class="reportPDF page0 pagebreak">
+            <table style="width:100%">
+                <tr>
+                    <td style="text-align:center;border-bottom: 1px solid #ccc;padding-bottom: 6px;">
+                        <h1 id="h1">ARG Management Snapshot</h1> <span class="period">(@Html.Raw(Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate))</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: 1px solid #ccc;">
+                        <table class="dateDetailsBlock" style="vertical-align:top; width: 100%;">
+                            <tr>
+                                <td class="left-block" style="vertical-align:top; width: 60%;">
+                                    <img width="300px" src="@Url.Content("~/images/InvoicePDFLogo.png")" class="logo" />
+                                </td>
+                                <td class="right-block" style="width: 40%;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td class="clientDetails" style="vertical-align: top;">
+                                                @if (!string.IsNullOrWhiteSpace(Model.Company))
+                                                {
+                                                <div class="client">
+                                                    <span class="myLabel">Client: </span><span class="value">@Model.Company.ToUpper()</span>
+                                                </div>
+                                                }
+                                                <div class="reportPeriod">
+                                                    <span class="myLabel">Period: </span><span class="value">@Html.Raw(@Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate)</span>
+                                                </div>
+                                                @if (Model.SearchOptions.Regions == null || !Model.SearchOptions.Regions.Any())
+                                                {
+                                                    regions = "All";
+                                                }
+                                                else
+                                                {
+                                                    regions = string.Join(",", Model.SearchOptions.Regions);
+                                                }
+                                                <div class="region">
+                                                    <span class="myLabel">Region: </span><span class="value">@Html.Raw(regions)</span>
+                                                </div>
+                                                <div class="reportGen">
+                                                    <span class="myLabel">Report Generated: </span><span class="value">@DateTime.Now.ToLongDateString()</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @if (Model.RevenueRecovered != null && Model.RevenueRecovered.Any())
+            {
+                var firstDateOfYear = new DateTime(DateTime.Now.Year, 1, 1);
+            <h2>Report Summary</h2>
+            <table id="RevenueRecovList" class="table row DetailInfo" style="width:100%;border: 2px solid #DFDFDF;">
+                <thead>
+                    <tr>
+                        <th style="width:10%;">Region</th>
+                        <th style="width:30%;">Revenue Recovered for Period <br /> @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</th>
+                        <th style="width:30%;">Revenue Recovered for YTD <br />@firstDateOfYear.ToString("MM-dd-yyy") to @Model.SearchOptions.ClientEndDate</th>
+                        <th style="width:30%;">Revenue Recovered for Past Year <br />@DateTime.Now.AddYears(-1).ToString("MM-dd-yyy") to @Model.SearchOptions.ClientEndDate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RevenueRecovered)
+                        {
+                    <tr>
+                        <td>@item.Region</td>
+                        <td>@item.RevenueRecoveredForPeriodFormatted</td>
+                        <td>@item.RevenueRecoveredForYTDFormatted</td>
+                        <td>@item.RevenueRecoveredForPastYearFormatted</td>
+                    </tr>
+                        }
+                </tbody>
+            </table>
+            }
+        </div>
+    </page>
+    @{var idx = 0;}
+    @if (Model.RevenueRecovered != null && Model.RevenueRecovered.Count > 0)
+    {
+        var pbClass = "pagebreak";
+        var totalRevRec = Model.RevenueRecovered.Count;
+        foreach (var item in Model.RevenueRecovered)
+        {
+            idx++;
+            if (idx >= totalRevRec)
+            {
+                pbClass = "";
+            }
+    <page>
+        <div class="reportPDF page@(idx) @pbClass">
+            <table style="width:100%">
+                <tr>
+                    <td style="text-align: center;border-bottom: 1px solid #ccc;padding-bottom: 6px;">
+                        <h1>ARG Management Snapshot (Detail)</h1> <span class="period">(@Html.Raw(@Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate))</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="dateDetailsBlock" style="vertical-align:top; width: 100%;">
+                            <tr>
+                                <td class="left-block" style="vertical-align:top; width: 60%;">
+                                    <img width="300px" src="@Url.Content("~/images/InvoicePDFLogo.png")" class="logo" />
+                                </td>
+                                <td class="right-block" style="width: 40%;">
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td class="clientDetails" style="vertical-align: top;">
+                                                @if (!string.IsNullOrWhiteSpace(Model.Company))
+                                                        {
+                                                <div class="client">
+                                                    <span class="myLabel">Client: </span><span class="value">@Model.Company.ToUpper()</span>
+                                                </div>
+                                                        }
+                                                <div class="reportPeriod">
+                                                    <span class="myLabel">Period: </span><span class="value">@Html.Raw(@Model.SearchOptions.ClientStartDate + " to " + @Model.SearchOptions.ClientEndDate)</span>
+                                                </div>
+                                                <div class="region">
+                                                    <span class="myLabel">Region: </span><span class="value">@Html.Raw(regions)</span>
+                                                </div>
+                                                <div class="reportGen">
+                                                    <span class="myLabel">Report Generated: </span><span class="value">@DateTime.Now.ToLongDateString()</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            @{var firstDateOfYear = new DateTime(DateTime.Now.Year, 1, 1);}
+            <table class="row revRec" style="width:100%">
+                <tr>
+                    <td class="myLabel"><b>Region</b></td>
+                    <td class="value"><b>@item.Region</b></td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Revenue Recovered for period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</td>
+                    <td class="value">@item.RevenueRecoveredForPeriodFormatted</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Revenue Recovered for YTD @firstDateOfYear.ToString("MM-dd-yyy") to @Model.SearchOptions.ClientEndDate</td>
+                    <td class="value">@item.RevenueRecoveredForYTDFormatted</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Current Open Balance (collection efforts continue)</td>
+                    <td class="value">@StringExtensions.FormattedValue(Model.CurrentOpenBal)</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Collection Rate (past 12 months)</td>
+                    <td class="value">@(Model.CollectionRate)@Html.Raw("%")</td>
+                </tr>
+                <tr>
+                    <td class="myLabel">Revenue Recovered Rate as % of Scope (past 12 months)</td>
+                    <td class="value">@(Model.RevenueLossRate)@Html.Raw("%")</td>
+                </tr>
+            </table>
+
+            @{var nineHundredDaysAgo = DateTime.Today.AddDays(-900);
+                    var ninetyDaysAgo = DateTime.Today.AddDays(-90);}
+            <table class="row revLossTrend pagebreak" style="width:100%;margin-top:50px;">
+                <tr>
+                    <td class="myLabel" style="font-size: 25px;"><b>Revenue Recovered Trend (% of scope)</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        @*<div class="canvas-holder" style="width: 818px; height: 409px;">
+                                <canvas id="revenueLossTrend" width="1636" height="818" style="width: 818px; height: 409px;"></canvas>
+                            </div>*@
+                        <canvas id="revenueLossTrend" width="600" height="400"></canvas>
+                    </td>
+                </tr>
+            </table>
+            <table class="row revLossByBDErrorCode pagebreak" style="width:100%;margin-top:30px;min-height:900px !important;">
+                <tr>
+                    <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Revenue Recovered by Balance Due Error Code for Period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <canvas id="revLossByBDErrorCode" style="width:600px; height:400px;margin-top: 50px;"></canvas>
+                    </td>
+                </tr>
+                @if (Model.RevLossByBDErrorCode != null && Model.RevLossByBDErrorCode.Any())
+                        {
+                <tr>
+                    <td>
+                        <table style="width:100%;margin-top: 40px;" class="table table-bordered table-striped DetailInfo">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">BD Error Code</th>
+                                    <th class="text-right">Revenue Recovered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var revLoss in Model.RevLossByBDErrorCode)
+                                            {
+                                <tr>
+                                    <td>@revLoss.BDErrorCode (@revLoss.ShortDescription)</td>
+                                    <td class="text-right">@(String.Format("{0:n}", revLoss.PaymentAmount)) @revLoss.Currency</td>
+                                </tr>
+                                            }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                        }
+            </table>
+            <table class="row revByCustomer pagebreak" style="width:100%;margin-top:30px;min-height:900px !important;">
+                <tr>
+                    <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Revenue Recovered</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="width:800px;height:800px;">
+                            <canvas id="revenueByCustomer" style="width:800px;height:800px;"></canvas>
+                        </div>
+                    </td>
+                </tr>
+
+                @if (Model.RevByCustomer != null && Model.RevByCustomer.Any())
+                        {
+                <tr>
+                    <td>
+                        <table style="width:100%;margin-top: 40px;" class="table table-bordered table-striped DetailInfo">
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th class="text-right">Revenue Recovered</th>
+                                    @*<th>Customer Name</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var revByCust in Model.RevByCustomer)
+                                            {
+                                <tr>
+                                    <td>@revByCust.CustomerID</td>
+                                    <td class="text-right">@(String.Format("{0:n}", revByCust.PaymentTotal)) @revByCust.Currency</td>
+                                    @*<td>@revByCust.CustomerName</td>*@
+                                </tr>
+                                            }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                        }
+            </table>
+            @{var pageBreakClass = "";}
+            @if (Model.RevRecoveredByOrigin != null && Model.RevRecoveredByOrigin.Count > 20)
+                    {
+                        pageBreakClass = "pagebreak";
+                    }
+            <table class="row revRecByOrigin @pageBreakClass" style="width:100%;margin-top:50px;min-height:900px !important;">
+                <tr>
+                    <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Revenue Recovered by Origin  for Period @Model.SearchOptions.ClientStartDate to @Model.SearchOptions.ClientEndDate</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <canvas id="revenueRecByOrigin" style="margin-top: 50px;"></canvas>
+                    </td>
+                </tr>
+            </table>
+            @if (Model.RevRecoveredByOrigin != null && Model.RevRecoveredByOrigin.Any())
+                    {
+            <table style="width:100%;margin-top: 30px;" class="table table-bordered table-striped DetailInfo">
+                <thead>
+                    <tr>
+                        <th class="text-left">Origin Location Code</th>
+                        <th class="text-right">Revenue Recovered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var revRec in Model.RevRecoveredByOrigin)
+                                {
+                    <tr>
+                        <td>@revRec.OriginLocationCode</td>
+                        <td class="text-right">@(String.Format("{0:n}", revRec.PaymentAmount)) @revRec.Currency</td>
+                    </tr>
+                                }
+                </tbody>
+            </table>
+                    }
+        </div>
+    </page>
+        }
+    }
+    @if (Model.RevLossByBDErrorCode == null)
+    {
+        return;
+    }
+    <script>
+        var colors = ["#FF5A5E", "#FDB45C", "#46BFBD", "#2ecc71","#3498db","#95a5a6","#9b59b6","#f1c40f","#e74c3c","#34495e"]
+        var pieLabels; var pieData;
+        pieLabels = @Html.Raw(JavaScript.Serialize(Model.RevLossByBDErrorCode.Select(x => x.BDErrorCode)));
+        pieData = @Html.Raw(JavaScript.Serialize(Model.RevLossByBDErrorCode.Select(x => x.PaymentAmount)));
+        var pieDataFormatted = [];
+        for(var i=0;i<pieData.length;i++){
+            var pie = {};
+            pie.color =colors[i];
+            pie.value = pieData[i];
+            pie.highlight= "#FFC870";
+            pie.label = pieLabels[i];
+            pieDataFormatted.push(pie);
+            console.log(pie);
+        }
+        console.log(pieDataFormatted);
+        var options =
+            {
+                tooltipTemplate: "<%= label+value %>",
+                onAnimationComplete: function()
+                {
+                    this.showTooltip(this.segments, true);
+                },
+                tooltipEvents: [],
+                showTooltips: true
+            }
+        var context = $('#revLossByBDErrorCode').get(0).getContext('2d');
+        //var chart = new Chart(context).Pie(pieDataFormatted, options);
+    </script>
+    @if (Model.RevByCustomer == null)
+    {
+        return;
+    }
+    <script>
+        var pieCustLabels; var pieCustData;
+        pieCustLabels = @Html.Raw(JavaScript.Serialize(Model.RevByCustomer.Select(x => x.CustomerID)));
+        pieCustData = @Html.Raw(JavaScript.Serialize(Model.RevByCustomer.Select(x => x.PaymentTotal)));
+        var pieCustDataFormatted = [];
+        for(var i=0;i<pieCustData.length;i++){
+            var pie = {};
+            pie.color =colors[i];
+            pie.value = pieCustData[i];
+            pie.highlight= "#FFC870";
+            pie.label = pieCustLabels[i];
+            pieCustDataFormatted.push(pie);
+            console.log(pie);
+        }
+        console.log(pieCustDataFormatted);
+        var options =
+            {
+                tooltipTemplate: "<%= label+value %>",
+                onAnimationComplete: function()
+                {
+                    this.showTooltip(this.segments, true);
+                },
+                tooltipEvents: [],
+                showTooltips: true,
+                animation:false
+            }
+        var context = $('#revenueByCustomer').get(0).getContext('2d');
+        //var chart = new Chart(context).Pie(pieCustDataFormatted, options);
+        var myPieChart = new Chart(context,{
+            type: 'pie',
+            data: pieCustDataFormatted,
+            options: options
+        });
+    </script>
+    <script>
+        var canvas = document.getElementById('revenueByCustomer'),
+    dataUrl = canvas.toDataURL(),
+    imageFoo = document.createElement('img');
+        imageFoo.src = dataUrl;
+
+        // Style your image here
+        imageFoo.style.width = '100px';
+        imageFoo.style.height = '100px';
+
+        // After you are done styling it, append it to the BODY element
+        document.body.appendChild(imageFoo);
+    </script>
+</body>
+</html>

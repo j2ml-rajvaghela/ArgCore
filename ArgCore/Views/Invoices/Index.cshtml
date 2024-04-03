@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="InvoicesList" class="main-content row">
+    <div class="row text-right right options exportIcon">
+        <img src="~/images/export.png" />
+    </div>
+    <div id="searchBlock" class="row">
+        <div class="col-md-10 searchBlock">
+            <input id="txtSearch" type="text" name="searchquery" class="form-control txtSearch" placeholder="Type here to search...">
+            <a id="btnSearch" class="Search" href="javascript:void(0);"><span class="fa fa-search"></span></a>
+        </div>
+    </div>
+    @if (Model.InvoicesList != null && Model.InvoicesList.Count > 0)
+    {
+        <table id="invoices-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="invoice">INVOICE</th>
+                    <th class="invDate">INVOICE DATE</th>
+                    <th class="company">COMPANY</th>
+                    @*<th class="customer">CUSTOMER</th>*@
+                    <th class="region">REGION</th>
+                    @*<th class="bolNo">BOL</th>
+                <th class="amtDue">AMOUNT DUE</th>*@
+                </tr>
+            </thead>
+            <tbody class="invoice-details">
+                @foreach (var item in Model.InvoicesList)
+                {
+                    <tr>
+                        <td class="id">
+                            @*<a href="@(Common.MyRoot)Invoices/Save?invoiceId=@item.InvoiceId" title="Edit Invoice">*@
+                            @item.Invoice
+                            @*</a>*@
+                        </td>
+                        <td class="invDate">@item.InvoiceDate.ToString("D")</td>
+                        <td class="company">@item.Company</td>
+                        @*<td class="customer">@item.Customer</td>*@
+                        <td class="region">@item.Region</td>
+                        @*<td class="bolNo">@item.Bol</td>
+                <td class="amtDue">@Html.Raw("$")@item.Amount_Due</td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No invoices found!</h3>")
+    }
+</div>

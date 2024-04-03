@@ -1,0 +1,109 @@
+﻿@model ArgCore.Models.SaveClient
+@{
+    // ViewBag.Title = Arg.Terms.Resource1.pgTitleClientEdit;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- data entry form -->
+<div id="divmain">
+    <div id="modaleditbody" class="modal-body">
+        @using (Html.BeginForm("ClientEditV1", "Manager", FormMethod.Post))
+        {
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">ID</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.clientid, null, new { @readonly = "true", @maxlength = "10", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Client Name</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.clientname, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Contact Name</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.contactname, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Email Address</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.emailaddress, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Phone Number</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.phonenumber, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Street Address</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.street1, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">City</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.city, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">State Code</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.statecode, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Postal Code</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Client.postalcode, null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Country</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(x => x.Client.countryid, Model.Countries, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline row">
+                <div class="col-md-2">
+                    <label for="inputUrl" class="mylabel label-content">Is Active</label>
+                </div>
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(m => m.Client.isactive, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label class="control-label"></label>
+                </div>
+                <div class="col-md-10">
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

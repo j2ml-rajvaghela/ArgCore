@@ -1,0 +1,57 @@
+﻿@model ArgCore.Models.Menus
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="AddMenuItem" class="main-content row">
+    @using (Html.BeginForm("Save", "Menus", FormMethod.Post, new { @id = "AddItem" }))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <h2>@Model.CommonObjects.Heading</h2>
+            </div>
+            <div class="col-md-6 text-right right manage-menu">
+                <a href="~/MenuItems/Index">
+                    <span><img src="~/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Menu Items</span>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label for="inputUrl" class="mylabel label-content">Menu ID</label>
+                @Html.TextBoxFor(x => x.MenuDetail.MenuId, null, new { @class = "form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Display Name</label>
+                @Html.TextBoxFor(x => x.MenuDetail.DisplayName, null, new { @class = "form-control firstSpacetruncate", maxlength = "150" })
+                @Html.ValidationMessageFor(x => x.MenuDetail.DisplayName)
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputUrl" class="mylabel label-content">Name</label>
+                @Html.TextBoxFor(x => x.MenuDetail.Name, null, new { @class = "form-control firstSpacetruncate", maxlength = "150" })
+                @Html.ValidationMessageFor(x => x.MenuDetail.Name)
+            </div>
+        </div>
+        @*<div class="row">
+    <div class="form-group col-md-6">
+    <label for="inputUrl" class="mylabel label-content">Last Modified On</label>
+    @Html.TextBoxFor(x => x.MenuDetail.LastModOn, null, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+    <div class="form-group col-md-6">
+    <label for="inputUrl" class="mylabel label-content">Last Modified by</label>
+    @Html.TextBoxFor(x => x.MenuDetail.LastModBy, null, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+    </div>*@
+        <div class="btnResrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "Menus", new { menuId = @Model.MenuDetail.MenuId }, new { @class = "btn btn-lg btnDelete" })
+                @*<button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

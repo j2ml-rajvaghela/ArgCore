@@ -1,0 +1,61 @@
+﻿@model ArgCore.Models.PullForResearch
+@{
+    Layout = "";
+}
+<style>
+    .modal {
+        top: -100px !important;
+        bottom: 10px !important;
+    }
+
+    .modal-open .modal {
+        overflow: hidden !important;
+    }
+
+    .CancelButton {
+        font-size: 20px;
+        padding: 10px 16px;
+        line-height: 1.3333333;
+        font-weight: normal;
+        margin-right: 34px;
+        width: 120px;
+        color: #fff;
+        background-color: #919193 !important;
+    }
+
+    #AddResearchReasonCode {
+        min-height: 500px;
+    }
+</style>
+<div id="AddResearchReasonCode">
+    @using (Html.AjaxBeginForm("SaveResearchReasonCode", "Research", null, new AjaxOptions { OnSuccess = "OnNewReasonCodeAdded" }, new { @class = "form-horizontal" }))
+    {
+        <h2>Add Research Reason Code</h2>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Reason Code</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.PullReasonCode, null, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.PullReasonCode)
+            </div>
+        </div>
+        <div class="btnResrItemInfo">
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" value="Exit" class="btn btn-lg btn-default close btnAddReasonCodeCancel" data-dismiss='modal' style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+                @*<button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>*@
+            </div>
+        </div>
+        <div id="lblAddedResearchCodeMsg" style="color: green; font-size: 20px;"></div>
+    }
+</div>
+<script>
+    function OnNewReasonCodeAdded(ajaxContext) {
+        console.log(ajaxContext);
+        $("#lblAddedResearchCodeMsg").html(ajaxContext.Message);
+        $("#ddlResReasonCodes").empty();
+        $.each(ajaxContext.PullReasonCodes, function (i, item) {
+            $("#ddlResReasonCodes").append('<option value="' + item.Value + '">' + item.Text + '</option>');
+        });
+        $(".btnAddReasonCodeCancel").click();
+    }
+</script>

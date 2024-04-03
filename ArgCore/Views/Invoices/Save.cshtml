@@ -1,0 +1,103 @@
+﻿@*@{Layout = "~/Views/Shared/_AdminLayout.cshtml";}*@
+@model ArgCore.Models.Invoices
+@{
+    Layout = "";
+}
+@*opening in popup(using bootbox) from Add Invoice in http://localhost:26744/ArgInvoicesBD/Index*@
+
+<style>
+    /*body {
+        color: #82797b;
+    }*/
+
+    .modal {
+        top: -190px !important;
+        bottom: 10px !important;
+    }
+
+    .modal-open .modal {
+        overflow: hidden !important;
+    }
+
+    .CancelButton {
+        font-size: 20px;
+        padding: 10px 16px;
+        line-height: 1.3333333;
+        font-weight: normal;
+        margin-right: 34px;
+        width: 120px;
+        color: #fff;
+        background-color: #919193 !important;
+    }
+</style>
+
+<div id="AddInvoice" class="main-content row" style="min-height: 600px;">
+    @using (Html.AjaxBeginForm("Save", "Invoices", null, new AjaxOptions { OnSuccess = "OnNewInvoiceAdded" }, new { @class = "form-horizontal" }))
+    {
+    <h2>@Model.CommonObjects.Heading</h2>
+    @Html.HiddenFor(x => x.InvoiceDetail.InvoiceId)
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Client</label>
+        <div class="col-md-6">
+            @Html.DropDownListFor(x => x.InvoiceDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlInvoiceCompanies", @class = "form-control" })
+            @Html.DropDownListFor(x => x.InvoiceDetail.CompanyId, Model.Clients, "-- select client --", new { id = "ddlInvoiceTerms", @class = "form-control", style = "display:none"})
+            @Html.ValidationMessageFor(x => x.InvoiceDetail.CompanyId)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Region</label>
+        <div class="col-md-6">
+            @Html.DropDownListFor(x => x.InvoiceDetail.Region, Model.Regions, "-- select region --", new { id = "ddlInvoiceRegions", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.InvoiceDetail.Region)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice</label>
+        <div class="col-md-6">
+            @Html.TextBoxFor(x => x.InvoiceDetail.Invoice, null, new { @readonly = "true", @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.InvoiceDetail.Invoice)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice Date</label>
+        <div class="col-md-6">
+            @Html.TextBoxFor(x => x.InvoiceDetail.InvoiceDate, null, new { @class = "form-control datepicker", data_val = "false" })
+            @*@Html.ValidationMessageFor(x => x.InvoiceDetail.InvoiceDate)*@
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice Status</label>
+        <div class="col-md-6">
+            @Html.DropDownListFor(x => x.InvoiceDetail.InvoiceStatus, Model.InvoiceStatus, "-- select status --", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.InvoiceDetail.InvoiceStatus)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Due Date</label>
+        <div class="col-md-6">
+            @Html.TextBoxFor(x => x.InvoiceDetail.DueDate, null, new { @class = "form-control datepicker", data_val = "false" })
+            @*@Html.ValidationMessageFor(x => x.InvoiceDetail.DueDate)*@
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice Type</label>
+        <div class="col-md-6">
+            @Html.DropDownListFor(x => x.InvoiceDetail.InvoiceType, Model.InvoiceTypes, "-- select invoice type --", new { id = "ddlInvoiceType", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.InvoiceDetail.InvoiceType)
+        </div>
+    </div>
+    <div class="btnReasrItemInfo">
+        @*<div class="col-xs-12 col-md-4"> //NO DELETE OPTION REQUIRED
+                @Html.ActionLink("Delete", "Delete", "Invoices", new { invoiceId = @Model.InvoiceDetail.InvoiceId }, new { @class = "btn btn-lg btnDelete" })
+            </div>*@
+        <div class="col-xs-12 col-md-8 right text-right">
+            <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+            <button type="button" class="bootbox-close-button btn btn-lg CancelButton"><i class="fa fa-ban"></i> Cancel</button>
+            @*<input type="button" class="bootbox-close-button btn btn-lg CancelButton" value="Cancel" />*@
+        </div>
+    </div>
+    <div id="lblAddedInvoiceMsg" style="color: green; font-size: 20px;"></div>
+    }
+</div>
+<script>
+</script>

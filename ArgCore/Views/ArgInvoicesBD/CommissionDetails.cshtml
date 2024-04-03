@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.CommissionDetails
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Invoice Commissions</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="bdPaymentDetails">
+        <div class="headingBlock">
+            <span class="heading">Invoice Commissions</span>
+            @if (Model.CommissionsSummeryList != null && Model.CommissionsSummeryList.Any())
+            {
+                <h2 class="commissionSummery">Summary Invoice </h2>
+
+                <table id="collComments-list-summery" class="table">
+                    <thead>
+                        <tr>
+                            <th class="user">UserName</th>
+                            <th class="amount">AMOUNT DUE USD</th>
+                        </tr>
+                    </thead>
+                    <tbody class="collComments-details">
+                        @foreach (var item in Model.CommissionsSummeryList)
+                        {
+                            <tr>
+                                <td class="user">@item.UserName</td>
+                                <td class="amount text-center">@item.AmountDueUSD</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            @*<span class="head-details">Cust. ID: @Model.BalanceDueInfo.CustomerId | Bol#: @Model.BalanceDueInfo.Bol</span>*@
+        </div>
+        @if (Model.Commissions != null && Model.Commissions.Any())
+        {
+            <table id="collComments-list" class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="user">UserName</th>
+                        <th class="region">Region</th>
+                        <th class="invoice">Invoice#</th>
+                        <th class="invoiceDate">Invoice Date</th>
+                        <th class="cId">Customer Id</th>
+                        <th class="bol">BOL#</th>
+                        <th class="bolExecDate">Bol Execution Date</th>
+                        <th class="amntDueUSD">Amount Due USD</th>
+                    </tr>
+                </thead>
+                <tbody class="collComments-details">
+                    @foreach (var item in Model.Commissions)
+                    {
+                        <tr>
+                            <td>@item.UserName</td>
+                            <td>@item.Region</td>
+                            <td>@item.InvoiceNo</td>
+                            <td>@item.InvoiceDate.ToString("d")</td>
+                            <td>@item.CustomerId</td>
+                            <td>@item.BOLNo</td>
+                            <td>@item.BolExecutionDate.ToString("d")</td>
+                            <td>@item.AmountDueUSD</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            @Html.Raw("No commissions found!")
+        }
+    </div>
+</body>
+</html>

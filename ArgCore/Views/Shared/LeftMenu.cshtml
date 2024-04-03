@@ -1,0 +1,36 @@
+﻿@using ArgCore.Helpers
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+        <ul class="nav side-menu">
+            <li>
+                <img src="~/images/Dashboard-.png" class="dashboardIcon">@Html.ActionLink("Dashboard", "Index", "Admin", null, new { @class = "menuDash" })
+            </li>
+            @{
+                var items = Common.GetMenuItemsForCurrentUser();
+            }
+            @foreach (var item in items.Where(x => x.ParentId == 0).OrderBy(x => x.DisplayIdx))
+            {
+                var childItems = items.Where(x => x.ParentId == item.ItemId).OrderBy(x => x.DisplayIdx);
+                <li>
+                    @if (childItems != null && childItems.Any())
+                    {
+                        <a>
+                            <img src="~/images/@item.ImgSrc"> @item.DisplayName
+                            <span class='fa fa-chevron-down'></span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@(Common.MyRoot)@item.Link"><img src="~/images/@item.ImgSrc">@item.DisplayName</a>
+                    }
+                    @foreach (var childItem in childItems)
+                    {
+                        <ul class="nav child_menu">
+                            <li><img src="~/images/@childItem.ImgSrc"> <a href="@childItem.Link">@childItem.DisplayName</a></li>
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+</div>

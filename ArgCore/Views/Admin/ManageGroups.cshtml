@@ -1,0 +1,297 @@
+﻿@{
+    ViewBag.Title = Arg.Terms.Resource1.pgTitleManageGroups;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divmain">
+    <fieldset>
+        <legend>
+            <button id="btnaddgroup" class="btn btn-primary">
+                <i class="mdi mdi-plus-circle icnwht"></i> @Arg.Terms.Resource1.btnAddGroup
+            </button>
+        </legend>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblEdit</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblGroupName</div>
+            <div class="col-md-4">@Arg.Terms.Resource1.lblClient</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblIsActive</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblMembers</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1"><i class="mdi mdi-pencil-box-outline icngrn elnk" data-bind="attr:{'id':'g' + groupid}" style="cursor:pointer;"></i></div>
+                <div class="col-md-1" data-bind="text:groupid"></div>
+                <div class="col-md-2" data-bind="text:groupname"></div>
+                <div class="col-md-4" data-bind="text:clientname"></div>
+                <div class="col-md-1" data-bind="if: isactive==true"><i class="mdi mdi-check icngrn"></i></div>
+                <div class="col-md-1"><a data-bind="attr: { href: 'ManageMembers/' + groupid }">@Arg.Terms.Resource1.lblMembers</a></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<!-- name confirm modal -->
+
+<div class="modal fade" id="modaleditgroup" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- Modal Header -->
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <div class="modal-title" id="modaltitle">@Arg.Terms.Resource1.lblEditGroup</div>
+            </div>
+            <div id="modaleditbody" class="modal-body">
+                <!-- Modal Body -->
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblID</label></div>
+                    <div class="col-sm-6">
+                        <label data-bind="text:groupid"></label>
+                        <input type="text" class="form-control hide" id="groupid" placeholder="Group Name" data-bind="value:groupid" />
+                    </div>
+                </div>
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblGroupName</label></div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control firstInput de" id="groupname" placeholder="Group Name" data-bind="value:groupname" />
+                    </div>
+                </div>
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblClient</label></div>
+                    <div class="col-sm-6">
+                        <select class="form-control" id="ddlclients" data-bind="value:clientid"></select>
+                    </div>
+                </div>
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblIsActive</label></div>
+                    <div class="col-sm-6" style="text-align:left !important;">
+                        <input type="checkbox" class="form-control de chk" id="isactive" data-bind="checked:isactive" />
+                    </div>
+                </div>
+
+                <div class="row der">
+                    <div class="col-sm-11">
+                        <div id="modal-error" class="alert alert-danger hide">123</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Modal Footer -->
+                <button type="button" class="btn btn-default btngry" data-dismiss="modal">
+                    <i class="mdi mdi-close-circle icnwht"></i> @Arg.Terms.Resource1.btnClose
+                </button>
+                <button id="btnsave" type="button" class="btn btn-primary btnblu">
+                    <i class="mdi mdi-check-circle icnwht"></i> @Arg.Terms.Resource1.btnSave
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var gm;
+        var bound = false;
+        var dataupdated = false;
+        var newGroup = false;
+        $(document).ready(function () {
+            setProgressBar();
+            InitializeViewModel();
+            getData("groups");
+            log.info("ready to load ddl");
+            getDataX("ddlclients", loadDDLClients);
+
+            $(document).on('hide.bs.modal', '#modaleditgroup', function () {
+                if (dataupdated) {
+                    setProgressBar();
+                    getData("groups");
+                }
+            });
+        });
+
+        function InitializeViewModel() {
+            ko.applyBindings(viewModel, $("#divmain")[0]);
+        }
+
+        //function centerModal(nm) {
+        //    $(this).css('display', 'block');
+        //    var $dialog = $(nm).find(".modal-dialog"),
+        //    offset = ($(window).height() - $dialog.height()) / 2,
+        //    bottomMargin = parseInt($dialog.css('marginBottom'), 10);
+
+        //    // Make sure you don't hide the top part of the modal w/ a negative margin if it's longer than the screen height, and keep the margin equal to the bottom margin of the modal
+        //    if (offset < bottomMargin) offset = bottomMargin;
+        //    $dialog.css("margin-top", offset);
+        //}
+
+        function addGroup() {
+            log.info("add group");
+            // $('#modalNotYet').modal('show');
+
+            try {
+                // empty group
+                gm = new groupModel(null);
+                ko.cleanNode($("#modaleditbody")[0])
+                ko.applyBindings(gm, $("#modaleditbody")[0]);
+                //log.info("loadGroup.clientID=" + gm.clientid() + ";isactive=" + gm.isactive());
+                $("#ddlclients").val("");
+                newGroup = true;
+                popGroup();
+            } catch (e) { log.info("load group error: " + e.message); }
+
+        }
+
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            dataupdated = false;
+            viewModel.items([]);
+            try {
+                for (i = 0; i < response.length; i++) {
+                    viewModel.items.push(response[i]);
+                }
+                finishProgressBar();
+                $("#btnaddgroup").on("click", addGroup);
+                $(".elnk").on("click", function () { popGroup(this); });
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        }
+
+        // load view model so Knockout can bind to it
+        function loadDDLClients(response) {
+            try {
+                log.info("get response: load ddl clients");
+                $('#ddlclients').find('option').remove().end().append('<option value="">** Select Client **</option>');
+
+                for (i = 0; i < response.length; i++) {
+                    var opt = "<option value='" + response[i].id + "'>" + response[i].txt + "</option>";
+                    $("#ddlclients").append(opt);
+                }
+                $("#ddlclients").prop("width:300px;");
+            } catch (e) {
+                log.error("load ddl : " + e.message);
+                setMessage("load ddl : " + e.message, "error");
+            }
+        }
+        class groupModel {
+            constructor(rec) {
+                if (rec != null) {
+                    this.groupid = ko.observable(rec.groupid);
+                    this.groupname = ko.observable(rec.groupname);
+                    this.clientid = ko.observable(rec.clientid);
+                    this.isactive = ko.observable(rec.isactive);
+                } else {
+                    this.groupid = ko.observable(0);
+                    this.groupname = ko.observable("");
+                    this.clientid = ko.observable(0);
+                    this.isactive = ko.observable(true);
+                }
+            }
+        }
+
+        // load view model so Knockout can bind to it
+        function loadGroup(response) {
+            try {
+                log.info("get response: loadGroup");
+                gm = new groupModel(response);
+                ko.cleanNode($("#modaleditbody")[0])
+                ko.applyBindings(gm, $("#modaleditbody")[0]);
+                log.info("loadGroup.clientID=" + gm.clientid() + ";isactive=" + gm.isactive());
+                $("#ddlclients").val(gm.clientid());
+            } catch (e) { log.info("load group error: " + e.message); }
+        }
+
+        // prepare the popup
+        function popGroup() {
+            log.info("popGroup: newgroup=" + newGroup);
+            $(".de").removeClass("dataentryerror");
+            clearModalMessage();
+            $("#modalerror").text("").addClass("hide");
+            $("#groupname").val("").focus();
+            $("#modaltitle").text("Edit Group Description");
+            $("#btnsavename").unbind('click');
+            //$("#btnsavename").on("click", saveNewName);
+            $("#modaleditgroup").css("margin-top", "200px").show();
+            //centerModal("#modaleditgroup");
+            $("#modaleditgroup").modal('show');
+            try {
+                $("modaleditgroup").draggable({ handle: ".modal-header" });
+            } catch (e) { log.info("popGroup error:" + e.message); };
+            if (newGroup == false) {
+                editGroup(this);
+            }
+            newGroup = false;
+            $("#btnsave").off("click").on("click", sendData);
+        }
+
+        function editGroup(x) {
+            var sid = event.target.id;
+            var id = sid.substr(1);
+            log.info("edit group: id=" + id);
+            getDataX("group", loadGroup, id);
+            //$("#btnsave").on("click", sendData);
+        }
+
+        function validPage() {
+            log.info("validating");
+            isValid = false;
+            var cnt = 0;
+            try {
+                $(".de").removeClass("dataentryerror");
+                cnt = checkRequiredField("groupname", true);
+                log.info("validated; cnt=" + cnt);
+                if (cnt > 0) {
+                    setModalMessage("@Arg.Terms.Resource1.msgRequiredFieldsError", "error");
+                } else {
+                    isValid = true;
+                }
+            } catch (e) {
+                log.info("validation error" + e.message);
+            }
+            return isValid;
+        }
+
+        // send records to web service for insert or update
+        function saveData() {
+            //if (!validPage()) { return; }
+            log.info("save data");
+            log.info("items=" + dataModel.items().length);
+            log.info("cnt2=" + dataModel.dirtyItems().length);
+            // send update: convert data set to JSON
+            try {
+                if (dataModel.dirtyItems().length == 0) {
+                    setMessage("No changes to submit");
+                } else {
+                    var jdata = ko.toJSON(dataModel.dirtyItems);
+                    log.info("ready to submit changes:");
+                    $.ajax({
+                        url: "/api/locations",
+                        type: "POST",
+                        data: jdata,
+                        processData: true,
+                        contentType: "application/json",
+                        dataType: "json",
+                        length: jdata.length,
+                        success: function (result) {
+                            dataupdated = true;
+                            setDBMessage(result, "#divmessage", 5000);
+                            getMoreData();
+                        },
+                        error: function (result) {
+                            setDBMessage(result, "#divmessage");
+                        }
+                    });
+                }
+            } catch (e) { log.info(e.message); }
+        }
+
+        function updateGroup() {
+            var sid = event.target.id;
+            var id = sid.substr(1);
+            log.info("edit group: id=" + id);
+            getDataX("group", loadGroup, id);
+        }
+    </script>
+}

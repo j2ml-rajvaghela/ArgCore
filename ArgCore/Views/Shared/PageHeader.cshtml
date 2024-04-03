@@ -1,0 +1,21 @@
+﻿@using ArgCore.Helpers
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARG - Your Profits Our Business</title>
+<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+<link href="@(Common.MyRoot)favicon.png" rel="shortcut icon" type="image/png" />
+@*<link href="/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />*@
+@*<link href="/Content/Gentallela.css" rel="stylesheet" />*@
+@*<link href="/Content/custom.min.css" rel="stylesheet" />*@
+@* @Html.Partial("CssFiles") *@
+<partial name="CssFiles"/>
+<script type="text/javascript">
+    var SiteRoot = "@Html.Raw(Common.MyRoot)";
+    var currentUserRole = "@Html.Raw(Common.CurrentUserRole)";
+    var UsePdfJs = "@Html.Raw(Common.UsePdfJs)";
+</script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script type='text/javascript' src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script type='text/javascript' src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+<![endif]-->

@@ -1,0 +1,93 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.PullForResearch
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Research For Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        /*.modal {
+                    top: -190px !important;
+                    bottom: 10px !important;
+                }
+
+                .modal-open .modal {
+                    overflow: hidden !important;
+                }*/
+
+        #ResearchForDetails {
+            padding: 15px;
+            background-color: #F4F5F7;
+            min-height: 700px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ResearchForDetails">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">X</span>
+        </button>
+        <div class="headingBlock" style="margin-bottom:30px;">
+            <span class="heading">Research For Details </span>
+            <span class="head-details">Bol#: @(string.IsNullOrWhiteSpace(Model.BookingDetails.HBLNO) ? Model.BookingDetails.HAWBNO : Model.BookingDetails.HBLNO)| Booking ID: </span>
+        </div>
+        @using (Html.AjaxBeginForm("SaveResearchDetails", "Booking", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "SubmitSuccess" }, new { @class = "form-horizontal" }))
+        {
+            @Html.HiddenFor(x => x.BOLNo)
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Pull Reason</label>
+                    <div class="col-md-7">
+
+                        @Html.DropDownListFor(x => x.PullReasonCode, Model.ReasonCodes, " -- select reason code -- ", new { @class = "form-control", id = "ddlResReasonCodes", data_val_required = "Pull Reason Code field is required", @required = "required" })
+                    </div>
+                    @if (Common.CurrentUserInfo.IsAdmin)
+                    {
+                        <div class="col-md-3" style="margin-top:12px;">
+                            <a href="@(Common.MyRoot)RSReasonCodes/Index" target="_blank">
+                                <span><img src="~/images/Manage-menu-item.png" /></span><span class="right-txt">Manage Reason Codes</span>
+                            </a>
+                        </div>
+
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-2">Comments</label>
+                    <div class="col-md-7">
+                        @Html.TextAreaFor(x => x.ResearchComments, 7, 5, new { @class = "form-control ckeditor", maxlength = "500", data_val_required = "Comments field is required", @required = "required" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5" id="lblResearchItemMsg" style="color: green; font-size: 20px;"></div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-lg btnSave"><img src="~/images/save.png" /> Save</button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" value="Exit" class="btn btn-lg btn-default close btnCancel" data-dismiss='modal' style="margin-right: 41px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+                </div>
+            </div>
+        }
+    </div>
+    <script>
+        function SubmitSuccess(ajaxContext) {
+            $("#lblResearchItemMsg").html(ajaxContext);
+        }
+    </script>
+
+    <script src="@(Common.MyRoot)/Scripts/CevaScripts/PullForResearch.js?c=@Common.VersionNo"></script>
+</body>
+</html>

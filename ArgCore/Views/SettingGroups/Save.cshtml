@@ -1,0 +1,32 @@
+﻿@model ArgCore.Models.SettingGroups
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Save Setting Group";
+}
+<div id="AddSettingGroup" class="main-content row">
+    @using (Html.BeginForm("Save", "SettingGroups", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.SettingGroupDetail.GroupId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-1">Name</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(m => m.SettingGroupDetail.Name, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.SettingGroupDetail.Name)
+            </div>
+        </div>
+        <div class="btnReasrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "SettingGroups", new { groupId = @Model.SettingGroupDetail.GroupId }, new { @class = "btn btn-lg btnDelete" })
+               @*  <a asp-action="Delete" asp-controller="SettingGroups" asp-route-groupId="@Model.SettingGroupDetail.GroupId" class="btn btn-lg btnDelete">Delete</a> *@
+                @*  <button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

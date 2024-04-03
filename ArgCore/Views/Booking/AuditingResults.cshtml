@@ -1,0 +1,952 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.BookingAuditingResult
+@using ArgCore.Helpers
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Atlas Auditing</title>
+    <partial name="PageHeader" />
+    <style>
+        body {
+            padding: 0;
+            background-color: #F4F5F7 !important;
+        }
+    </style>
+    <script src="@(Common.MyRoot)build/pdf.js"></script>
+    <script src="https://rawgit.com/mozilla/pdf.js/master/src/shared/compatibility.js"></script>
+</head>
+<body>
+    <div id="BOLAudResults-PopUp" class="bookingauditingresult">
+        @{
+            var CustomerId = Context.Request.Query["customerId"];
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Message))
+        {
+            @Html.Raw(Model.Message)
+            return;
+        }
+        <div class="row">
+            <div class="col-md-6 leftBlock">
+                @*if (Model.BalanceDueDetails != null && Model.BalanceDueDetails.BalanceId > 0)*@
+                @if (Model.BalanceDueDetails != null)
+                {
+                    foreach (var item in Model.BalanceDueDetails)
+                    {
+                        @Html.HiddenFor(x => item.BalanceId)
+                        @Html.HiddenFor(x => item.InvoiceStatus)
+                        <div id="ARGBalDue">
+                            <div class="heading">
+                                <span>ARG Balance Due</span>
+                                <span class="right pull-right">BALANCE DUE TYPE = @item.InvoiceType</span>
+                            </div>
+                            <div class="balDueDetails">
+                                <div class="item">
+                                    <span class="bolLabel">Customer:</span>
+                                    <span class="value">@item.Customer</span>
+                                </div>
+                                <div class="row">
+                                    <div class="item col-md-5">
+                                        <span class="bolLabel">Invoice Status:</span>
+                                        <span class="value">@item.InvoiceStatus</span>
+                                    </div>
+                                    <div class="item col-md-7">
+                                        <span class="bolLabel">Error Code:</span>
+                                        <span class="value">@item.BDErrorCode</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="item col-md-5">
+                                        <span class="bolLabel">Origin Location Code:</span>
+                                        <span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.OriginLocationCode) ? @item.OriginLocationCode : "-")</span>
+                                    </div>
+                                    <div class="item col-md-3">
+                                        <span class="bolLabel">POL:</span>
+                                        <span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.PortOfLoading) ? @item.PortOfLoading : "-")</span>
+                                    </div>
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">Mode:</span>
+                                        <span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.MoveType) ? @item.MoveType : "-")</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="item col-md-5">
+                                        <span class="bolLabel">Destination Location Code:</span>
+                                        <span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.DestinationLocationCode) ? @item.DestinationLocationCode : "-")</span>
+                                    </div>
+                                    <div class="item col-md-7">
+                                        <span class="bolLabel">POD:</span>
+                                        <span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.PortOfDischarge) ? @item.PortOfDischarge : "-")</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @if (string.IsNullOrWhiteSpace(CustomerId))
+                                    {
+                                        <div class="item col-md-5">
+                                            <span class="bolLabel">Auditor:</span>
+                                            <span class="value">@Html.Raw(!string.IsNullOrWhiteSpace(item.FullName) ? @item.FullName : "-")</span>
+                                        </div>
+                                    }
+
+                                    <div class="item col-md-7">
+                                        <span class="bolLabel">Last Modified Date:</span>
+                                        <span class="value">@item.LastModified.ToString("d")</span>
+                                    </div>
+                                </div>
+                                <div class="item bdDescWindowBox">
+                                    <div class="bolLabel">Description:</div>
+                                    <textarea class="value bdDesc" readonly>@item.BDDescription</textarea>
+                                    <div class="row">
+                                        <div class="item col-md-5">
+                                            <span class="bolLabel">Balance Due Amount Paid:</span>
+                                            <span class="value">$ @Model.BDPaymentAmount</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        if (Model.ShowNavigation && string.IsNullOrWhiteSpace(CustomerId))
+                        {
+                            <div class="row thirdRow">
+                                @*{var animatedClass = ""; var link = "javascript:void(0);";}
+                    if (Model.EnablePullForResearchBtn)
+                    {
+
+                    animatedClass = " bootbox-pop modal-fullscreen";
+                    link = Common.MyRoot + "BOL/PullForResearch?bolNo=" + @Model.BolNo;
+                    }
+                    <div class="pullForResearch col-md-6 text-right">
+                    <a class="btn btn-primary btnPullForResearch@(animatedClass)" href="@link">
+
+                    <i class="fa fa-indent"></i> Pull For Research
+                    </a>
+                    </div>*@
+                                @if (Common.CanRunAction.AddBalanceDue)
+                                {
+                                    <div class="addBalDue col-md-6">
+                                        <a href="javascript:void(0);" data-balanceid="@item.BalanceId" data-status="@item.InvoiceStatus" class="btn btn-primary btnAddBalDue"><i class="fa fa-plus"></i> Edit Balance Due</a>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                }
+                @if (Model.BOLAuditResults != null)
+                {
+
+                    <div id="booking-loc">
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Region:</span>
+                                <span class="value">@Model.BOLAuditResults.Region</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Booking branch:</span>
+                                <span class="value">@Model.BOLAuditResults.BRANCH</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Booking type:</span>
+                                <span class="value">@Model.BOLAuditResults.BookingTypeDescription</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Created:</span>
+                                <span class="value">@Convert.ToDateTime(@Model.BOLAuditResults.CREATEDATE).ToString("d")</span>
+                            </div>
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Mode of transport:</span>
+                                @if (@Model.BOLAuditResults.MODE == "P")
+                                {
+                                    <span class="value">Air</span>
+                                }
+                                else if (@Model.BOLAuditResults.MODE == "O")
+                                {
+                                    <span class="value">Ocean</span>
+                                }
+                                else
+                                {
+                                    <span class="value">@Model.BOLAuditResults.MODE</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div id="BookingInfo">
+                        <div class="heading">Booking details</div>
+
+                        <div class="row">
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Ocean HBL #:</span>
+                                <span class="value">@Model.BOLAuditResults.HBLNO</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Ocean service type:</span>
+                                <span class="value">@Model.BOLAuditResults.ONCSERV</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Ocean carrier:</span>
+                                <span class="value">@Model.BOLAuditResults.SCACCompanyName</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item setminheight col-md-4">
+                                <span class="bolLabel">Ocean Carrier BL:</span>
+                                <span class="value">@Model.BOLAuditResults.LBLNO</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">LSONO:</span>
+                                <span class="value">@Model.BOLAuditResults.LSONO </span>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Ocean vessel:</span>
+                                <span class="value">@Model.BOLAuditResults.VESSCODE</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Ocean voyage:</span>
+                                <span class="value">@Model.BOLAuditResults.VOYNO</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Air HAWB #:</span>
+                                <span class="value">@Model.BOLAuditResults.HAWBNO</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Air service level:</span>
+                                <span class="value">@Model.BOLAuditResults.SERVLEVELDescription</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Air carrier:</span>
+                                <span class="value">@Model.BOLAuditResults.IATACodeDescription</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item setminheight col-md-4">
+                                <span class="bolLabel">Air Carrier AWB:</span>
+                                <span class="value">@Model.BOLAuditResults.AWBNO</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Air service type:</span>
+                                <span class="value">@Model.BOLAuditResults.SERVTYPE</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Air service level (detail):</span>
+                                <span class="value">@Model.BOLAuditResults.SERVLVLDescription </span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Flight:</span>
+                                <span class="value">@Model.BOLAuditResults.MAINFLGH</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="locations">
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Pickup location:</span>
+                                <span class="value">@Model.BOLAuditResults.PickLocationName</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Origin country:</span>
+                                <span class="value">@Model.BOLAuditResults.CountryName</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Origin station:</span>
+                                <span class="value">@Model.BOLAuditResults.OriginStation</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">POL:</span>
+                                <span class="value">@Model.BOLAuditResults.POLDetail</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Dest country:</span>
+                                <span class="value">@Model.BOLAuditResults.CountryName01</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Delivery location:</span>
+                                <span class="value">@Model.BOLAuditResults.DelLocationName</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">POD:</span>
+                                <span class="value">@Model.BOLAuditResults.PODDetail</span>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Shipper:</span>
+                                <span class="value">@Model.BOLAuditResults.Shipper</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Consignee:</span>
+                                <span class="value">@Model.BOLAuditResults.PartConsignee</span>
+                            </div>
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Payor:</span>
+                                <span class="value">@Model.BOLAuditResults.Payor</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Pickup date:</span>
+                                <span class="value">@Convert.ToDateTime(@Model.BOLAuditResults.PCCDATE).ToString("d")</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Depart date:</span>
+                                <span class="value">@Convert.ToDateTime(@Model.BOLAuditResults.MATRCDATE).ToString("d")</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Est depart date:</span>
+                                <span class="value">@Convert.ToDateTime(@Model.BOLAuditResults.MATRCDATE).ToString("d")</span>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Estimated delivery date to Port:</span>
+                                <span class="value">@Convert.ToDateTime(@Model.BOLAuditResults.MATRDDATE).ToString("d")</span>
+                            </div>
+                            <div class="item col-md-4">
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Est del date to Cngnse :</span>
+                                <span class="value">@Convert.ToDateTime(@Model.BOLAuditResults.ONCDDATE).ToString("d")</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Booking remarks:</span>
+                                <span class="value">@Model.BOLAuditResults.MARKS @Model.BOLAuditResults.REMARKS @Model.BOLAuditResults.REMARKS2 @Model.BOLAuditResults.REMARKS3 @Model.BOLAuditResults.REMARKS4</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Handling remarks:</span>
+                                <span class="value">@Model.BOLAuditResults.HANDLNO @Model.BOLAuditResults.HANDLREM @Model.BOLAuditResults.HANDLREM2 @Model.BOLAuditResults.HANDLREM3 @Model.BOLAuditResults.CLAUSNO @Model.BOLAuditResults.CLAUSREM1 @Model.BOLAuditResults.CLAUSREM2 @Model.BOLAuditResults.CLAUSREM3 @Model.BOLAuditResults.CLAUSREM4 @Model.BOLAuditResults.CLAUSREM5 @Model.BOLAuditResults.CLAUSREM6 @Model.BOLAuditResults.CLAUSREM7 @Model.BOLAuditResults.CLAUSREM8</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Goods type:</span>
+                                <span class="value">@Model.BOLAuditResults.GoodType</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="measure">
+                        <div class="row">
+                            <div class="heading">Piece \ Container details</div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Actual weight:</span>
+                                <span class="value">@Model.BOLAuditResults.WGHT</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Measure:</span>
+                                <span class="value">@Model.BOLAuditResults.MEAS</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Chargeable weight:</span>
+                                <span class="value">@Model.BOLAuditResults.CHRGWGHT</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Pieces:</span>
+                                <span class="value">@Model.BOLAuditResults.PCKGS</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Piece type:</span>
+                                <span class="value">@Model.BOLAuditResults.PackagingCode</span>
+                            </div>
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Description of Goods:</span>
+                                <span class="value">@Model.BOLAuditResults.GOODSDSC @Model.BOLAuditResults.GOODSDSC2 @Model.BOLAuditResults.GOODSDSC3 @Model.BOLAuditResults.GOODSDSC4 @Model.BOLAuditResults.GOODSDSC5 @Model.BOLAuditResults.GOODSDSC6 @Model.BOLAuditResults.GOODSDSC7 @Model.BOLAuditResults.GOODSDSC8 @Model.BOLAuditResults.GOODSDSC9 @Model.BOLAuditResults.GOODSDSC10 @Model.BOLAuditResults.GOODSDSC11 @Model.BOLAuditResults.GOODSDSC12</span>
+                            </div>
+                        </div>
+
+                        @if (Model.BOLContainerDetail != null)
+                        {
+
+                            foreach (var item in Model.BOLContainerDetail)
+                            {
+
+                                <div class="row">
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">ContainerID:</span>
+                                        <span class="value">@item.CNTRNO</span>
+                                    </div>
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">Gross Weight (K):</span>
+                                        <span class="value"><b>@item.GROSSKGS</b></span>
+                                    </div>
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">Charg Weight (K):</span>
+                                        <span class="value"><b>@item.CHRGKGS</b></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">Type:</span>
+                                        <span class="value">@item.CNTRTYPE</span>
+                                    </div>
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">Description:</span>
+                                        <span class="value">@item.CNTRDESC</span>
+                                    </div>
+                                    <div class="item col-md-4">
+                                        <span class="bolLabel">Full / Less than Full:</span>
+                                        <span class="value">@item.FCLLCL</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="item col-md-3">
+                                        <span class="bolLabel">Cube:</span>
+                                        <span class="value"><b>@item.CUBE</b></span>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+                    </div>
+                    <div id="invoiceCharges">
+                        <div class="heading">Invoiced charges</div>
+                        <div class="row">
+                            @*<div class="item col-md-4">
+                        <span class="bolLabel">Gross rate</span>
+                        <span class="value">@Model.BOLAuditResults.GrossRate.ToString("0.##")</span>
+                        </div>*@
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Net rate</span>
+                                <span class="value">@string.Format("{0:n0}", Model.BOLAuditResults.NetRate.ToString("0.##"))</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item col-md-2">
+                                <span class="bolLabel">Customer</span>
+                            </div>
+                            <div class="item col-md-2">
+                                <span class="bolLabel">Inv #</span>
+                            </div>
+                            <div class="item col-md-2">
+                                <span class="bolLabel">Date </span>
+                            </div>
+                            <div class="item col-md-2">
+                                <span class="bolLabel">Rate </span>
+                            </div>
+                            <div class="item col-md-2">
+                                <span class="bolLabel">Invoice charges</span>
+                            </div>
+                            <div class="item col-md-1">
+                                <span class="bolLabel">Charges</span>
+                            </div>
+                            <div class="item col-md-1">
+                                <span class="bolLabel">Currency</span>
+                            </div>
+                        </div>
+                        @if (Model.BOLInvoiceHeader != null && Model.BOLInvoiceHeader.Count > 0)
+                        {
+                            int count = 0;
+
+                            foreach (var item in Model.BOLInvoiceHeader)
+                            {
+                                count++;
+                                var debtcount = Model.BOLInvoiceHeader.Where(u => u.DEBTOR == item.DEBTOR && u.INVOICENO == item.INVOICENO).Count();
+                                <div class="row">
+                                    <div class="item col-md-2">
+
+                                        <span class="value">@item.ParticipantName</span>
+                                    </div>
+                                    <div class="item col-md-2">
+
+                                        <span class="value">@item.INVOICENO</span>
+                                    </div>
+                                    <div class="item col-md-2">
+
+                                        <span class="value">@Convert.ToDateTime(@item.DATEINV).ToString("d")</span>
+                                    </div>
+                                    <div class="item col-md-2">
+
+                                        @*string.Format("{0:n0}"*@
+                                        <span class="value">@string.Format("{0:n0}", Convert.ToDecimal(item.RATE).ToString("0.##"))</span>
+                                    </div>
+                                    <div class="item col-md-2">
+
+                                        <span class="value">@item.INVTEXTDescription</span>
+                                    </div>
+
+                                    <div class="item col-md-1">
+                                        <span class="value">@string.Format("{0:n0}", Convert.ToDecimal(item.INVCURAMT).ToString("0.##"))</span>
+                                    </div>
+                                    <div class="item col-md-1">
+                                        <span class="value">@item.CURR</span>
+                                    </div>
+                                </div>
+                                if (count == debtcount)
+                                {
+                                    count = 0;
+                                    <div class="row">
+                                        <div class="item col-md-8">
+                                            <span class="bolLabel">Total customer invoice amount</span>
+                                            <span class="value">@string.Format("{0:n0}", Convert.ToDecimal(Model.BOLNetInvoiceHeader.FirstOrDefault(u => u.DEBTOR == item.DEBTOR && u.INVOICENO == item.INVOICENO).INVCURAMT).ToString("0.##"))</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="item col-md-8">
+                                            <span class="bolLabel">Net rate for customer invoice amount</span>
+                                            @if (Model.BOLAuditResults.CHRGWGHT > 0)
+                                            {
+                                                <span class="value">@string.Format("{0:n0}", (Convert.ToDecimal(Model.BOLNetInvoiceHeader.FirstOrDefault(u => u.DEBTOR == item.DEBTOR && u.INVOICENO == item.INVOICENO).INVCURAMT / Model.BOLAuditResults.CHRGWGHT).ToString("0.##")))</span>
+
+                                            }
+                                            else
+                                            {
+                                                <span class="value">0</span>
+
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+
+                        <div class="row">
+                            <div class="item col-md-4">
+                                <span class="bolLabel">Total invoiced amount :</span>
+                                <span class="value"><b>@string.Format("{0:n0}", Convert.ToDecimal(Model.TotalBOLInvoiceHeader).ToString("0.##"))</b></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.ShowNavigation && string.IsNullOrWhiteSpace(CustomerId))
+                {
+                    <div id="navBlock" class="row">
+                        <div class="col-md-4 actStatByEventType">
+                            @if (Model.ActStatsByEvent != null && Model.ActStatsByEvent.Count > 0)
+                            {
+                                <h5>User Activity Overview</h5>
+                                <table id="activityStatsEvent" class="table text-center">
+
+                                    <tbody class="actStat-details">
+                                        @foreach (var stat in Model.ActStatsByEvent)
+                                        {
+                                            <tr>
+                                                <td class="name text-left">@stat.UserName</td>
+                                                <td class="bolViews">@stat.EventCount</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                        <div class="col-md-8 recordsDetailBlock">
+                            <div class="row firstRow">
+                                <div class="col-md-3">
+                                    <div class="firstItem">
+                                        <a href="@(Common.MyRoot)Booking/AuditingResults?queryId=@(Model.QueryId)&idx=1" class="stepToBegin">
+                                            <i class="fa fa-angle-double-left"></i> Begin
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <span class="prevItem">
+                                        @{
+                                            var PrevUrl = (Common.MyRoot) + "Booking/AuditingResults?queryId=" + (Model.QueryId) + "&idx=" + (Model.Idx - 1);
+                                            var NextUrl = (Common.MyRoot) + "Booking/AuditingResults?queryId=" + (Model.QueryId) + "&idx=" + (Model.Idx + 1);
+                                            if (Model.Idx <= 1)
+                                            {
+                                                PrevUrl = "javascript:void(0);";
+                                            }
+                                            if (Model.Idx >= Model.TotalResultCount)
+                                            {
+                                                NextUrl = "javascript:void(0);";
+                                            }
+                                        }
+                                        <a href="@PrevUrl" class="stepToPrev">
+                                            <i class="fa fa-angle-left"></i> Previous
+                                        </a>
+                                    </span>
+                                    <span class="nextItem">
+                                        <a href="@NextUrl" class="stepToNext">
+                                            Next <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="lastItem">
+                                        <a href="@(Common.MyRoot)Booking/AuditingResults?queryId=@(Model.QueryId)&idx=@(Model.TotalResultCount)" class="stepToLast">
+                                            Last <i class="fa fa-angle-double-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row secondRow">
+                                <div class="col-md-5 recordDetail">
+                                    @Html.Raw("View Record: ")@(Model.Idx)@Html.Raw("<span class='records'>of</span>")@Model.TotalResultCount
+                                </div>
+                                <div class="JumpToBlock col-md-7">
+                                    <label for="inputUrl" class="mylabel control-label col-md-4">Jump To</label>
+                                    <div class="col-md-3 jumpText">
+                                        <input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="idx" id="idx" class="form-control idx col-md-1" value="" />
+                                    </div>
+                                    <div class="col-md-2 jumpToIcon">
+                                        <button id="btnBookingJumpToRecord" type="submit" class="btn btn-xs btnGetRecord" data-queryid="@Model.QueryId">
+                                            <i class="fa fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row thirdRow">
+                                @{
+                                    var animatedClass = ""; var link = "javascript:void(0);";
+                                }
+                                @if (Model.EnablePullForResearchBtn)
+                                {
+
+                                    animatedClass = " bootbox-pop modal-fullscreen";
+                                    link = Common.MyRoot + "Booking/PullForResearch?bolNo=" + @Model.BolNo;
+                                }
+                                <div class="pullForResearch col-md-6 text-right">
+                                    <a class="btn btn-primary btnPullForResearch@(animatedClass)" href="@link">
+
+                                        <i class="fa fa-indent"></i> Pull For Research
+                                    </a>
+                                </div>
+                                @if (Common.CanRunAction.AddBalanceDue)
+                                {
+                                    <div class="addBalDue col-md-6">
+                                        <a href="javascript:void(0);" class="btn btn-primary btnNewAddBalDue"><i class="fa fa-plus"></i> Add Balance Due</a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6 rightBlock text-center pdfBlock">
+                @if (Model.PDFFile != null && Model.PDFFile.Any())
+                {
+                    <script>
+                        var pdfIdx = 0;
+                        var pdfFiles = @Html.Raw(JavaScript.Serialize(Model.PDFFile.Select(x => x.FileUrl)));
+                        var fileTypes = @Html.Raw(JavaScript.Serialize(Model.PDFFile.Select(x => x.Type)));
+                        var fileNames = @Html.Raw(JavaScript.Serialize(Model.PDFFile.Select(x => x.fileName)));
+                        var scanDate = @Html.Raw(JavaScript.Serialize(Model.PDFFile.Select(x => x.ScanDate)));
+                    </script>
+                    if (Model.PDFFile.Count > 1)
+                    {
+                        <div class="row">
+                            <div class="col-md-4 text-left previousPdf">
+                                <div class="prevFileExtension"></div>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4 text-right nextPdf">
+                                <div class="nextFileExtension"></div>
+                            </div>
+                        </div>
+                        <div class="row pdfFilesDetails">
+                            <div class="col-md-4 text-left previousPdf">
+                                <a href="javascript:void(0);"><i class="fa fa-angle-left"></i> Previous</a>
+                            </div>
+                            <div class="col-md-4 fileDetail"></div>
+                            <div class="col-md-4 text-right nextPdf">
+                                <a href="javascript:void(0);">Next <i class="fa fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    }
+                    <div class="pdfView"></div>
+                    @*<div id="holder"></div>*@
+                    @*if (Model.FileNames != null && Model.FileNames.IndexOf(".pdf") > 0)
+                {
+                <input id="pdfFileName" value="" hidden />
+                Html.RenderPartial("PDFViewer");
+                }*@
+                }
+                else
+                {
+                    @Html.Raw("<div class='label-danger noImg'>No BOL image available with your search!</div>")
+                }
+                @*<canvas id="the-canvas" style="border:1px solid black;" />*@
+            </div>
+        </div>
+    </div>
+    <partial name="PageFooter" />
+    <script type="text/javascript" src="https://rawgit.com/Aymkdn/ExcelPlus/master/2.4.1/sheetjs.all.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/Aymkdn/ExcelPlus/master/2.4.1/excelplus-2.4.1.min.js"></script>
+    <script>
+        if ($(".bdDescWindowBox").length > 0) {
+            $(".bdDescWindowBox textarea").height($(".bdDescWindowBox textarea")[0].scrollHeight);
+        }
+    </script>
+    <script>
+        function ToJavaScriptDate(value) {
+
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return (("0" + (dt.getMonth() + 1)).slice(-2)) + "/" + dt.getDate() + "/" + dt.getFullYear().toString().substr(2, 2);
+        }
+        $(".toggleHidden").click(function () {
+            var showtarget = $(this).data("showtarget");
+            var hidetarget = $(this).data("hidetarget");
+            $("." + showtarget).removeClass("hidden");
+            $("." + hidetarget).addClass("hidden");
+        });
+
+        $(".bolRemarks").click(function () {
+            $("#BOLRemarks").removeClass("hidden");
+            $(".bolRemarks").addClass("hidden");
+        });
+        $(".bookNotes").click(function () {
+            $("#Notes").removeClass("hidden");
+            $(".bookNotes").addClass("hidden");
+        });
+
+        function renderPDF(url, canvasContainer, options) {
+            if (url != null) {
+                if (url.toLowerCase().indexOf("pdf") > 0) {
+
+                    PDFJS.workerSrc = '/Scripts/pdf.worker.js';
+
+                    var options = options || { scale: 1 };
+
+                    function renderPage(page) {
+
+                        var viewport = page.getViewport(options.scale);
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+                        var renderContext = {
+                            canvasContext: ctx,
+                            viewport: viewport
+                        };
+
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        canvasContainer.appendChild(canvas);
+
+                        page.render(renderContext);
+                    }
+
+                    function renderPages(pdfDoc) {
+                        for (var num = 1; num <= pdfDoc.numPages; num++)
+                            pdfDoc.getPage(num).then(renderPage);
+                    }
+                    // PDFJS.disableWorker = true;
+                    //     alert(url);
+                    PDFJS.getDocument(url).then(renderPages);
+
+                }
+            }
+        }
+        LoadPdf(pdfFiles[pdfIdx]);
+        var viewer = $(".pdfView");
+        function LoadPdf(pdfUrl) {
+            console.log(pdfUrl);
+            if (pdfUrl != null) {
+                //SET URL FOR FILES AS REQUIED - SET pdfUrl
+                if (pdfUrl.toLowerCase().indexOf("msg") > 0) {
+                    console.log("Is MSG. Getting content for: " + pdfUrl);
+                    pdfUrl = SiteRoot + "Booking/MsgViewer?msgFileFullPath=" + pdfUrl;
+                }
+
+                ///USE THE URLS TO SHOW RELAVANT FILE IN VIEWER - BASIS OF pdfUrl
+                if (pdfUrl.toLowerCase().indexOf("drive.google") > 0) {
+                    console.log("Is Excel, Getting content for: " + pdfUrl);
+                    $(".pdfView").html("<iframe src='" + pdfUrl + "' style='width:100%; min-height:1400px;'></iframe>");
+                }
+                else if (pdfUrl.toLowerCase().indexOf("pdf") > 0) {
+                    if (UsePdfJs.toLowerCase() == "true") {
+                        //$.get(SiteRoot+"web/viewer.html?file="+pdfUrl,function(data){
+                        //    $(".pdfView").html(data);
+                        //});
+                        //window.InitViewer();
+                        //$('#holder').empty();
+                        console.log("Rendering pdf... " + pdfUrl);
+                        //renderPDF(pdfFiles[pdfIdx], document.getElementById('holder'));
+                        //$("#pdfFileName").val(pdfUrl);
+                        $(".pdfView").html("<iframe src='@(Common.MyRoot)web/viewer.html?file=" + pdfUrl + "' style='width:100%; min-height:2100px;'></iframe>");
+        @*$('#holder').html('<iframe src="@(Common.MyRoot)web/viewer.html?file=@(Common.MyRoot)web/compressed.tracemonkey-pldi-09.pdf" height="2000px" width="100%"></iframe>');*@
+                            }
+                    else {
+                        $(".pdfView").html("<iframe src='" + pdfUrl + "' style='width:100%; min-height:2100px;' seamless='seamless' scrolling='no' frameborder='0'></iframe>");
+                    }
+                }
+                else if (pdfUrl.toLowerCase().indexOf("msg") > 0) {
+                    $(".pdfView").html("<iframe src='" + pdfUrl + "' style='width:100%; min-height:2100px;' seamless='seamless' scrolling='no' frameborder='0'></iframe>");
+                }
+                else {
+                    $(".pdfView").html("<a href='" + pdfUrl + "' target='_blank' class='btn btn-primary'>View File</a>");
+                    $(".pdfView").append("<div class='fileDesc'>File Name: " + fileNames[pdfIdx] + "<br /> File Type: " + fileTypes[pdfIdx] + "<br />Scan Date: " + ToJavaScriptDate(scanDate[pdfIdx]) + "</div>");
+                }
+                var myIdx = 0;
+                var fileExt = "";
+                if (pdfIdx <= pdfFiles.length - 2) {
+                    myIdx = pdfIdx + 1;
+                    fileExt = fileTypes[myIdx];
+                }
+                $(".nextFileExtension").html(fileExt);
+                fileExt = "";
+                if (pdfIdx >= 1) {
+                    myIdx = pdfIdx - 1;
+                    fileExt = fileTypes[myIdx];
+                }
+                $(".prevFileExtension").html(fileExt);
+                $(".fileDetail").html("View File " + (pdfIdx + 1) + "<span class='records'> of </span>" + (pdfFiles.length) + "<br />Type: " + fileTypes[pdfIdx] + "<br />Scan Date: " + ToJavaScriptDate(scanDate[pdfIdx]));
+            }
+            else {
+                console.log("file not found");
+            }
+        }
+
+        $(".nextPdf").click(function () {
+            if (pdfIdx >= (pdfFiles.length - 1))
+                return;
+            pdfIdx++;
+            var url = pdfFiles[pdfIdx];
+            LoadPdf(url);
+        });
+
+        $(".previousPdf").click(function () {
+            if (pdfIdx < 1)
+                return;
+            pdfIdx--;
+            var url = pdfFiles[pdfIdx];
+            LoadPdf(url);
+        });
+    </script>
+    @if (Model.ShowNavigation)
+    {
+        <script>
+            Mousetrap.bind('right', function () { $(".nextItem > a")[0].click(); });
+            Mousetrap.bind('left', function () { $(".prevItem > a")[0].click(); });
+            Mousetrap.bind('command+right', function () { $(".lastItem > a")[0].click(); });
+            Mousetrap.bind('command+left', function () { $(".firstItem > a")[0].click(); });
+
+            $(".btnViewStats").click(function () {
+                window.open("@(Common.MyRoot)Booking/ViewAuditingStats", "_blank");//todo pending
+            });
+            $(".btnPullForResearch").click(function () {
+                var output = '@(Model.EnablePullForResearchBtn)';
+                console.log(output);
+                if (output.toLowerCase() == "false") {
+                    bootbox.alert("Item is already pulled for research!");
+                    return;
+                }
+            });
+            $(".btnNewAddBalDue").click(function () {
+                window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo&&IsNewBal=true", "_blank");
+
+            });
+            $(".btnAddBalDue").click(function () {
+
+                var balanceId = $(this).data("balanceid");
+                //var invoicestatus=$(this).data("status");
+
+                if (balanceId > 0) {
+                    var status = $(this).data("status");
+                    if (status == "Pending" || status == "Invoiced_NR") {
+                        bootbox.dialog({
+                            message: "You are editing a " + status + " balance due! Are you sure to continue?",
+
+                            buttons: {
+                                success: {
+                                    label: "Yes",
+                                    className: "btn-success",
+                                    callback: function () {
+                                        window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo&&balanceId=" + balanceId, "_blank");
+                                    }
+                                },
+                                danger: {
+                                    label: "No",
+                                    className: "btn-danger",
+                                    callback: function () {
+                                        $('.bootbox.modal').modal('hide');
+                                        // window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo","_blank");
+                                    }
+                                },
+            @*main: {
+                        label: "Add Balance Due",
+                        className: "btn-primary",
+                        callback: function() {
+                        window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo&&IsNewBal=true","_blank");
+                        }
+                        }*@
+                                    }
+                });
+            @*bootbox.confirm({
+            message: "You are editing a "+status+" balance due! Are you sure to continue?",
+            buttons: {
+            confirm: {
+            label: 'Yes',
+            className: 'btn-success'
+            },
+            cancel: {
+            label: 'No',
+            className: 'btn-danger'
+            }
+            },
+            callback: function(result){
+            if(result)
+            {
+            window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo","_blank");
+            }
+            }
+            });*@
+                            }
+                            else {
+                bootbox.dialog({
+                    message: "You cannot edit a " + status + " balance due!",
+                    buttons: {
+
+                        danger: {
+                            label: "Ok",
+                            className: "btn-danger",
+                            callback: function () {
+                                $('.bootbox.modal').modal('hide');
+                                // window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo","_blank");
+                            }
+                        },
+                        main: {
+                            label: "Add Balance Due",
+                            className: "btn-primary",
+                            callback: function () {
+                                window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo&&IsNewBal=true", "_blank");
+
+                            }
+                        }
+                    }
+                });
+                //  bootbox.alert("You cannot create a balance due as one is already created!");
+            }
+                        }
+                        else {
+                window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo&&IsNewBal=true", "_blank");
+
+                //  window.open("@(Common.MyRoot)Booking/AddBalanceDue?bolNo=@Model.BolNo","_blank");
+            }
+                    });
+        </script>
+    }
+    <partial name="PopUpBox" />
+    <div class="modal modal-fullscreen fade" id="modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

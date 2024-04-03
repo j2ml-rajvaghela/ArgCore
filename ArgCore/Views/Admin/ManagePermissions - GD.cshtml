@@ -1,0 +1,456 @@
+﻿@{
+    ViewBag.Title = Arg.Terms.Resource1.pgTitleManagePermissions;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divmain">
+    <fieldset>
+        <div class="row">
+            <div class="col-sm-4">
+                <select class="form-control hide" id="ddlclients"></select>
+            </div>
+            <div class="col-sm-2">
+                <button id="btnupdate" class="btn btn-primary">
+                    <i class="mdi mdi-check-circle icnwht"></i> @Arg.Terms.Resource1.btnUpdate
+                </button>
+            </div>
+            <div class="col-sm-2 reccount"><span class="reccount" id="reccount"></span></div>
+        </div>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblObjectName</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblActions</div>
+            <div class="col-md-3">@Arg.Terms.Resource1.lblGroupName</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblPermissionLevel</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1" data-bind="text:groupobjectid"></div>
+                <div class="col-md-2" data-bind="text:objectname"></div>
+                <div class="col-md-1">
+                    <i class="mdi mdi-plus-box icngrn alnk" data-bind="attr:{'id':'o' + groupobjectid()}" style="cursor:pointer;"></i>
+                </div>
+            </div>
+            <!-- ko foreach: permissionlist -->
+            <div class="row">
+                <div class="col-md-1 col-md-offset-3">
+                    <i class="mdi mdi-pencil-box-outline icngry elnk" data-bind="attr:{'id':'e' + permissionid()}" style="cursor:pointer;"></i>
+                </div>
+                <div class="col-md-3" data-bind="text:groupname"></div>
+                <div class="col-md-1" data-bind="text:permissionlevel"></div>
+                <div class="col-xs-1 col-sm-1"><input type="checkbox" class="de ro" data-bind="checked:dirtyFlag.isDirty" /></div>
+                <button class="dfc" data-bind="click: dirtyFlag.resetDirty, attr:{'id':'x' + permissionid()}">
+                    Reset<span data-bind="text:'x' + permissionid()"></span>
+                </button>
+            </div>
+            <!-- /ko -->
+        </div>
+    </fieldset>
+</div>
+
+<!-- add/edit permission modal -->
+<div class="modal fade" id="modaledit" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- Modal Header -->
+
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <div class="modal-title" id="modaltitle">@Arg.Terms.Resource1.lblEditGroup</div>
+            </div>
+            <div id="modaleditbody" class="modal-body">
+                <!-- Modal Body -->
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblID</label></div>
+                    <div class="col-sm-6">
+                        <label id="lblpermissionid"></label>-<label id="lbllistloc"></label>
+                        <input type="text" class="form-control hide" id="permissionid" />
+                    </div>
+                </div>
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblObjectName</label></div>
+                    <div class="col-sm-6" id="objectname"></div>
+                </div>
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblGroupName</label></div>
+                    <div class="col-sm-6">
+                        <select class="form-control firstInput" id="ddlgroups" data-bind="value:groupid"></select>
+                    </div>
+                </div>
+                <div class="row der">
+                    <div class="col-sm-4"><label>@Arg.Terms.Resource1.lblPermissionLevel</label></div>
+                    <div class="col-sm-6" style="text-align:left !important;">
+                        <select id="ddlpermissions">
+                            <option value="0">Not Set (0)</option>
+                            <option value="1">Read-Only (1)</option>
+                            <option value="3">Add (3)</option>
+                            <option value="5">Update (5)</option>
+                            <option value="7">Delete (7)</option>
+                            <option value="9">DENY (9)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row der">
+                    <div class="col-sm-11">
+                        <div id="modal-error" class="alert alert-danger hide">123</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Modal Footer -->
+                <button id="btnmodalclose" type="button" class="btn btn-default btngry" data-dismiss="modal">
+                    <i class="mdi mdi-close-circle icnwht"></i> @Arg.Terms.Resource1.btnClose
+                </button>
+                <button id="btnsave" type="button" class="btn btn-primary btnblu">
+                    <i class="mdi mdi-check-circle icnwht"></i> @Arg.Terms.Resource1.btnSave
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var clientid = "@ViewBag.clientid";
+        var dataupdated = false;
+        var newrecord = false;
+        var newreccnt = 0;
+
+        $(document).ready(function () {
+            InitializeViewModel();
+            getDataX("ddlclients", loadddlclients);
+            getDataX("ddlgroups", loadddlgroups);
+            initPage();
+
+            $(document).on('hide.bs.modal', '#modaledit', function () {
+                if (dataupdated) {
+                }
+            });
+
+        });
+
+        // load view model so Knockout can bind to it
+        function loadddlclients(response) {
+            try {
+                //log.info("get response: load ddl clients");
+                $('#ddlclients').find('option').remove().end().append('<option value="0">** Select Client **</option>');
+
+                for (i = 0; i < response.length; i++) {
+                    var opt = "<option value='" + response[i].id + "'>" + response[i].txt + "</option>";
+                    $("#ddlclients").append(opt);
+                }
+                $("#ddlclients").val(clientid);
+                $("#ddlclients").prop("width:300px;");
+                $("#ddlclients").on("change", switchClient);
+            } catch (e) {
+                log.error("load ddl : " + e.message);
+                setMessage("load ddl : " + e.message, "error");
+            }
+        }
+        // load view model so Knockout can bind to it
+        function loadddlgroups(response) {
+            try {
+                //log.info("get response: load ddl groups");
+                $('#ddlgroups').find('option').remove().end().append('<option value="0">** Select group **</option>');
+
+                for (i = 0; i < response.length; i++) {
+                    var opt = "<option value='" + response[i].id + "'>" + response[i].txt + "</option>";
+                    $("#ddlgroups").append(opt);
+                }
+                //$("#ddlgroups").val(groupid);
+                $("#ddlgroups").prop("width:300px;");
+                //$("#ddlgroups").on("change", switchGroup);
+            } catch (e) {
+                log.error("load ddl : " + e.message);
+                setMessage("load ddl : " + e.message, "error");
+            }
+        }
+
+        function initPage() {
+            setProgressBar();
+            getData("groupobjects", clientid);
+        }
+
+        function InitializeViewModel() {
+            dataModel = new dataModel();
+            ko.applyBindings(dataModel, $("#divmain")[0]);
+        }
+
+        function switchClient() {
+            var cid = $("#ddlclients").val();
+            var url = '@Url.Action("ManagePermissions", "Admin")';
+            url = url.substring(0, url.lastIndexOf("/"));
+            location.href = url + "/" + cid;
+        }
+
+        // adds group object for editing
+        function addGroup() {
+            newrecord = true;
+
+            var sid = event.target.id;
+            var id = sid.substr(1);
+            log.info("add group: id=" + id);
+            var objname = "Not Found";
+            var loc = 0;
+            for (var i = 0; i < dataModel.items().length; i++) {
+                var prm = dataModel.items()[i];
+                if (prm.groupobjectid() == id) {
+                    objname = prm.objectname();
+                    loc = i;
+                    break;
+                }
+            }
+            popModalEdit(id, objname, loc);
+        }
+
+        // adds group object for editing
+        function editPermission() {
+            newrecord = false;
+            var sid = event.target.id;
+            var id = sid.substr(1);
+            log.info("edit permission: id=" + id);
+            //var objname = "Not Found";
+            //var loc = 0;
+            //var grpid = 0;
+
+            for (var i = 0; i < dataModel.items().length; i++) {
+                var obj = dataModel.items()[i];
+                log.info("plen=" + obj.permissionlist().length);
+                for (var j = 0; j < obj.permissionlist().length; j++) {
+                    var prm = obj.permissionlist()[j];
+                    if (prm.permissionid() == id) {
+                        log.info("p found");
+                        var loc = j;
+                        var grpid = prm.groupid();
+                        var objname = prm.objectname();
+                        var lvl = prm.permissionlevel();
+
+                        // configure the popup here
+                        log.info("popGroup: editrecord=" + newrecord);
+                        $("#permissionid").val(id);
+                        $("#lblpermissionid").text(id);
+                        $("#lbllistloc").text(loc);
+                        $("#objectname").text(objname).focus();
+                        $("#ddlgroups").val(grpid);
+                        $("#ddlpermissions").val(lvl);
+                        $("#btnsave").off("click").on("click", updateGrid);
+                        prepModal("@Arg.Terms.Resource1.lblEditPermission");
+                        break;
+                    }
+                }
+            }
+
+            //popModalEdit(id, objname, loc);
+        }
+
+        function prepModal(title) {
+            $(".de").removeClass("dataentryerror");
+            clearModalMessage();
+            $("#modalerror").text("").addClass("hide");
+            $("#modaltitle").text(title);
+            $("#btnsave").unbind('click');
+            $("#modaledit").css("margin-top", "200px").show();
+            try {
+                $("#modaledit").draggable({ handle: ".modal-header" });
+            } catch (e) { log.info("popModalEdit error:" + e.message); };
+
+            $("#modaledit").modal('show');
+        }
+
+        // prepare the popup
+        function popModalEdit(id, nm, loc) {
+            log.info("popGroup: newrecord=" + newrecord);
+            $(".de").removeClass("dataentryerror");
+            clearModalMessage();
+            $("#modalerror").text("").addClass("hide");
+            $("#permissionid").val(id);
+            $("#lblpermissionid").text(id);
+            $("#lbllistloc").text(loc);
+            $("#objectname").text(nm).focus();
+            $("#modaltitle").text("@Arg.Terms.Resource1.lblAddPermission");
+            $("#btnsave").unbind('click');
+            $("#modaledit").css("margin-top", "200px").show();
+            $("#modaledit").modal('show');
+            try {
+                $("#modaledit").draggable({ handle: ".modal-header" });
+            } catch (e) { log.info("popModalEdit error:" + e.message); };
+            if (newrecord == false) {
+                //                editGroup(this);
+            }
+            newrecord = false;
+            $("#btnsave").off("click").on("click", updateGrid);
+        }
+
+        //#region Models
+        class modelGroupObject {
+            constructor(rec) {
+                var self = this;
+                self.groupobjectid = ko.observable(rec.groupobjectid);
+                self.objectname = ko.observable(rec.objectname);
+                //                self.permissionlist = ko.observableArray(rec.permissionlist);
+                self.permissionlist = ko.observableArray();
+                self.dirtyFlag = new ko.dirtyFlag(this);
+            }
+        }
+
+        // child model
+        class modelPermission {
+            constructor(rec) {
+                var self = this;
+                self.permissionid = ko.observable(rec.permissionid);
+                self.clientid = ko.observable(rec.clientid);
+                self.groupobjectid = ko.observable(rec.groupobjectid);
+                self.groupid = ko.observable(rec.groupid);
+                self.objectname = ko.observable(rec.objectname);
+                self.groupname = ko.observable(rec.groupname);
+                self.defaultlevel = ko.observable(rec.defaultlevel);
+                self.permissionlevel = ko.observable(rec.permissionlevel);
+                self.changed = ko.observable(rec.changed);
+                self.dirtyFlag = new ko.dirtyFlag(this);
+            }
+        }
+        //#endregion
+
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            dataModel.items([]);
+            try {
+                //                dataModel.items(ko.mapping.fromJS(response));
+                //                var jdata = ko.toJSON(dataModel);
+                //                log.info(jdata);
+
+                for (i = 0; i < response.length; i++) {
+                    var itm = new modelGroupObject(response[i]);
+                    //var itm = new modelPermission(response[i]);
+                    var perms = response[i].permissionlist;
+                    itm.permissionlist = ko.observableArray([]);
+                    //log.info("p=" + perms.length);
+                    for (j = 0; j < perms.length; j++) {
+                        //log.info("j=" + j);
+                        var inneritm = new modelPermission(perms[j]);
+                        itm.permissionlist.push(inneritm);
+                    }
+                    dataModel.items.push(itm);
+                }
+
+                //$("#reccount").text("Records: " + response.length);
+                $("#btnupdate").on("click", saveData);
+                $(".alnk").on("click", function () { addGroup(this); });
+                $(".elnk").on("click", function () { editPermission(this); });
+                finishProgressBar();
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        }
+
+        function updateGrid() {
+            // add item to modelData
+            //            var id = $("#permissionid").val();
+            var id = $("#lblpermissionid").text();
+            var loc = $("#lbllistloc").text();
+            var nm = $("#objectname").text();
+            var grpid = $("#ddlgroups").val();
+            var grpnm = $("#ddlgroups option:selected").text();
+            var plvl = $("#ddlpermissions").val();
+            newreccnt--;
+            log.info("loc|id|nm|lvl|cnt=" + loc + "|" + id + "|" + nm + "|" + plvl + "|" + newreccnt);
+            var prm = new modelPermission({
+                permissionid: newreccnt, clientid: 0, groupobjectid: id, groupid: grpid, objectname: nm, groupname:
+                    grpnm, defaultlevel: 0, permissionlevel: plvl, changed: true
+            });
+            // orig
+            //var result = dataModel.items.splice(loc + 1, 0, prm);
+
+            //            var obj = new modelGroupObject(dataModel.items()[loc]);
+            var obj = dataModel.items()[loc];
+            //var jobj = ko.toJSON(obj);
+            //log.info(jobj);
+
+            //            var obj = dataModel.items()[loc];
+            //            log.info("objname=" + obj.objectname());
+            //            log.info("plist len=" + obj.permissionlist.length);
+            obj.permissionlist.push(prm);
+            //            dataModel.items()[loc].permissionlist.push(prm);
+            //            log.info("plist len=" + obj.permissionlist.length);
+            //            obj.permissionlist.splice(0, 0, prm);
+
+            //dataModel.refresh();
+            //            obj.permissionlist().valueHasMutated();
+
+            //                dataModel.items(ko.mapping.fromJS(response));
+            //var jdata = ko.toJSON(dataModel);
+            //log.info(jdata);
+
+            //           result.dirtyFlag = new ko.dirtyFlag(result, true);
+            log.info("x=" + newreccnt);
+            $("#x" + newreccnt).click();
+
+            //            ko.cleanNode($("#divmain")[0])
+            //            ko.applyBindings(dataModel, $("#divmain")[0]);
+
+            //            result.dirtyFlag = new ko.dirtyFlag.resetDirty(result, true);
+            //            result.resetDirty();
+            //            $(".dfc").click();
+            //dataModel.items.setAt(loc+1, prm);
+            $("#btnmodalclose").click();
+            //            saveData();
+            //            initPage();
+        }
+
+        // send record to web service for insert or update
+        function saveData() {
+            //if (!validPage()) { return; }
+            log.info("save data");
+            log.info("items=" + dataModel.items().length);
+            log.info("cnt2=" + dataModel.dirtyItems().length);
+            var cnt3 = 0;
+            for (var i = 0; i < dataModel.items().length; i++) {
+                var obj = dataModel.items()[i];
+                log.info("plen=" + obj.permissionlist().length);
+                for (var j = 0; j < obj.permissionlist().length; j++) {
+                    var p = obj.permissionlist()[j];
+                    log.info("p=" + p.groupid());
+                    if (p.changed()) {
+                        cnt3++;
+                        updateModel.items.push(p);
+                    }
+                    var jdata = ko.toJSON(p);
+                    log.info(jdata);
+                    //log.info("g=" + g.groupid());
+                }
+            }
+
+            log.info("cnt3=" + cnt3);
+            //            return;
+            // send update: convert data set to JSON
+            try {
+                if (cnt3 == 0) {
+                    setMessage("No changes to submit");
+                } else {
+                    var jdata = ko.toJSON(updateModel.items);
+                    log.info("ready to submit changes:");
+                    $.ajax({
+                        url: "/api/permissions",
+                        type: "POST",
+                        data: jdata,
+                        processData: true,
+                        contentType: "application/json",
+                        dataType: "json",
+                        length: jdata.length,
+                        success: function (result) {
+                            dataupdated = true;
+                            setDBMessage(result, "#divmessage", 5000);
+                            getMoreData();
+                        },
+                        error: function (result) {
+                            setDBMessage(result, "#divmessage");
+                        }
+                    });
+                }
+            } catch (e) { log.info(e.message); }
+        }
+    </script>
+}

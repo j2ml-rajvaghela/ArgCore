@@ -1,0 +1,80 @@
+﻿<!--Call your modal-->
+@*<a class="demo1" id="demo1" href="#" data-ajax="http://api.fixer.io/latest?symbols=USD">1</a>
+    <a class="demo1" id="demo2" href="#">2</a>
+    <a class="demo1" id="demo3">3</a>
+    <a class="demo1" id="demo4">4</a>*@
+
+<!--DEMO01-->
+<style>
+    #animatedModal {
+        background-color: #fff !important;
+    }
+
+        #animatedModal .animated-modal-content {
+            background-color: #fff;
+            /*height: 100% !important; don't apply ckeditor moves behind*/
+        }
+
+    .fa-times-circle-o {
+        font-size: 35px !important;
+    }
+
+    .close-animatedModal {
+        right: 0;
+        padding-top: 8px;
+        padding-right: 8px;
+        z-index: 9999;
+        position: absolute;
+        float: right;
+    }
+
+    a:focus, a:hover {
+        color: #23527c !important;
+    }
+
+    th.filters.sorting {
+        width: 185px !important;
+    }
+
+    div.scrollable {
+        max-height: 71px;
+        font-size: 13px;
+        overflow: auto;
+        max-width: 300px;
+        color: #828282;
+        background-color: #eceaea;
+        text-align: left;
+        border: 1px solid rgb(255, 255, 255);
+        padding-left: 21px;
+        padding-top: 4px;
+    }
+</style>
+<div id="animatedModal">
+    <div class="close-animatedModal">
+        <a href="javascript:void(0);"><i class="fa fa-times-circle-o"></i></a>
+    </div>
+    <div class="animated-modal-content">
+        <!--Your modal content goes here-->
+    </div>
+</div>
+
+<script>
+
+    LinkAnimatedPopup();
+
+    function LinkAnimatedPopup() {
+
+        $(".animatedPopUp").animatedModal({
+
+            afterOpen: function () {
+                $('.ckeditor').ckeditor();
+                $(".datepicker").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    dateFormat: 'mm-dd-yy',
+                    yearRange: "-0:+50"
+                });
+            }
+        });
+    }
+</script>

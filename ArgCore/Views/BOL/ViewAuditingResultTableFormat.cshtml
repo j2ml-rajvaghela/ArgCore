@@ -1,0 +1,283 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.BOLAuditingResults
+@using ArgCore.Helpers
+@using X.PagedList.Mvc.Core;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BOL Auditing Result</title>
+    @Html.Partial("PageHeader")
+    <style>
+        body {
+            padding: 0;
+            background-color: #F4F5F7 !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="BOLAudResultTableFormat" class="row">
+        @{
+            var queryId = Context.Request.Query["QueryId"];
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Message))
+        {
+            @Html.Raw(Model.Message)
+            return;
+        }
+        <div class="col-md-12">
+            @if (Model.BolAuditResultTableFormat != null && Model.BolAuditResultTableFormat.Any())
+            {
+
+                <table id="auditor-table" class="table text-center">
+                    <thead>
+                        <tr>
+                            <th class="bol">BOL#</th>
+                            @if (string.IsNullOrWhiteSpace(Model.InvoiceBillType))
+                            {
+                                <th class="eventdatetime">Recv Date</th>
+                            }
+
+                            <th class="shipperId">Shipper ID</th>
+                            <th class="partName">Participant Name</th>
+                            <th class="origin">Origin</th>
+                            <th class="destination">Destination</th>
+                            <th class="mode">Mode</th>
+                            <th class="containerSize">Container Size</th>
+                            <th class="containerType">Container Type</th>
+                            @if (string.IsNullOrWhiteSpace(Model.InvoiceBillType))
+                            {
+                                <th class="cbf">CBF</th>
+                                <th class="commodityCode">Commodity Code</th>
+                                <th class="commodityDescription">Commodity Description </th>
+                                <th class="oceanCharges">Ocean Charges</th>
+                                <th class="totalCharges">Total Charges</th>
+                            }
+                            @if (Arg.DataAccess.ActiveClient.Info.BolBilltype && !string.IsNullOrWhiteSpace(Model.InvoiceBillType))
+                            {
+                                <th class="dischargeDate">Discharge Date</th>
+                                <th class="returnDate">Return Date</th>
+
+                                <th class="differenceDate">Difference</th>
+
+                                <th class="perdiemCharges">Per Diem Charges</th>
+
+                            }
+                            <th class="bolViewed">Views</th>
+                        </tr>
+                    </thead>
+                    <tbody class="auditResult-details">
+                        @foreach (var item in Model.BolAuditResultTableFormat)
+                        {
+                        //var url = HttpContext.Current.Request.Url;
+
+                            //string queryId = HttpUtility.ParseQueryString(url).Get("queryId");
+                            <tr>
+                                <td><a target="_blank" class="ViewAuditingResultTableFormat" href="@(Common.MyRoot)Bol/AuditingResults?bolNo=@item.BOLNo&companyId=@Model.CompanyId">@item.BOLNo</a></td>
+                                @if (string.IsNullOrWhiteSpace(Model.InvoiceBillType))
+                                {
+                                    <td class="shipperId">@item.EventDatetime.ToString("d")</td>
+
+                                }
+                                <td class="shipperId">@item.ShipperID</td>
+                                <td class="partName">@item.ParticipantName</td>
+                                <td class="origin">@item.OriginLocationCode</td>
+                                <td class="destination">@item.DestinationLocationCode</td>
+                                <td class="mode">@item.Mode</td>
+                                <td class="containerSize">@item.ContainerSize</td>
+                                <td class="containerType">@item.ContainerType</td>
+                                @if (string.IsNullOrWhiteSpace(Model.InvoiceBillType))
+                                {
+                                    <td class="cbf">@item.CBF</td>
+                                    <td class="commodityCode">@item.CommodityCode</td>
+                                    <td class="commodityDescription">@item.CommodityDescription</td>
+                                    <td class="oceanCharges">@item.OceanCharges</td>
+                                    <td class="totalCharges">@item.BOLCharges</td>
+                                }
+                                @if (Arg.DataAccess.ActiveClient.Info.BolBilltype && !string.IsNullOrWhiteSpace(Model.InvoiceBillType))
+                                {
+                                    <td class="dischargeDate">@item.DischargeDate.ToString("d")</td>
+                                    <td class="returnDate">@item.ReturnDate.ToString("d")</td>
+
+                                    <td class="differenceDate">@item.DifferenceDate.Days</td>
+
+                                    <td class="perdiemCharges">@item.PerDiemCharges</td>
+
+                                }
+                                @if (!string.IsNullOrWhiteSpace(item.BOLViewed))
+                                {
+                                    <td class="bolViewed"><input class="bolviewed-@item.BOLNo" type="checkbox" id="chkbolViewed" checked disabled /></td>
+                                }
+                                else
+                                {
+                                    <td class="bolViewed"><input class="bolviewed-@item.BOLNo" id="chkbolViewed" data-bol="@item.BOLNo" data-companyid="@Model.CompanyId" type="checkbox" /></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div id='Paging' style="text-align:right">
+                    Page @(Model.BolAuditResultTableFormat.PageCount < Model.BolAuditResultTableFormat.PageNumber ? 0 : Model.BolAuditResultTableFormat.PageNumber)
+                    of @Model.BolAuditResultTableFormat.PageCount
+
+                    @Html.PagedListPager(Model.BolAuditResultTableFormat, pageNo => Url.Action("ViewAuditingResultTableFormat", new { queryId, pageNo, Model.CompanyId }))
+                </div>
+            }
+            @if (Model.AgilityBolAuditResultTableFormat != null && Model.AgilityBolAuditResultTableFormat.Any())
+            {
+
+                <table id="auditor-table" class="table text-center">
+                    <thead>
+                        <tr>
+                            <th class="job">Job#</th>
+                            <th class="recvdate">DEPART DATE</th>
+                            <th class="shipper">SHIPPER</th>
+                            <th class="origin">ORIGIN</th>
+                            <th class="portofexit">PORT OF EXIT </th>
+                            <th class="portofentry">PORT OF ENTRY</th>
+                            <th class="dest">DEST </th>
+                            <th class="servic">SERVIC LEVEL</th>
+                            <th class="serv">SERV TYPE</th>
+                            <th class="servmove">SERV MOV TYPE</th>
+                            <th class="pieces">PIECES</th>
+                            <th class="grosswt">GROSS WT</th>
+                            <th class="chargewt">CHARG WT</th>
+                            <th class="totalrevenu">TOTAL REVENUE </th>
+                            <th class="freightrevenu">FREIGHT REVENUE </th>
+                            <th class="otherrevenue">OTHER REVENUE  </th>
+                            <th class="bolViewed">VIEWS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="auditResult-details">
+                        @foreach (var item in Model.AgilityBolAuditResultTableFormat)
+                        {
+                        //var url = HttpContext.Current.Request.Url;
+
+                            //string queryId = HttpUtility.ParseQueryString(url).Get("queryId");
+                            <tr>
+                                <td><a target="_blank" class="ViewAuditingResultTableFormat" href="@(Common.MyRoot)Bol/AuditingResults?bolNo=@item.JobNumber&companyId=@Model.CompanyId">@item.JobNumber</a></td>
+                                @*<td class="JobNumber">@item.JobNumber</td>*@
+                                <td class="DepartureDate">@(item.JobConfirmationDate.HasValue ? item.JobConfirmationDate.Value.ToString("MM/dd/yyyy") : "")</td>
+                                <td class="Shipper">@item.Shipper</td>
+                                <td class="Origin">@item.Origin</td>
+                                <td class="PortOfExit">@item.PortOfExit</td>
+                                <td class="PortofEntry">@item.PortofEntry</td>
+                                <td class="Destination">@item.Destination</td>
+                                <td class="ServiceLevel">@item.ServiceLevel</td>
+                                <td class="ServiceType">@item.ServiceType</td>
+                                <td class="ServiceMovementType">@item.ServiceMovementType</td>
+                                <td class="Pieces">@item.Pieces</td>
+                                <td class="GrossWeight">@item.GrossWeight</td>
+                                <td class="ChargeableWeight">@item.ChargeableWeight</td>
+                                <td class="TotalRevenue">@item.TotalRevenue</td>
+                                <td class="FreightRevenue">@item.FreightRevenue</td>
+                                <td class="OtherRevenue">@item.OtherRevenue</td>
+                                @if (!string.IsNullOrWhiteSpace(item.BOLViewed))
+                                {
+                                    <td class="bolViewed"><input class="bolviewed-@item.JobNumber" type="checkbox" id="chkbolViewed" checked disabled /></td>
+                                }
+                                else
+                                {
+                                    <td class="bolViewed"><input class="bolviewed-@item.JobNumber" id="chkbolViewed" data-bol="@item.JobNumber" data-companyid="@Model.CompanyId" type="checkbox" /></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div id='Paging' style="text-align:right">
+                    Page @(Model.AgilityBolAuditResultTableFormat.PageCount < Model.AgilityBolAuditResultTableFormat.PageNumber ? 0 : Model.AgilityBolAuditResultTableFormat.PageNumber)
+                    of @Model.AgilityBolAuditResultTableFormat.PageCount
+
+                    @Html.PagedListPager(Model.AgilityBolAuditResultTableFormat, pageNo => Url.Action("ViewAuditingResultTableFormat", new { queryId, pageNo, Model.CompanyId }))
+                </div>
+            }
+            @if (Model.ShipmentJournalAuditResultTableFormat != null && Model.ShipmentJournalAuditResultTableFormat.Any())
+            {
+
+                <table id="auditor-table" class="table text-center">
+                    <thead>
+                        <tr>
+                            <th class="bol">Issuing Dept</th>
+                            <th class="shipperId">Shipment #</th>
+                            <th class="partName">Shipment Date</th>
+                            <th class="origin">Supplier Ref</th>
+                            <th class="destination">Supplier Ref</th>
+                            <th class="mode">Shipment Type</th>
+                            <th class="containerSize">Shipment Status</th>
+                            <th class="containerType">Shipment CL Status</th>
+                            <th class="bolViewed">Shipper/Consignee</th>
+                            <th class="bolViewed">Origin</th>
+                            <th class="bolViewed">Dest</th>
+                            <th class="bolViewed">Carrier</th>
+                            <th class="bolViewed">Actual Weight kgs	</th>
+                            <th class="bolViewed">Cubic Volume MTQ</th>
+                            <th class="bolViewed">Chgbl Weight</th>
+                            <th class="bolViewed">Accrual Existent</th>
+                            <th class="bolViewed">Actual Revenue (CCR)</th>
+                            <th class="bolViewed">Accrual Revenue Total (CCR)</th>
+                            <th class="bolViewed">Expected Revenue (CCR)</th>
+                            <th class="bolViewed">Actual Cost (CCR)</th>
+                            <th class="bolViewed">Accrual Cost Total (CCR)</th>
+                            <th class="bolViewed">Expected Cost (CCR)</th>
+                            <th class="bolViewed">Act Gross Profit (CCR)</th>
+                            <th class="bolViewed">Expected Profit (CCR)</th>
+                            <th class="bolViewed">VIEWS</th>
+                        </tr>
+                    </thead>
+                    <tbody class="auditResult-details">
+                        @foreach (var item in Model.ShipmentJournalAuditResultTableFormat)
+                        {
+                            //var url = HttpContext.Current.Request.Url;
+
+                            //string queryId = HttpUtility.ParseQueryString(url).Get("queryId");
+                            <tr>
+                                <td class="Issuing_Dept">@item.Issuing_Dept</td>
+                                <td><a target="_blank" class="ViewAuditingResultTableFormat" href="@(Common.MyRoot)Bol/AuditingResults?bolNo=@item.Shipment_No&companyId=@Model.CompanyId">@item.Shipment_No</a></td>
+                                <td class="Shipment_Date">@item.Shipment_Date.ToShortDateString()</td>
+                                <td class="AWB_BL_No">@item.AWB_BL_No </td>
+                                <td class="M_AWB_BL_No">@item.M_AWB_BL_No </td>
+                                <td class="Shipment_Type">@item.Shipment_Type </td>
+                                <td class="Shipment_Status">@item.Shipment_Status </td>
+                                <td class="Shipment_CL_Status">@item.Shipment_CL_Status</td>
+                                <td class="Shipper_Consignee">@item.Shipper_Consignee</td>
+                                <td class="origin">@item.origin</td>
+                                <td class="dest">@item.dest</td>
+                                <td class="M_Carrier_Code">@item.M_Carrier_Code</td>
+                                <td class="Actual_Weight_kgs">@item.Actual_Weight_kgs</td>
+                                <td class="Cubic_Volume_MTQ">@item.Cubic_Volume_MTQ</td>
+                                <td class="Chargeable_Weight">@item.Chargeable_Weight</td>
+                                <td class="Accrual_Existent">@item.Accrual_Existent</td>
+                                <td class="Actual_Revenue_CCR">@item.Actual_Revenue_CCR</td>
+                                <td class="Accrual_Revenue_Total_CCR">@item.Accrual_Revenue_Total_CCR</td>
+                                <td class="Expected_Revenue_CCR">@item.Expected_Revenue_CCR</td>
+                                <td class="Actual_Cost_CCR">@item.Actual_Cost_CCR</td>
+                                <td class="Accrual_Cost_Total_CCR">@item.Accrual_Cost_Total_CCR</td>
+                                <td class="Expected_Cost_CCR">@item.Expected_Cost_CCR</td>
+                                <td class="Actual_Gross_Profit_CCR">@item.Actual_Gross_Profit_CCR</td>
+                                <td class="Expected_Profit_CCR">@item.Expected_Profit_CCR</td>
+                                @if (!string.IsNullOrWhiteSpace(item.BOLViewed))
+                                {
+                                    <td class="bolViewed"><input class="bolviewed-@item.Shipment_No" type="checkbox" id="chkbolViewed" checked disabled /></td>
+                                }
+                                else
+                                {
+                                    <td class="bolViewed"><input class="bolviewed-@item.Shipment_No" id="chkbolViewed" data-bol="@item.Shipment_No" data-companyid="@Model.CompanyId" type="checkbox" /></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div id='Paging' style="text-align:right">
+                    Page @(Model.ShipmentJournalAuditResultTableFormat.PageCount < Model.ShipmentJournalAuditResultTableFormat.PageNumber ? 0 : Model.ShipmentJournalAuditResultTableFormat.PageNumber)
+                    of @Model.ShipmentJournalAuditResultTableFormat.PageCount
+
+                    @Html.PagedListPager(Model.ShipmentJournalAuditResultTableFormat, pageNo => Url.Action("ViewAuditingResultTableFormat", new { queryId, pageNo, Model.CompanyId }))
+                </div>
+            }
+        </div>
+    </div>
+
+    @Html.Partial("PageFooter")
+</body>
+</html>

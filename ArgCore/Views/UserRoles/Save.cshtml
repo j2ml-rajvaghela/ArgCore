@@ -1,0 +1,63 @@
+﻿@model ArgCore.Models.UserRoles
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .scrolltable {
+        margin-top: 20px;
+        height: 500px;
+        overflow: auto;
+    }
+
+    .scrolltable table {
+        border-collapse: collapse;
+    }
+
+    .scrolltable th div {
+        position: absolute;
+        margin-top: -40px;
+    }
+</style>
+<div id="AddUserRole" class="main-content row">
+    @using (Html.BeginForm("Save", "UserRoles", FormMethod.Post, new { id = "frmSaveUser" }))
+    {
+    <h2>@Model.CommonObjects.Heading</h2>
+    @*if (Model.RoleDetail.Id != null && Model.RoleDetail.Id.Length > 0)
+        {
+            <span class="assignMenuLink">
+                <a href="@(Common.MyRoot)Menus/Assign?roleId=@Model.RoleDetail.Id">Assign Menus</a>
+            </span>
+        }*@
+    <div class="row">
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel label-content">Role ID</label>
+            @Html.TextBoxFor(m => m.RoleDetail.Id, null, new { @readonly = "true", @class = "form-control" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel label-content">Name</label>
+            @Html.TextBoxFor(x => x.RoleDetail.Name, new { @class = "form-control firstSpacetruncate", maxlength = "200", data_val = "true", data_val_required = "The Name field is required." })
+            @Html.ValidationMessageFor(x => x.RoleDetail.Name)
+        </div>
+    </div>
+    <div class="btnReasrItemInfo">
+        <div class="col-xs-12 col-md-4">
+            @Html.ActionLink("Delete", "Delete", "UserRoles", new { roleId = @Model.RoleDetail.Id }, new { @class = "btn btn-lg btnDelete" })
+        </div>
+        <div class="col-xs-12 col-md-8 right text-right">
+            <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+            <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+        </div>
+    </div>
+    }
+    @{
+        // ViewData["roleId"] = @Model.RoleDetail.Id;
+        // await Html.RenderPartialAsync("Assign", "AppActions");
+        // Html.RenderAction("Assign", "Menus", new { roleId = @Model.RoleDetail.Id });
+        Html.ActionLink("Assign", "Menus", new { roleId = @Model.RoleDetail.Id });
+    }
+    @{
+        Html.ActionLink("Assign", "AppActions", new { roleId = @Model.RoleDetail.Id });
+    }
+</div>

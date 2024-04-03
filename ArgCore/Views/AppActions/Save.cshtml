@@ -1,0 +1,27 @@
+﻿@model ArgCore.Models.AppActions
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="AddClient" class="main-content row">
+    @using (Html.BeginForm("Save", "AppActions", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.AppActionDetail.AppActionId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">App Action Name</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.AppActionDetail.ActionName, null, new { @class = "form-control", maxlength = "200" })
+                @Html.ValidationMessageFor(x => x.AppActionDetail.ActionName)
+            </div>
+        </div>
+        <div class="btnClientInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "AppActions", new { appActionId = Model.AppActionDetail.AppActionId }, new { @class = "btn btn-lg btnDelete" })
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

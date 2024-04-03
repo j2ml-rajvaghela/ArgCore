@@ -1,0 +1,260 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.Clients
+<div id="AddClient" class="main-content row">
+    @{
+        var idx = 0;
+        var hdnIdx = -1;
+    }
+    @using (Html.BeginForm("Save", "Clients", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+    <h2>@Model.CommonObjects.Heading</h2>
+    @*<div class="row">*@
+    @*<div class="col-md-8 leftContent">*@
+    @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+    @Html.HiddenFor(x => x.ClientDetail.CompanyId)
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Client Name</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Name, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.Name)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Email</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Email, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.Email)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Phone</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Contact, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", maxlength = "10", @class = "form-control" })
+            @*<div class="note"><span class="noteLabel">Note: </span>Will be used for SMS notifications.</div>*@
+            @*@Html.ValidationMessageFor(x => x.ClientDetail.Contact)*@
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Fax</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Fax, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", maxlength = "10", @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Address1</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Address1, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.Address1)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Address2</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Address2, null, new { @class = "form-control", maxlength = "100" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">City</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.City, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.City)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">State</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.State, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.State)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Zip Code</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.ZipCode, null, new { @class = "form-control", maxlength = "10" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.ZipCode)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Country</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.Location, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.Location)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice Terms</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.InvoiceTerms, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", maxlength = "10", @class = "form-control" })
+            @*@Html.ValidationMessageFor(x => x.ClientDetail.InvoiceTerms)*@
+        </div>
+    </div>
+    @*<div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Commission Rate</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ClientDetail.CommisionRate, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", maxlength = "10", @class = "form-control" })
+            </div>
+        </div>*@
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Collector First Name</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.CollectorFirstName, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.CollectorFirstName)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Collector Last Name</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.CollectorLastName, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.CollectorLastName)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Collector Email</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.CollectorEmail, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.CollectorEmail)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">DB Name</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.DBName, null, new { @class = "form-control", maxlength = "100" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.DBName)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Import Data Path</label>
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.ClientDetail.ImportDataPath, null, new { @class = "form-control", maxlength = "200" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.ImportDataPath)
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-3">Bol Billtype</label>
+        <div class="col-md-5">
+            @Html.CheckBoxFor(x => x.ClientDetail.BolBilltype, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.ClientDetail.BolBilltype)
+        </div>
+    </div>
+
+    <div id="IpAddressRestriction" class="bol-sections">
+        <div class="block-heading">IP Addresses</div>
+        <div class="IpAddressRow row">
+            <table class="table table-striped" id="tbls">
+                <thead>
+                    <tr>
+                        <th>Beginning IP</th>
+                        <th>Ending IP</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                            var hdnclass = "hidden";
+                            var reqClass = "";
+                            hdnclass = "hidden";
+                            reqClass = "";
+
+                            if (idx == 0)
+                            {
+                        <tr class="Ipaddress_row @hdnclass">
+                            <td class="hidden"><input type="text" class="txtrow hidden" name="IPAddress[@hdnIdx].IpAddressRestrictionId" value="" /></td>
+                            <td>
+                                <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="IPAddress[@hdnIdx].BeginningIp" value="" @reqClass />
+                                <br /><span class="field-validation-valid" data-valmsg-for="IPAddress[@hdnIdx].BeginningIp" data-valmsg-replace="true"></span>
+                            </td>
+                            <td>
+                                <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="IPAddress[@hdnIdx].EndingIp" value="" @reqClass />
+                                <br /><span class="field-validation-valid" data-valmsg-for="IPAddress[@hdnIdx].EndingIp" data-valmsg-replace="true"></span>
+                            </td>
+                            <td><a href="javascript:void(0)" class="removeIpaddressItem" data-Ipaddressitemid="IPAddress[@hdnIdx].IPAddressRestrictionId">X</a></td>
+                        </tr>
+                            }
+
+                            foreach (var item in Model.IPAddress)
+                            {
+
+                        <tr class="Ipaddress_row">
+                            <td class="hidden"><input type="text" class="txtrow hidden" name="IPAddress[@idx].IpAddressRestrictionId" value="@item.IPAddressRestrictionId" /></td>
+                            <td>
+                                <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="IPAddress[@idx].BeginningIp" value="@item.BeginningIp" @reqClass />
+                                <br /><span class="field-validation-valid" data-valmsg-for="IPAddress[@idx].BeginningIp" data-valmsg-replace="true"></span>
+                            </td>
+                            <td>
+                                <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="IPAddress[@idx].EndingIp" value="@item.EndingIp" @reqClass />
+                                <br /><span class="field-validation-valid" data-valmsg-for="IPAddress[@idx].EndingIp" data-valmsg-replace="true"></span>
+                            </td>
+
+                            <td><a href="javascript:void(0)" class="removeIpaddressItem" data-Ipaddressitemid="@item.IPAddressRestrictionId">X</a></td>
+                        </tr>
+
+                                idx++;
+                                hdnclass = "";
+                                reqClass = "required";
+                            }
+                    }
+                </tbody>
+            </table>
+            <input type="button" id="add-Ip-address" class="btn btn-default" value="Add New Row" />
+        </div>
+    </div>
+
+    <div class="btnClientInfo">
+        <div class="col-xs-12 col-md-4">
+            @Html.ActionLink("Delete", "Delete", "Clients", new { clientId = @Model.ClientDetail.CompanyId }, new { @class = "btn btn-lg btnDelete" })
+        </div>
+        <div class="col-xs-12 col-md-8 right text-right">
+            <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+            <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+        </div>
+    </div>
+    }
+</div>
+
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script>
+
+    $("#add-Ip-address").click(function () {
+        var idx = $("#IpAddressRestriction .Ipaddress_row").length - 1;
+        var src = $("#IpAddressRestriction .Ipaddress_row:first");
+        var html = $('<div>').append(src.clone()).html();
+        html = html.replace(/\[-1\]/g, "[" + idx + "]");
+        $(html).insertAfter("#IpAddressRestriction .Ipaddress_row:last").removeClass("hidden");
+        var ctrls = $("#IpAddressRestriction .Ipaddress_row:last input:not('.hidden')");
+        console.log("Controls: " + ctrls.length);
+        $.each(ctrls, function () {
+            if ($(this).hasClass("notRequired")) {
+                return;
+            }
+            else {
+                $(this).attr("required", "required");
+            }
+        });
+    });
+
+    $('body').on("click", ".removeIpaddressItem", function () {
+        var tr = $(this).parent().parent();
+        tr.remove();
+        UpdateItemIndexes("#IpAddressRestriction", "tr.Ipaddress_row", "IPAddress");
+    });
+
+    function UpdateItemIndexes(containerSelector, rowSelector, nameAttrPrefix) {
+        //EXAMPLE: .AddBolItem tr.item_row:not('.hidden') - WILL BE THE OUTOUT OF FIRST LINE
+        var rows = $(containerSelector + " " + rowSelector + ":not('.hidden')");
+        console.log("Rows: " + rows.length);
+        var idx = 0;
+        $.each(rows, function () {
+            var ctrls = $(this).find("[name*='" + nameAttrPrefix + "']"); //EXAMPLE VALUE: BalanceDuesItems
+            console.log("Controls: " + rows.length);
+            $.each(ctrls, function () {
+                var item = $(this);
+                var oldName = item.attr("name");
+                var newName = oldName.replace(/\[[0-9]+\]/g, "[" + idx + "]");
+                item.attr("name", newName);
+            });
+            idx++;
+        });
+    }
+</script>

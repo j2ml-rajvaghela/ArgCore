@@ -1,0 +1,1216 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model ArgCore.Models.BOLAuditing
+<div id="BOLAudFilters" class="main-content row">
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        @Html.Raw("<div class='message'>" + Model.Message + "</div>")
+    }
+    else
+    {
+
+        <div id="BolAuditing">
+            @if (Model.CompanyId > 0)
+            {
+                <button id="ClearForm" type="submit" class="btn btn-lg top-clear"><img src="/images/ClearForm.png" class="clearFormIcon" /> Clear Form</button>
+            }
+            @using (Html.AjaxBeginForm("Index", "BOL", new AjaxOptions { OnSuccess = "SubmitSuccess" }, new { @class = "form-horizontal", id = "frmBOLAuditing" }))
+            {
+               @*  Html.EnableClientValidation(false); *@
+                <h2>@Model.CommonObjects.Heading</h2>
+                <h4>General Filters</h4>
+
+                <div class="form-group">
+                    <label for="inputUrl" class="mylabel control-label col-md-4">Select Client</label>
+                    <div class="col-md-5">
+                        @{
+                            var noClearClass = "";
+                        }
+                        @if (Model.CompanyId > 0)
+                        {
+                            noClearClass = "neverclear";
+                        }
+                        else
+                        {
+                            noClearClass = "clearDDL";
+                        }
+                        @Html.DropDownListFor(x => x.CompanyId, Model.Companies, null, new { id = "ddlClients", @class = "form-control company SelectActive " + @noClearClass })
+                    </div>
+                </div>
+                if (Model.CompanyId <= 0)
+                {
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="clientLabel col-md-5">Please select client to get filters for searching results!</div>
+                    </div>
+                }
+                else
+                {
+                    if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.BolBilltype)
+                    {
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Invoice Type</label>
+                            <div class="col-md-5">
+
+                                @Html.DropDownListFor(x => x.InvoiceType, Common.InvoiceTypeforClientDemo, null, new { id = "invoicetype", @class = "form-control SelectInvoiceType" })
+                            </div>
+                        </div>
+                    }
+                    if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.DBName == "ClientPasha")
+                    {
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">BOL#</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.BOLNo, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Booking#</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.BookingId, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Actual Departure Date</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @*<input class="form-control BDDatepicker" id="SearchOptions_DepartureStartDate" name="SearchOptions.DepartureStartDate" type="date" value="@Model.SearchOptions.DepartureStartDate">*@
+                                    @Html.TextBoxFor(x => x.SearchOptions.DepartureStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @*<input class="form-control DepEndDatepicker" id="SearchOptions_DepartureEndDate" name="SearchOptions.DepartureEndDate" type="date" value="@Model.SearchOptions.DepartureEndDate">*@
+                                    @Html.TextBoxFor(x => x.SearchOptions.DepartureEndDate, null, new { @class = "form-control DepEndDatepicker", data_val_required = "false" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Origin</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.OriginLocationCode, Model.Origins, new { id = "ddlOrigin", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Port of Loading</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.POLCode, Model.PortOfLoading, new { id = "ddlPOL", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Port of Discharge</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.PODCode, Model.PortOfDischarge, new { id = "ddlPOD", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Destination</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.DestinationLocationCode, Model.Destinations, new { id = "ddlDestinations", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Mode</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.Mode, Model.Modes, new { id = "ddlModes", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipper</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ShipperID, Model.Shippers, new { id = "ddlShippers", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Consignee</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ConsigneeID, Model.Consignee, new { id = "ddlConsignee", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Payor</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.PayorID, Model.Payors, new { id = "ddlPayor", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">BOL Reference Value</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ReferenceValue, null, new { @class = "form-control" })
+        </div>
+        </div>*@
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipper Reference Number</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.ShipperReferenceNumber, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-5">
+                                @Html.CheckBoxFor(m => m.SearchOptions.ShipperRefNoNotNullValues)
+                                @Html.LabelFor(m => m.SearchOptions.ShipperRefNoNotNullValues, new { @class = "lblCheckBox" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Forwarder Reference Number</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.ForwarderReferenceNumber, null, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group excludefrombilltype">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-5">
+                                    @Html.CheckBoxFor(m => m.SearchOptions.ForwarderRefNoNotNullValues)
+                                    @Html.LabelFor(m => m.SearchOptions.ForwarderRefNoNotNullValues, new { @class = "lblCheckBox" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Consignee Reference Number</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.ConsigneeReferenceNumber, null, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group excludefrombilltype">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-5">
+                                    @Html.CheckBoxFor(m => m.SearchOptions.ConsigneeRefNoNotNullValues)
+                                    @Html.LabelFor(m => m.SearchOptions.ConsigneeRefNoNotNullValues, new { @class = "lblCheckBox" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Notify Party Reference Number</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.NotifyPartyReferenceNumber, null, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group excludefrombilltype">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-5">
+                                    @Html.CheckBoxFor(m => m.SearchOptions.NotifyNoNotNullValues)
+                                    @Html.LabelFor(m => m.SearchOptions.NotifyNoNotNullValues, new { @class = "lblCheckBox" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Payor Reference Number</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.PayorReferenceNumber, null, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group excludefrombilltype">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-5">
+                                    @Html.CheckBoxFor(m => m.SearchOptions.PayorRefNoNotNullValues)
+                                    @Html.LabelFor(m => m.SearchOptions.PayorRefNoNotNullValues, new { @class = "lblCheckBox" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Weight</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.BookingMinWeight, "{0:#.#}", new { @class = "form-control" })
+                                    <div class="note">Min: 0</div>
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.BookingMaxWeight, "{0:#.#}", new { @class = "form-control" })
+                                    <div class="note">Max: 70000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Equipment Size</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.EquipmentSize, Model.EquipmentSizes, new { id = "ddlES", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Equipment Type</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.EquipmentType, Model.EquipmentTypes, new { id = "ddlET", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Container ID</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.ContainerId, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Commodity Code</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.CommodityCode, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Commodity Description</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.CommodityDescription, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Temperature</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.MinTemp, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.MaxTemp, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">UN Hazmat Code</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.UNHazmatCode, Model.UNHazmatCodes, new { id = "ddlUNCodes", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">SIT Flag</label>
+                            <div class="col-md-5">
+                                @Html.CheckBoxFor(m => m.SearchOptions.SITFlag, new { @class = "chkSitFlag" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">BOL Reference</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.SearchOptions.ReferenceType, Model.ReferenceTypes, null, new { id = "ddlRefTypes", @class = "form-control" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(x => x.SearchOptions.ReferenceValue, null, new { @class = "form-control", placeholder = "Value" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">BOL Views less than or equal to</label>
+                            <div class="col-md-1" style="width: 9%;">
+                                @Html.TextBoxFor(x => x.SearchOptions.BOLViews, null, new { @class = "form-control", placeholder = "Value" })
+                            </div>
+                            <div class="col-md-1" style="padding: 0; width: 2%;">
+                                <label for="inputUrl" class="mylabel control-label">by</label>
+                            </div>
+                            <div class="col-md-3" style="width: 31.5%;">
+                                @Html.ListBoxFor(x => x.SearchOptions.UserIds, Model.Users, new { id = "ddlUsers", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div id="BOLChargesFilter" class="excludefrombilltype">
+                            <h4>BOL Charge Filters</h4>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Charge Code</label>
+                                <div class="col-md-4">
+                                    @Html.TextBoxFor(x => x.SearchOptions.ChargeCode, null, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-1">
+                                    @Html.DropDownListFor(x => x.SearchOptions.ChargeCodeOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Charge Description</label>
+                                <div class="col-md-4">
+                                    @Html.TextBoxFor(x => x.SearchOptions.ChargeDesc, null, new { @class = "form-control" })
+                                </div>
+                                <div class="col-md-1">
+                                    @Html.DropDownListFor(x => x.SearchOptions.ChargeDescOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Charge Amount</label>
+                                <div class="col-md-5 dateBlock">
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.ChargeMinAmount, null, new { @class = "form-control", placeholder = "Min." })
+                                    </div>
+                                    <label class="col-md-2">and</label>
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.ChargeMaxAmount, null, new { @class = "form-control", placeholder = "Max." })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Total Charges</label>
+                                <div class="col-md-5 dateBlock">
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.TotalChargeMinAmount, null, new { @class = "form-control", placeholder = "Min." })
+                                    </div>
+                                    <label class="col-md-2">and</label>
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.TotalChargeMaxAmount, null, new { @class = "form-control", placeholder = "Max." })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="BOLPaymentsFilter" class="excludefrombilltype">
+                            <h4>BOL Payment Filters</h4>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Current Balance</label>
+                                <div class="col-md-5 dateBlock">
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.CurrentMinBalance, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                                    </div>
+                                    <label class="col-md-2">and</label>
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.CurrentMaxBalance, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="DocumentImagesFilter">
+                            <h4>Document Images</h4>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Image Type</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.ImageType, null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div id="Container TrackingFilter">
+                            <h4>Container Tracking</h4>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Container Event</label>
+                                <div class="col-md-5">
+                                    @Html.ListBoxFor(x => x.SearchOptions.ContainerEventType, Model.ContainerEventTypes, new { id = "ddlContainerEventTypes", multiple = "", @class = "form-control chzn-select" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Date between</label>
+                                <div class="col-md-5 dateBlock">
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.TrackingStartDate, null, new { @class = "form-control BDDatepicker dateCtrl", data_val_required = "false" })
+                                    </div>
+                                    <label class="col-md-2">and</label>
+                                    <div class="col-md-5">
+                                        @Html.TextBoxFor(x => x.SearchOptions.TrackingEndDate, null, new { @class = "form-control BDDatepicker dateCtrl", data_val_required = "false" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="eliminateCheckboxFilter" class="excludefrombilltype">
+                            <div class="form-group">
+                                @*<div class="col-md-1">*@
+                                @Html.CheckBoxFor(m => m.SearchOptions.EliminateBDResearchItems, new { @class = "chkSitFlag" })
+                                @*</div>*@
+                                <label for="inputUrl" class="mylabel control-label">Eliminate Balance Dues / Item Pulled for Research</label>
+                            </div>
+                        </div>
+                        if (Model.SearchOptions.SortOptions != null && Model.SearchOptions.SortOptions.Any())
+                        {
+                            <div id="SortByBlock" class="sortable">
+                                <h4>Sort By</h4>
+                                @{
+                                    var idx = 0;
+                                }
+                                @foreach (var item in Model.SearchOptions.SortOptions)
+                                {
+                                    <div class="col-md-12" data-sortidx="0">
+                                        <input checked="checked" class="neverclear" id="SearchOptions_SortByShipperName@(idx)" name="SearchOptions.SortOptions[@idx].IsSelected" type="checkbox" value="true">
+                                        <label class="lblCheckBox neverclear" for="SearchOptions_SortByShipperName">@Model.SearchOptions.SortOptions[@idx].DisplayName</label>
+                                        <input class="chkDesc col-md-1 neverclear" id="SearchOptions_SortByShipperNameDesc" name="SearchOptions.SortOptions[@idx].IsDesc" type="checkbox" value="true">
+                                        <input class="hidden idx neverclear" name="SearchOptions.SortOptions[@idx].Idx" type="text" value="@idx">
+                                        <input class="hidden neverclear" name="SearchOptions.SortOptions[@idx].ColumnName" type="text" value="@Model.SearchOptions.SortOptions[@idx].ColumnName">
+                                        <i class="fa fa-arrows"></i>
+                                    </div>
+                                    idx++;
+                                }
+                            </div>
+                        }
+                    }
+                    else if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.DBName == "ClientAgility")
+                    {
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">BOL#</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.BOLNo, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Job#</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.JobNumber, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Consignment ID</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.ConsignmentID, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Service Movement Type</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ServiceMovementTypeCode, Model.ServiceMovementType, new { id = "ddlServiceMovementType", multiple = "multiple", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Service Level</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ServiceLevelCode, Model.ServiceLevel, new { id = "ddlServiceLevel", multiple = "multiple", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Service Type</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ServiceTypeCode, Model.ServiceType, new { id = "ddlServiceType", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Origin</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.OriginLocationCode, Model.Origins, new { id = "ddlOrigin", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Port Of Exit</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.PortOfExitCode, Model.PortOfExit, new { id = "ddlPortOfExit", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Port of Entry</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.PortofEntryCode, Model.PortofEntry, new { id = "ddlPortofEntry", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Destination</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.DestinationLocationCode, Model.Destinations, new { id = "ddlDestinations", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Prepaid Collect</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.PrepaidCollectCode, Model.PrepaidCollect, new { id = "ddlPrepaidCollect", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Job Confirmation Date</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.JobConfirmationStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.JobConfirmationEndDate, null, new { @class = "form-control DepEndDatepicker", data_val_required = "false" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Load Date</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.LoadStartDate, null, new { @class = "form-control BDDatepicker" })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.LoadEndDate, null, new { @class = "form-control DepEndDatepicker" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Departure Date Date</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.DepartureStartDate, null, new { @class = "form-control BDDatepicker" })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.DepartureEndDate, null, new { @class = "form-control DepEndDatepicker" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipper</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ShipperID, Model.Shipper, new { id = "ddlShippers", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Consignee</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ConsigneeID, Model.Consignee, new { id = "ddlConsignee", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Notify Party</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.NotifyPartyCode, Model.NotifyParty, new { id = "ddlNotifyParty", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Exporting Carrier</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ExportingCarrierCode, Model.ExportingCarrier, new { id = "ddlExportingCarrier", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Unit Number</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.unitNumber, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Unit Type</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.UnitTypeCode, Model.UnitType, new { id = "ddlUnitType", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">HazMat Flag</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.HazMatFlagCode, Model.HazMatFlag, new { id = "ddlHazMatFlag", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Temperature between</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.TempFromZone, null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group excludefrombilltype">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">BOL Views less than or equal to</label>
+                            <div class="col-md-1" style="width: 9%;">
+                                @Html.TextBoxFor(x => x.SearchOptions.BOLViews, null, new { @class = "form-control", placeholder = "Value" })
+                            </div>
+                            <div class="col-md-1" style="padding: 0; width: 2%;">
+                                <label for="inputUrl" class="mylabel control-label">by</label>
+                            </div>
+                            <div class="col-md-3" style="width: 31.5%;">
+                                @Html.ListBoxFor(x => x.SearchOptions.UserIds, Model.Users, new { id = "ddlUsers", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div id="DocumentImagesFilter">
+                            <h4>Document Images</h4>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4">Image Type</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.ImageType, null, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div id="eliminateCheckboxFilter" class="excludefrombilltype">
+                            <div class="form-group">
+                                @*<div class="col-md-1">*@
+                                @Html.CheckBoxFor(m => m.SearchOptions.EliminateBDResearchItems, new { @class = "chkSitFlag" })
+                                @*</div>*@
+                                <label for="inputUrl" class="mylabel control-label">Eliminate Balance Dues / Item Pulled for Research</label>
+                            </div>
+                        </div>
+                        if (Model.SearchOptions.SortOptions != null && Model.SearchOptions.SortOptions.Any())
+                        {
+                            <div id="SortByBlock" class="sortable">
+                                <h4>Sort By</h4>
+                                @{
+                                    var idx = 0;
+                                }
+                                @foreach (var item in Model.SearchOptions.SortOptions)
+                                {
+                                    <div class="col-md-12" data-sortidx="0">
+                                        <input checked="checked" class="neverclear" id="SearchOptions_SortByShipperName@(idx)" name="SearchOptions.SortOptions[@idx].IsSelected" type="checkbox" value="true">
+                                        <label class="lblCheckBox neverclear" for="SearchOptions_SortByShipperName">@Model.SearchOptions.SortOptions[@idx].DisplayName</label>
+                                        <input class="chkDesc col-md-1 neverclear" id="SearchOptions_SortByShipperNameDesc" name="SearchOptions.SortOptions[@idx].IsDesc" type="checkbox" value="true">
+                                        <input class="hidden idx neverclear" name="SearchOptions.SortOptions[@idx].Idx" type="text" value="@idx">
+                                        <input class="hidden neverclear" name="SearchOptions.SortOptions[@idx].ColumnName" type="text" value="@Model.SearchOptions.SortOptions[@idx].ColumnName">
+                                        <i class="fa fa-arrows"></i>
+                                    </div>
+                                    idx++;
+                                }
+                            </div>
+                        }
+                    }
+                    else if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.DBName == "ClientHellmann")
+                    {
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Mode:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(x => x.SearchOptions.Mode, Model.Mode, null, new { id = "ddlMode", @class = "form-control Mode" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Region</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.Regions, Model.ShipmentRegions, new { id = "ddlShipmentRegions", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.DropDownListFor(x => x.SearchOptions.Region, Model.ShipmentRegions, null, new { id = "ddlShipmentRegions", @class = "form-control ShipmentRegion " })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Issuing Department</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.IssuingDepts, Model.IssuingDepts, new { id = "ddlShipmentIssuingDepts", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.TextBoxFor(x => x.SearchOptions.IssuingDept, null, new { @class = "form-control" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipment #</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.ShipmentNo, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Supplier Ref#</label>
+                            <div class="col-md-5">
+                                @Html.TextBoxFor(x => x.SearchOptions.AWBBLNo, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipment Date</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @*<input class="form-control BDDatepicker" id="SearchOptions_DepartureStartDate" name="SearchOptions.DepartureStartDate" type="date" value="@Model.SearchOptions.DepartureStartDate">*@
+                                    @Html.TextBoxFor(x => x.SearchOptions.ShipmentStartDate, null, new { @class = "form-control BDDatepicker" })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @*<input class="form-control DepEndDatepicker" id="SearchOptions_DepartureEndDate" name="SearchOptions.DepartureEndDate" type="date" value="@Model.SearchOptions.DepartureEndDate">*@
+                                    @Html.TextBoxFor(x => x.SearchOptions.ShipmentEndDate, null, new { @class = "form-control DepEndDatepicker" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipment Type</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ShipmentType, Model.ShipmentTypes, new { id = "ddlShipmentType", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.DropDownListFor(x => x.SearchOptions.ShipmentType, Model.ShipmentTypes, null, new { id = "ddlShipmentType", @class = "form-control" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipment Status</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ShipmentStatus, Model.ShipmentStatuss, new { id = "ddlShipmentStatus", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.DropDownListFor(x => x.SearchOptions.ShipmentStatus, Model.ShipmentStatuss, null, new { id = "ddlShipmentStatus", @class = "form-control ShipmentStatus " })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Shipment CL Status</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.ShipmentCLStatus, Model.ShipmentCLStatuss, new { id = "ddlShipmentCLStatus", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.DropDownListFor(x => x.SearchOptions.ShipmentCLStatus, Model.ShipmentCLStatuss, null, new { id = "ddlShipmentCLStatus", @class = "form-control" })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Origin</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.Origin, Model.Origins, new { id = "ddlShipmentOrigins", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.DropDownListFor(x => x.SearchOptions.Origin, Model.Origins, null, new { id = "ddlShipmentOrigins", @class = "form-control ShipmentOrigin " })*@
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Origin</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.Origin, null, new { @class = "form-control" })
+        </div>
+        </div>*@
+                        @*<div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Dest</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.Dest, null, new { @class = "form-control" })
+        </div>
+        </div>*@
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Dest</label>
+                            <div class="col-md-5">
+                                @Html.ListBoxFor(x => x.SearchOptions.Dest, Model.Destinations, new { id = "ddlShipmentDestinations", multiple = "", @class = "form-control chzn-select" })
+                                @*@Html.DropDownListFor(x => x.SearchOptions.Dest, Model.Destinations, null, new { id = "ddlShipmentDestinations", @class = "form-control ShipmentDestination " })*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Chargeable Weight</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.MinChargeableWeight, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+                                </div>
+                                <label class="col-md-2">and</label>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.MaxChargeableWeight, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Total Revenue - Total Cost</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-2">
+                                    @Html.DropDownListFor(x => x.SearchOptions.FLSign1, Model.FilterSign, null, new { id = "ddlSign", @class = "form-control" })
+                                </div>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.FLInput1, "{0:#.#}", new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Total Revenue</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-2">
+                                    @Html.DropDownListFor(x => x.SearchOptions.FLSign2, Model.FilterSign, null, new { id = "ddlSign", @class = "form-control" })
+                                </div>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.FLInput2, "{0:#.#}", new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Chargeable Weight</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-2">
+                                    @Html.DropDownListFor(x => x.SearchOptions.FLSign3, Model.FilterSign, null, new { id = "ddlSign", @class = "form-control" })
+                                </div>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.FLInput3, "{0:#.#}", new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Chargeable Weight - Actual Weight</label>
+                            <div class="col-md-5 dateBlock">
+                                <div class="col-md-2">
+                                    @Html.DropDownListFor(x => x.SearchOptions.FLSign4, Model.FilterSign, null, new { id = "ddlSign", @class = "form-control" })
+                                </div>
+                                <div class="col-md-5">
+                                    @Html.TextBoxFor(x => x.SearchOptions.FLInput4, "{0:#.#}", new { @class = "form-control", placeholder = "" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">BOL Views less than or equal to</label>
+                            <div class="col-md-1" style="width: 9%;">
+                                @Html.TextBoxFor(x => x.SearchOptions.BOLViews, null, new { @class = "form-control", placeholder = "Value" })
+                            </div>
+                            <div class="col-md-1" style="padding: 0; width: 2%;">
+                                <label for="inputUrl" class="mylabel control-label">by</label>
+                            </div>
+                            <div class="col-md-3" style="width: 31.5%;">
+                                @Html.ListBoxFor(x => x.SearchOptions.UserIds, Model.Users, new { id = "ddlUsers", multiple = "", @class = "form-control chzn-select" })
+                            </div>
+                        </div>
+                        <div id="eliminateCheckboxFilter" class="excludefrombilltype">
+                            <div class="form-group">
+                                @*<div class="col-md-1">*@
+                                @Html.CheckBoxFor(m => m.SearchOptions.EliminateBDResearchItems, new { @class = "chkSitFlag" })
+                                @*</div>*@
+                                <label for="inputUrl" class="mylabel control-label">Eliminate Balance Dues / Item Pulled for Research</label>
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Port of Loading</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.POLCode, Model.PortOfLoading, new { id = "ddlPOL", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Port of Discharge</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.PODCode, Model.PortOfDischarge, new { id = "ddlPOD", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Destination</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.DestinationLocationCode, Model.Destinations, new { id = "ddlDestinations", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Mode</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.Mode, Model.Modes, new { id = "ddlModes", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Shipper</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.ShipperID, Model.Shippers, new { id = "ddlShippers", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Consignee</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.ConsigneeID, Model.Consignee, new { id = "ddlConsignee", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Payor</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.PayorID, Model.Payors, new { id = "ddlPayor", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>*@
+                        @*<div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">BOL Reference Value</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ReferenceValue, null, new { @class = "form-control" })
+        </div>
+        </div>*@
+                        @*<div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Shipper Reference Number</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ShipperReferenceNumber, null, new { @class = "form-control" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+        @Html.CheckBoxFor(m => m.SearchOptions.ShipperRefNoNotNullValues)
+        @Html.LabelFor(m => m.SearchOptions.ShipperRefNoNotNullValues, new { @class = "lblCheckBox" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Forwarder Reference Number</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ForwarderReferenceNumber, null, new { @class = "form-control" })
+        </div>
+        <div class="form-group excludefrombilltype">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+        @Html.CheckBoxFor(m => m.SearchOptions.ForwarderRefNoNotNullValues)
+        @Html.LabelFor(m => m.SearchOptions.ForwarderRefNoNotNullValues, new { @class = "lblCheckBox" })
+        </div>
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Consignee Reference Number</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ConsigneeReferenceNumber, null, new { @class = "form-control" })
+        </div>
+        <div class="form-group excludefrombilltype">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+        @Html.CheckBoxFor(m => m.SearchOptions.ConsigneeRefNoNotNullValues)
+        @Html.LabelFor(m => m.SearchOptions.ConsigneeRefNoNotNullValues, new { @class = "lblCheckBox" })
+        </div>
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Notify Party Reference Number</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.NotifyPartyReferenceNumber, null, new { @class = "form-control" })
+        </div>
+        <div class="form-group excludefrombilltype">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+        @Html.CheckBoxFor(m => m.SearchOptions.NotifyNoNotNullValues)
+        @Html.LabelFor(m => m.SearchOptions.NotifyNoNotNullValues, new { @class = "lblCheckBox" })
+        </div>
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Payor Reference Number</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.PayorReferenceNumber, null, new { @class = "form-control" })
+        </div>
+        <div class="form-group excludefrombilltype">
+        <div class="col-md-4"></div>
+        <div class="col-md-5">
+        @Html.CheckBoxFor(m => m.SearchOptions.PayorRefNoNotNullValues)
+        @Html.LabelFor(m => m.SearchOptions.PayorRefNoNotNullValues, new { @class = "lblCheckBox" })
+        </div>
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Weight</label>
+        <div class="col-md-5 dateBlock">
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.BookingMinWeight, "{0:#.#}", new { @class = "form-control" })
+        <div class="note">Min: 0</div>
+        </div>
+        <label class="col-md-2">and</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.BookingMaxWeight, "{0:#.#}", new { @class = "form-control" })
+        <div class="note">Max: 70000</div>
+        </div>
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Equipment Size</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.EquipmentSize, Model.EquipmentSizes, new { id = "ddlES", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Equipment Type</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.EquipmentType, Model.EquipmentTypes, new { id = "ddlET", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Container ID</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ContainerId, null, new { @class = "form-control" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Commodity Code</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.CommodityCode, null, new { @class = "form-control" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Commodity Description</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.CommodityDescription, null, new { @class = "form-control" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Temperature</label>
+        <div class="col-md-5 dateBlock">
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.MinTemp, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+        </div>
+        <label class="col-md-2">and</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.MaxTemp, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+        </div>
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">UN Hazmat Code</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.UNHazmatCode, Model.UNHazmatCodes, new { id = "ddlUNCodes", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">SIT Flag</label>
+        <div class="col-md-5">
+        @Html.CheckBoxFor(m => m.SearchOptions.SITFlag, new { @class = "chkSitFlag" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">BOL Reference</label>
+        <div class="col-md-3">
+        @Html.DropDownListFor(x => x.SearchOptions.ReferenceType, Model.ReferenceTypes, null, new { id = "ddlRefTypes", @class = "form-control" })
+        </div>
+        <div class="col-md-2">
+        @Html.TextBoxFor(x => x.SearchOptions.ReferenceValue, null, new { @class = "form-control", placeholder = "Value" })
+        </div>
+        </div>
+        <div class="form-group excludefrombilltype">
+        <label for="inputUrl" class="mylabel control-label col-md-4">BOL Views less than or equal to</label>
+        <div class="col-md-1" style="width: 9%;">
+        @Html.TextBoxFor(x => x.SearchOptions.BOLViews, null, new { @class = "form-control", placeholder = "Value" })
+        </div>
+        <div class="col-md-1" style="padding: 0; width: 2%;">
+        <label for="inputUrl" class="mylabel control-label">by</label>
+        </div>
+        <div class="col-md-3" style="width: 31.5%;">
+        @Html.ListBoxFor(x => x.SearchOptions.UserIds, Model.Users, new { id = "ddlUsers", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div id="BOLChargesFilter" class="excludefrombilltype">
+        <h4>BOL Charge Filters</h4>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Charge Code</label>
+        <div class="col-md-4">
+        @Html.TextBoxFor(x => x.SearchOptions.ChargeCode, null, new { @class = "form-control" })
+        </div>
+        <div class="col-md-1">
+        @Html.DropDownListFor(x => x.SearchOptions.ChargeCodeOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Charge Description</label>
+        <div class="col-md-4">
+        @Html.TextBoxFor(x => x.SearchOptions.ChargeDesc, null, new { @class = "form-control" })
+        </div>
+        <div class="col-md-1">
+        @Html.DropDownListFor(x => x.SearchOptions.ChargeDescOperator, Model.Operators, new { id = "ddlOperators", @class = "form-control" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Charge Amount</label>
+        <div class="col-md-5 dateBlock">
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ChargeMinAmount, null, new { @class = "form-control", placeholder = "Min." })
+        </div>
+        <label class="col-md-2">and</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ChargeMaxAmount, null, new { @class = "form-control", placeholder = "Max." })
+        </div>
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Total Charges</label>
+        <div class="col-md-5 dateBlock">
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.TotalChargeMinAmount, null, new { @class = "form-control", placeholder = "Min." })
+        </div>
+        <label class="col-md-2">and</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.TotalChargeMaxAmount, null, new { @class = "form-control", placeholder = "Max." })
+        </div>
+        </div>
+        </div>
+        </div>
+        <div id="BOLPaymentsFilter" class="excludefrombilltype">
+        <h4>BOL Payment Filters</h4>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Current Balance</label>
+        <div class="col-md-5 dateBlock">
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.CurrentMinBalance, "{0:#.#}", new { @class = "form-control", placeholder = "Min." })
+        </div>
+        <label class="col-md-2">and</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.CurrentMaxBalance, "{0:#.#}", new { @class = "form-control", placeholder = "Max." })
+        </div>
+        </div>
+        </div>
+        </div>
+        <div id="DocumentImagesFilter">
+        <h4>Document Images</h4>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Image Type</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.ImageType, null, new { @class = "form-control" })
+        </div>
+        </div>
+        </div>
+        <div id="Container TrackingFilter">
+        <h4>Container Tracking</h4>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Container Event</label>
+        <div class="col-md-5">
+        @Html.ListBoxFor(x => x.SearchOptions.ContainerEventType, Model.ContainerEventTypes, new { id = "ddlContainerEventTypes", multiple = "", @class = "form-control chzn-select" })
+        </div>
+        </div>
+        <div class="form-group">
+        <label for="inputUrl" class="mylabel control-label col-md-4">Date between</label>
+        <div class="col-md-5 dateBlock">
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.TrackingStartDate, null, new { @class = "form-control BDDatepicker dateCtrl" })
+        </div>
+        <label class="col-md-2">and</label>
+        <div class="col-md-5">
+        @Html.TextBoxFor(x => x.SearchOptions.TrackingEndDate, null, new { @class = "form-control BDDatepicker dateCtrl" })
+        </div>
+        </div>
+        </div>
+        </div>*@
+                        @*<div id="eliminateCheckboxFilter" class="excludefrombilltype">
+        <div class="form-group">
+        @Html.CheckBoxFor(m => m.SearchOptions.EliminateBDResearchItems, new { @class = "chkSitFlag" })
+        <label for="inputUrl" class="mylabel control-label">Eliminate Balance Dues / Item Pulled for Research</label>
+        </div>
+        </div>*@
+                        if (Model.SearchOptions.SortOptions != null && Model.SearchOptions.SortOptions.Any())
+                        {
+                            <div id="SortByBlock" class="sortable">
+                                <h4>Sort By</h4>
+                                @{
+                                    var idx = 0;
+                                }
+                                @foreach (var item in Model.SearchOptions.SortOptions)
+                                {
+                                    <div class="col-md-12" data-sortidx="0">
+                                        <input checked="checked" class="neverclear" id="SearchOptions_SortByShipperName@(idx)" name="SearchOptions.SortOptions[@idx].IsSelected" type="checkbox" value="true">
+                                        <label class="lblCheckBox neverclear" for="SearchOptions_SortByShipperName">@Model.SearchOptions.SortOptions[@idx].DisplayName</label>
+                                        <input class="chkDesc col-md-1 neverclear" id="SearchOptions_SortByShipperNameDesc" name="SearchOptions.SortOptions[@idx].IsDesc" type="checkbox" value="true">
+                                        <input class="hidden idx neverclear" name="SearchOptions.SortOptions[@idx].Idx" type="text" value="@idx">
+                                        <input class="hidden neverclear" name="SearchOptions.SortOptions[@idx].ColumnName" type="text" value="@Model.SearchOptions.SortOptions[@idx].ColumnName">
+                                        <i class="fa fa-arrows"></i>
+                                    </div>
+                                    idx++;
+                                }
+                            </div>
+                        }
+                    }
+                    <div id="getresulttable">
+                        <div class="form-group">
+                            @Html.CheckBoxFor(m => m.SearchOptions.ResultTableFormat, new { @class = "chktableresult" })
+                            <label for="inputUrl" class="mylabel control-label">Display results in table format</label>
+                        </div>
+                    </div>
+
+                    <div class="btnReasrItemInfo">
+                        @*<input type="submit" value="Get Results" id="GetAuditResults" name="ButtonType" class="btn btn-lg btnLoadData" />*@
+                        <button id="GetAuditResults" type="submit" class="btn btn-lg btnLoadData" name="ButtonType"><img src="/images/GetResults.png" class="getResultsIcon" />Get Results</button>
+                        @if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.DBName == "ClientPasha")
+                        {
+                            <button type="submit" value="Stats" id="GetStats" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/stats.png" />Stats</button>
+                            <button id="GetAuditPlaybook" type="submit" value="Playbook" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/add.png" />Manage Playbook</button>
+                        }
+                        @if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.DBName == "ClientHellmann")
+                        {
+                            <button type="submit" value="Stats" id="GetStats" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/stats.png" />Stats</button>
+                        }
+                        @if (Model.CompanyId > 0 && Arg.DataAccess.ActiveClient.Info.DBName == "ClientAgility")
+                        {
+                            <button type="submit" value="Stats" id="GetStats" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/stats.png" />Stats</button>
+                            // <button id="GetAuditPlaybook" type="submit" value="Playbook" name="ButtonType" class="btn btn-lg btnLoadData"><img src="/images/add.png" />Manage Playbook</button>
+                        }
+                    </div>
+                    @*<button id="GetStats" type="submit" class="btn btn-lg btnLoadData" name="ButtonType">Stats</button>*@
+                }
+            }
+            @if (Model.CompanyId > 0)
+            {
+                <button id="ClearForm" type="submit" class="btn btn-lg"><img src="/images/ClearForm.png" class="clearFormIcon" /> Clear Form</button>
+            }
+            <div id="message"></div>
+        </div>
+    }
+    @if (Model.BOLAuditingResults != null && Model.BOLAuditingResults.Count > 0)
+    {
+        <table id="BOLAuditResults-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="bolNo">Bol No</th>
+                    <th class="shipperID">Shipper ID</th>
+                    <th class="mode">Mode</th>
+                    <th class="pol">POL</th>
+                    <th class="pod">POD</th>
+                    <th class="actDepDate">Actual Departure Date</th>
+                </tr>
+            </thead>
+            <tbody class="bOLAuditResults-details">
+                @foreach (var item in Model.BOLAuditingResults)
+                {
+                    <tr>
+                        <td class="bolNo">
+                            <a href="@(Common.MyRoot)BOL/AuditingResults?bolNo=@item.BOLNo&CompanyId=@Model.CompanyId">@item.BOLNo</a>
+                        </td>
+                        <td class="shipperID">@item.ShipperID</td>
+                        <td class="mode">@item.Mode</td>
+                        <td class="pol">@item.POL</td>
+                        <td class="pod">@item.POD</td>
+                        <td class="actDepDate">@item.ActualDepartureDate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<script>
+    function SubmitSuccess(ajaxContext) {
+
+        if (typeof ajaxContext == "undefined" || typeof ajaxContext.QueryId == "undefined") {
+            $("#message").html("Client not active. Please <a href='@(Common.MyRoot)Account/Login' title='Login' class='reLogin'>re-login</a>");
+            return false;
+        }
+        var url = "";
+        if (ajaxContext.Type == "Stats") {
+            url = SiteRoot + 'Bol/ViewAuditingResultStats?QueryId=' + ajaxContext.QueryId + "&idx=1" + "&CompanyId=" + @Model.CompanyId;
+            window.open(url);
+        }
+        else if (ajaxContext.Type == "Playbook") {
+            url = SiteRoot + 'Bol/AuditorPlaybook?queryId=' + ajaxContext.QueryId + "&CompanyId=" + @Model.CompanyId;
+            window.open(url);
+        }
+        else if (ajaxContext.Type == "Message") {
+            $("#message").html("No client is assigned!");
+        }
+        else {
+            if (ajaxContext.ResultTableFormat) {
+                url = SiteRoot + 'Bol/ViewAuditingResultTableFormat?QueryId=' + ajaxContext.QueryId + "&idx=1" + "&CompanyId=" + @Model.CompanyId;
+                window.open(url);
+            }
+            else {
+                url = SiteRoot + 'Bol/AuditingResults?QueryId=' + ajaxContext.QueryId + "&idx=1" + "&CompanyId=" + @Model.CompanyId;
+                window.open(url);
+            }
+        }
+    }
+</script>

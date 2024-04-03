@@ -1,0 +1,62 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.CollectionComments
+<div id="commentsBlock" class="row">
+    <h3 style="display:inline-block;">Previous Comments</h3>
+    <a class="loadInTarget loadComments" href="javascript:void(0);" data-balanceid="@Model.BalanceId"><i class="fa fa-refresh"></i></a>
+    <div class="comments" style="margin-bottom: 30px;">
+        @if (Model.CollectionCommentsList != null && Model.CollectionCommentsList.Any())
+        {
+            foreach (var item in Model.CollectionCommentsList)
+            {
+                <div class="collectionComment">
+                    <div class="details">
+                        <span class="dateTime"><img src="~/images/datetime.png" /> @item.DateTime.ToLongDateString()  <img src="~/images/time.png" style="margin-left:8px;" /> @item.DateTime.ToLongTimeString()</span>
+                        @if (!string.IsNullOrWhiteSpace(@item.CollectorName))
+                        {
+                            @Html.Raw(" | ")
+                            <span class="name"><img src="~/images/user-name.png" /> <b>@item.CollectorName</b></span>
+                        }
+                    </div>
+                    <div class="comment">@Html.Raw(item.Comments)</div>
+                </div>
+            }
+        }
+        else
+        {
+            @Html.Raw("No comments added yet!")
+        }
+    </div>
+    <h3>Add a Comment</h3>
+    @using (Html.AjaxBeginForm("SaveCollectionComments", "BalanceDues", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "SubmitSuccess" }, new { @class = "form-horizontal frmAddCollComment" }))
+    {
+        @Html.HiddenFor(x => x.BalanceId)
+        <div class="row">
+            <div class="col-md-12">
+                @Html.TextAreaFor(x => x.CollectionComment, new { @class = "form-control ckeditor" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+        </div>
+    }
+    <button type="button" value="Exit" class="close-animatedModal btn btn-lg btn-default" style="line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;   font-size: 20px;   margin-top: -64px;"><i class="fa fa-sign-out"></i> Exit</button>
+</div>
+<script>
+
+    function SubmitSuccess(ajaxContext) {
+
+        var html = '<div class="collectionComment"><div class="details">';
+        html += ajaxContext.DateTimeFormatted;
+        if ($(ajaxContext.CollectorName).length > 0) {
+            html += " | ";
+            html += '<span class="name"><img src="/images/user-name.png" /> <b>' + $(ajaxContext.CollectorName) + '</b></span>';
+        }
+        html += "</div>";
+        html += "<div class='comment'>" + ajaxContext.Comments + '</div>';
+        html += "</div>";
+        $(".comments").prepend(html);
+        $("#CollectionComment").val("");
+    }
+</script>

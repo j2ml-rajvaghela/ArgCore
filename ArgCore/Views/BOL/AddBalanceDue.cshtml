@@ -1,0 +1,913 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.AddBalanceDue
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Balance Due Entry</title>
+    <partial name="PageHeader"/>
+    <link href="~/res/css/AdBalDue.css" rel="stylesheet" />
+    <style>
+        body {
+            padding: 15px 70px;
+        }
+
+        .messageBlock {
+            position: relative;
+            margin-bottom: 20px;
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
+<body>
+    @{
+        var idx = 0;
+        var hdnIdx = -1;
+    }
+    @using (Html.AjaxBeginForm("AddBalanceDue", "BOL", new AjaxOptions { OnSuccess = "SubmitSuccess", OnFailure = "OnFailure", OnBegin = "OnBegin" }, new { @class = "form-horizontal", id = "frmAddBalanceDue", enctype = "multipart/form-data" }))
+    {
+
+       @*  Html.EnableClientValidation(false); *@
+        <div id="AddBalanceDue" class="main-content">
+            @if (!string.IsNullOrWhiteSpace(Model.Message))
+            {
+                <div class="messageBlock row">
+                    <span class="label label-warning">@Model.Message</span>
+                </div>
+            }
+
+            @if (Model.BolHeaderDetails != null)
+            {
+                <div class="headingBlock row"><span class="heading">Balance Due Entry </span><span class="head-details">Bol#: @Model.BolNo | BOL Date: @Convert.ToDateTime(Model.BolHeaderDetails.ActualDepartureDate).ToString("d")</span></div>
+
+                <div id="BolHeaderBlock">
+                    <div class="block-heading">Shipment Header</div>
+                    <div class="AddBolHeader row">
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Customer ID</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.CustomerId, new SelectList(Model.CustomersList, "StrId", "Name"), "-- select --", new { id = "ddlparticipants", @class = "form-control bol-input chzn-select" })
+                                @* @Html.DropDownListFor(x => x.BolHeaderDetails.CutomerID, Model.Customers, "All", new { id = "ddlCustomers", multiple = "", @class = "form-control chzn-select" })*@
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Booking ID</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.BolHeaderDetails.BookingID, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">BOL #</label>
+                            <div class="col-md-3">
+                                @*<input type="text" class="form-control bol-input" value="0958" />*@
+                                @Html.TextBoxFor(x => x.BolHeaderDetails.BOLNo, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                                @*Html.TextBoxFor(x => x.BolHeaderDetails.BOLNo, null, new { @class = "form-control bol-input", @readonly = "readonly" })*@
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">BOL Execution Date</label>
+                            <div class="col-md-3">
+                                @*<input type="date" class="form-control bol-input" value="09-10-2016" />*@
+                                @Html.TextBoxFor(x => x.BolHeaderDetails.ActualDepartureDate, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Shippers Ref #</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.ShippersRefNo, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Consignee Ref #</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.ConsigneeRefNo, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Payor Ref #</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.PayorRefNo, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Vessel</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.BolHeaderDetails.Vessel, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Voyage</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.BolHeaderDetails.Voyage, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Quote</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.Quote, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Invoice Type (BOL Overcharge;BOL Under-billing)</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BalanceDue.InvoiceType, Common.InvoiceTypes.Select((r, x) => new SelectListItem { Text = r, Value = r }), "--select--", new { id = "ddlInvoiceType", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Error Code</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.ErrorCode, new SelectList(Model.BDErrorCodes, "Description", "BdErrorCode"), "--select--", new { id = "ddlErrorCodes", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Mode Type</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BolHeaderDetails.Mode, new SelectList(Model.Modes, "Mode", "Mode"), new { id = "ddlmodes", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Origin Location Code</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BolHeaderDetails.OriginLocationCode, new SelectList(Model.OriginLocList, "OriginLocationCode", "Origin"), new { id = "ddlorigins", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Port Of Loading</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BolHeaderDetails.POL, new SelectList(Model.PolList, "POLCode", "POL"), new { id = "ddlpols", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Port Of Discharge</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BolHeaderDetails.POD, new SelectList(Model.PodList, "PODCode", "POD"), new { id = "ddlpods", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Destination Location Code</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BolHeaderDetails.DestinationLocationCode, new SelectList(Model.DestinationLocList, "DestinationLocationCode", "Destination"), new { id = "ddldests", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Balance Due Descriptions</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BDDescription, Model.BDDescriptions, "--select--", new { id = "ddlBDDescs", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="BolItemBlock" class="bol-sections">
+                    <div class="block-heading">Shipment Header</div>
+
+                    <div class="AddBolItem row">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="display:none">Item#</th>
+                                    <th>Type</th>
+                                    <th>ContainerID</th>
+                                    <th>Container Type</th>
+                                    <th>Size</th>
+                                    <th>Weight</th>
+                                    <th>Weight Indicator</th>
+                                    <th>Measure</th>
+                                    <th>Measure Indicator</th>
+                                    <th>Hazmat <br />(Y/N)</th>
+                                    <th>Tariff Ref#</th>
+                                    <th>Commodity</th>
+                                    <th>Commodity description</th>
+                                    <th>Amount Due</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var hdnclass = "hidden";
+                                    var reqClass = "";
+
+                                    foreach (var item in Model.BalanceDuesItems)
+                                    {
+                                        if (idx == 0)
+                                        {
+                                            <tr class="item_row @hdnclass">
+                                                <input type="hidden" name="BalanceDuesItems[@hdnIdx].ItemId" value="@item.ItemId" />
+                                                <input type="hidden" name="BalanceDuesItems[@hdnIdx].BalanceDueInvoice" value="@item.BalanceDueInvoice" />
+                                                <input type="hidden" name="BalanceDuesItems[@hdnIdx].BalanceDueInvoiceDate" value="@item.BalanceDueInvoiceDate" />
+
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].Type", new SelectList(Common.ItemTypes, "Value", "Text", item.Type), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Type" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Container" value="@item.Container" style="min-width:125px" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Container" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].ContainerType", new SelectList(Model.Containers, "Type", "Type", item.ContainerType ?? ""), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].ContainerType" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].ContainerSize", new SelectList(Model.ContainerSizes, "Size", "Size", item.ContainerSize), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].ContainerSize" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Weight" value='@item.Weight' @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Weight" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].WeightUnit", new SelectList(Common.WeightUnits, "Value", "Text", item.WeightUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].WeightUnit" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Measure" value="@item.Measure" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Measure" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].MeasureUnit", new SelectList(Common.MeasureUnits, "Value", "Text", item.MeasureUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].MeasureUnit" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>@Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].Hazmat", new SelectList(Common.HazmatOptions, "Value", "Text", item.Hazmat), new { @class = "txtrow" })</td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].TariffRef" value="@item.TariffRef" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].TariffRef" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Commodity" value="@item.Commodity" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Commodity" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].CommodityDesc" value="@item.CommodityDesc" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].CommodityDesc" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" data-val="true" data-val-required="Required" class="txtrow itemsAmountDue" name="BalanceDuesItems[@hdnIdx].AmountDue" value="@item.AmountDue" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].AmountDue" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td><a href="javascript:void(0)" class="removeItem" data-itemid="@item.ItemId">X</a></td>
+                                            </tr>
+                                        }
+                                        <tr class="item_row">
+                                            <input type="hidden" name="BalanceDuesItems[@idx].ItemId" value="@item.ItemId" />
+                                            <input type="hidden" name="BalanceDuesItems[@idx].BalanceDueInvoice" value="@item.BalanceDueInvoice" />
+                                            <input type="hidden" name="BalanceDuesItems[@idx].BalanceDueInvoiceDate" value="@item.BalanceDueInvoiceDate" />
+
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].Type", new SelectList(Common.ItemTypes, "Value", "Text", item.Type), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Type" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Container" value="@item.Container" style="min-width:125px" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Container" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].ContainerType", new SelectList(Model.Containers, "Type", "Type", item.ContainerType ?? ""), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].ContainerType" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].ContainerSize", new SelectList(Model.ContainerSizes, "Size", "Size", item.ContainerSize), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].ContainerSize" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Weight" value='@item.Weight' @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Weight" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].WeightUnit", new SelectList(Common.WeightUnits, "Value", "Text", item.WeightUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].WeightUnit" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Measure" value="@item.Measure" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Measure" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].MeasureUnit", new SelectList(Common.MeasureUnits, "Value", "Text", item.MeasureUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].MeasureUnit" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>@Html.DropDownList("BalanceDuesItems[" + idx + "].Hazmat", new SelectList(Common.HazmatOptions, "Value", "Text", item.Hazmat), new { @class = "txtrow" })</td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].TariffRef" value="@item.TariffRef" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].TariffRef" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Commodity" value="@item.Commodity" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Commodity" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].CommodityDesc" value="@item.CommodityDesc" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].CommodityDesc" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" data-val="true" data-val-required="Required" class="txtrow itemsAmountDue" name="BalanceDuesItems[@idx].AmountDue" value="@item.AmountDue" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].AmountDue" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td><a href="javascript:void(0)" class="removeItem" data-itemid="@item.ItemId">X</a></td>
+                                        </tr>
+
+                                        idx++;
+                                        hdnclass = "";
+                                        reqClass = "required";
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        <input type="button" id="add-bol-item-row" class="btn btn-default" value="Add New Row" />
+                    </div>
+                </div>
+                <div id="BolChargesBlock" class="bol-sections">
+                    <div class="block-heading">Shipment Detail</div>
+                    <div class="AddBolItem row">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tariff Ref#</th>
+                                    <th>Charge Code</th>
+                                    <th>Description</th>
+                                    <th>Amount Due</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    idx = 0;
+                                    hdnclass = "hidden";
+                                    reqClass = "";
+
+                                    foreach (var item in Model.BalanceDuesOtherCharges)
+                                    {
+                                        if (idx == 0)
+                                        {
+                                            <tr class="charge_row @hdnclass">
+                                                <td class="hidden"><input type="text" class="txtrow hidden" name="BalanceDuesOtherCharges[@hdnIdx].ItemId" value="@item.ItemId" /></td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="BalanceDuesOtherCharges[@hdnIdx].TariffRefNo" value="@item.TariffRefNo" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@hdnIdx].TariffRefNo" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesOtherCharges[" + hdnIdx + "].ChargeCode", new SelectList(Model.ChargeList, "ChargeCode", "ChargeCodes", item.ChargeCode), "-- select --", new { @class = "txtrow bolOtherChargeCode", @required = @reqClass, @style = "width: 280px !important;", data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@hdnIdx].ChargeCode" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="txtrow otherChargeDesc notRequired" name="BalanceDuesOtherCharges[@hdnIdx].Description" value="@item.Description" />
+                                                </td>
+                                                <td><input type="number" class="txtrow chargesAmountDue" name="BalanceDuesOtherCharges[@hdnIdx].AmountDue" value="@item.AmountDue" @reqClass /></td>
+                                                <td><a href="javascript:void(0)" class="removeChargeItem" data-chargeitemid="@item.ItemId">X</a></td>
+                                            </tr>
+                                        }
+                                        <tr class="charge_row">
+                                            <td class="hidden"><input type="text" class="txtrow hidden" name="BalanceDuesOtherCharges[@idx].ItemId" value="@item.ItemId" /></td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="BalanceDuesOtherCharges[@idx].TariffRefNo" value="@item.TariffRefNo" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@idx].TariffRefNo" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesOtherCharges[" + idx + "].ChargeCode", new SelectList(Model.ChargeList, "ChargeCode", "ChargeCodes", item.ChargeCode), "-- select --", new { @class = "txtrow bolOtherChargeCode", @required = @reqClass, @style = "width: 280px !important;", data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@idx].ChargeCode" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="txtrow otherChargeDesc notRequired" name="BalanceDuesOtherCharges[@idx].Description" value="@item.Description" />
+                                            </td>
+                                            <td><input type="number" class="txtrow chargesAmountDue" name="BalanceDuesOtherCharges[@idx].AmountDue" value="@item.AmountDue" @reqClass /></td>
+                                            <td><a href="javascript:void(0)" class="removeChargeItem" data-chargeitemid="@item.ItemId">X</a></td>
+                                        </tr>
+
+                                        idx++;
+                                        hdnclass = "";
+                                        reqClass = "required";
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @*<button id="add-bol-charge-row" class="btn btn-default">Add New Row</button>*@
+                        <input type="button" id="add-bol-charge-row" class="btn btn-default" value="Add New Row" />
+                    </div>
+                </div>
+                <div id="OtherDesBlock">
+                    <div class="row">
+                        <div class="col-md-12 input-section">
+                            <label for="ErrorDescription" class="mylabel control-label col-md-3 bol-label">Notes</label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(x => x.ErrorDescription, new { @class = "form-control bol-textarea-input", cols = "35", rows = "2" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="AdditionalDescription" class="mylabel control-label col-md-3 bol-label">Additional Notes</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.AdditionalDescription, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">BD Description</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(x => x.Description)
+                                <div id="bdDescription" style="border: 1px solid #e8e8e8; padding:15px;"></div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Total Charges</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.TotalCharges, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Amount Paid</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AmountPaid, null, new { @class = "form-control bol-input" })
+                            </div>
+                            <label for="inputUrl" class="mylabel control-label col-md-1 bol-label">Currency</label>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(x => x.Currency, Model.Currencies, "-- select currency --", new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Balance Due Amount</label>
+                            <div class="col-md-3">
+                                @{
+                                    // Html.EnableClientValidation(true);
+                                }
+                                @Html.TextBoxFor(x => x.AmountDue, null, new { @class = "form-control bol-input", @readonly = "readonly", @data_val = "true", @type = "number" })
+                                <span class="field-validation-valid" data-valmsg-for="AmountDue" data-valmsg-replace="true"></span>
+                                @{
+                                    // Html.EnableClientValidation(false);
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-12 input-section">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <input type="button" id="AddDes" class="btn btn-default" value="Create Description" />
+                                <button id="AddBalDue" class="btn btn-default">Add Balance Due</button>
+                                @*<input type="submit" class="btn btn-default" value="Add Balance Due" />*@
+                            </div>
+                        </div>
+                        <div class="col-lg-12 input-section">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <div id="lblMessage" class="text-danger"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("ClientAgility"))
+            {
+                <div class="headingBlock row"><span class="heading">Balance Due Entry </span><span class="head-details">Job#: @Model.BolNo | Departure Date: @(Model.AgilityBookingHeaderDetails != null ? Convert.ToDateTime(Model.AgilityBookingHeaderDetails.DepartureDate).ToString("MM/dd/yyyy") : "")</span></div>
+                <div id="BolHeaderBlock">
+                    <div class="block-heading">Shipment Header</div>
+                    <div class="AddBolHeader row">
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Customer ID</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.CustomerId, new SelectList(Model.AgilityCustomersList, "ParticipantID", "ParticipantName"), "-- select --", new { id = "ddlparticipants", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Booking ID</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AgilityBookingHeaderDetails.BookingReference, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Job#</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AgilityBookingHeaderDetails.JobNumber, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Departure Date</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AgilityBookingHeaderDetails.DepartureDateString, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Shippers Ref #</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.ShippersRefNo, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Consignee Ref #</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.ConsigneeRefNo, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Payor Ref #</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.PayorRefNo, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Vessel</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AgilityBookingHeaderDetails.Vessel1, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Voyage</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AgilityBookingHeaderDetails.Voyage1, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Quote</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.Quote, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Invoice Type (BOL Overcharge;BOL Under-billing)</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.BalanceDue.InvoiceType, Common.InvoiceTypes.Select((r, x) => new SelectListItem { Text = r, Value = r }), "--select--", new { id = "ddlInvoiceType", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Error Code</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.ErrorCode, new SelectList(Model.BDErrorCodes, "Description", "BdErrorCode"), "--select--", new { id = "ddlErrorCodes", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Mode Type</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AgilityBookingHeaderDetails.ServiceMovementType, new SelectList(Model.ServiceMovementType, "ServiceMovementType", "ServiceMovementType"), "--select--", new { id = "ddlmodes", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Origin Location Code</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AgilityBolHeaderDetails.Origin, new SelectList(Model.Origin, "OriginLocationCode", "Origin"), "--select--", new { id = "ddlorigins", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Port Of Loading</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AgilityBookingHeaderDetails.PortOfExit, new SelectList(Model.PortOfExit, "PortOfExitCode", "PortOfExit"), "--select--", new { id = "ddlpols", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Port Of Discharge</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AgilityBookingHeaderDetails.PortOfEntry, new SelectList(Model.PortOfEntry, "PortofEntryCode", "PortOfEntry"), "--select--", new { id = "ddlpods", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Destination Location Code</label>
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(x => x.AgilityBolHeaderDetails.Destination, new SelectList(Model.Destination, "DestinationLocationCode", "Destination"), "--select--", new { id = "ddldests", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Balance Due Descriptions</label>
+                            <div class="col-md-3">
+                                @Html.DropDownList("BDDescription", new SelectList(Model.BDDescriptions, "Value", "Text", Model.BDDescription), "--select--", new { id = "ddlBDDescs", @class = "form-control bol-input chzn-select" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="BolItemBlock" class="bol-sections">
+                    <div class="block-heading">Shipment Detail</div>
+
+                    <div class="AddBolItem row">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="display:none">Item#</th>
+                                    <th>Type</th>
+                                    <th>ContainerID</th>
+                                    <th>Container Type</th>
+                                    <th>Size</th>
+                                    <th>Chargable<br />Weight</th>
+                                    <th>Weight Indicator</th>
+                                    <th>Measure</th>
+                                    <th>Measure Indicator</th>
+                                    <th>Hazmat <br />(Y/N)</th>
+                                    <th>Tariff Ref#</th>
+                                    <th>Commodity</th>
+                                    <th>Commodity description</th>
+                                    <th>Amount Due</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    idx = 0;
+                                    var hdnclass = "hidden";
+                                    var reqClass = "";
+
+                                    foreach (var item in Model.BalanceDuesItems)
+                                    {
+                                        if (idx == 0)
+                                        {
+                                            <tr class="item_row @hdnclass">
+                                                <input type="hidden" name="BalanceDuesItems[@hdnIdx].ItemId" value="@item.ItemId" />
+                                                <input type="hidden" name="BalanceDuesItems[@hdnIdx].BalanceDueInvoice" value="@item.BalanceDueInvoice" />
+                                                <input type="hidden" name="BalanceDuesItems[@hdnIdx].BalanceDueInvoiceDate" value="@item.BalanceDueInvoiceDate" />
+
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].Type", new SelectList(Common.ItemTypes, "Value", "Text", item.Type), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Type" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Container" value="@item.Container" style="min-width:125px" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Container" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].ContainerType", new SelectList(Model.Containers, "Type", "Type", item.ContainerType ?? ""), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].ContainerType" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].ContainerSize", new SelectList(Model.ContainerSizes, "Type", "Type", item.ContainerSize), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].ContainerSize" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Weight" value="@item.Weight" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Weight" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].WeightUnit", new SelectList(Common.WeightUnits, "Value", "Text", item.WeightUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].WeightUnit" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Measure" value="@item.Measure" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Measure" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].MeasureUnit", new SelectList(Common.MeasureUnits, "Value", "Text", item.MeasureUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                    <br />   <span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].MeasureUnit" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>@Html.DropDownList("BalanceDuesItems[" + hdnIdx + "].Hazmat", new SelectList(Common.HazmatOptions, "Value", "Text", item.Hazmat), new { @class = "txtrow" })</td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].TariffRef" value="@item.TariffRef" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].TariffRef" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].Commodity" value="@item.Commodity" @reqClass />
+                                                    <br /> <span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].Commodity" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@hdnIdx].CommodityDesc" value="@item.CommodityDesc" @reqClass />
+                                                    <br /> <span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].CommodityDesc" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="number" data-val="true" data-val-required="Required" class="txtrow itemsAmountDue" name="BalanceDuesItems[@hdnIdx].AmountDue" value="@item.AmountDue" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@hdnIdx].AmountDue" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td><a href="javascript:void(0)" class="removeItem" data-itemid="@item.ItemId">X</a></td>
+                                            </tr>
+                                        }
+                                        <tr class="item_row">
+                                            <input type="hidden" name="BalanceDuesItems[@idx].ItemId" value="@item.ItemId" />
+                                            <input type="hidden" name="BalanceDuesItems[@idx].BalanceDueInvoice" value="@item.BalanceDueInvoice" />
+                                            <input type="hidden" name="BalanceDuesItems[@idx].BalanceDueInvoiceDate" value="@item.BalanceDueInvoiceDate" />
+
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].Type", new SelectList(Common.ItemTypes, "Value", "Text", item.Type), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Type" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Container" value="@item.Container" style="min-width:125px" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Container" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].ContainerType", new SelectList(Model.Containers, "Type", "Type", item.ContainerType ?? ""), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].ContainerType" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].ContainerSize", new SelectList(Model.ContainerSizes, "Type", "Type", item.ContainerSize), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].ContainerSize" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Weight" value="@item.Weight" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Weight" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].WeightUnit", new SelectList(Common.WeightUnits, "Value", "Text", item.WeightUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].WeightUnit" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Measure" value="@item.Measure" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Measure" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesItems[" + idx + "].MeasureUnit", new SelectList(Common.MeasureUnits, "Value", "Text", item.MeasureUnit), new { @class = "txtrow", @required = @reqClass, data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].MeasureUnit" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>@Html.DropDownList("BalanceDuesItems[" + idx + "].Hazmat", new SelectList(Common.HazmatOptions, "Value", "Text", item.Hazmat), new { @class = "txtrow" })</td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].TariffRef" value="@item.TariffRef" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].TariffRef" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].Commodity" value="@item.Commodity" @reqClass />
+                                                <br /> <span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].Commodity" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required" class="txtrow" name="BalanceDuesItems[@idx].CommodityDesc" value="@item.CommodityDesc" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].CommodityDesc" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" data-val="true" data-val-required="Required" class="txtrow itemsAmountDue" name="BalanceDuesItems[@idx].AmountDue" value="@item.AmountDue" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesItems[@idx].AmountDue" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td><a href="javascript:void(0)" class="removeItem" data-itemid="@item.ItemId">X</a></td>
+                                        </tr>
+
+                                        idx++;
+                                        hdnclass = "";
+                                        reqClass = "required";
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        <input type="button" id="add-bol-item-row" class="btn btn-default" value="Add New Row" />
+                    </div>
+                </div>
+                <div id="BolChargesBlock" class="bol-sections">
+                    <div class="block-heading">Shipment Other Charges</div>
+                    <div class="AddBolItem row">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Tariff Ref#</th>
+                                    <th>Charge Code</th>
+                                    <th>Description</th>
+                                    <th>Amount Due</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    idx = 0;
+                                    hdnclass = "hidden";
+                                    reqClass = "";
+                                    foreach (var item in Model.BalanceDuesOtherCharges)
+                                    {
+                                        if (idx == 0)
+                                        {
+                                            <tr class="charge_row @hdnclass">
+                                                <td class="hidden"><input type="text" class="txtrow hidden" name="BalanceDuesOtherCharges[@hdnIdx].ItemId" value="@item.ItemId" /></td>
+                                                <td>
+                                                    <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="BalanceDuesOtherCharges[@hdnIdx].TariffRefNo" value="" @reqClass />
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@hdnIdx].TariffRefNo" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownList("BalanceDuesOtherCharges[" + hdnIdx + "].ChargeCode", new SelectList(Model.ChargeList, "ChargeCode", "ChargeCodes", item.ChargeCode), "-- select --", new { @class = "txtrow bolOtherChargeCode", @required = @reqClass, @style = "width: 280px !important;", data_val_required = "Required" })
+                                                    <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@hdnIdx].ChargeCode" data-valmsg-replace="true"></span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="txtrow otherChargeDesc notRequired" name="BalanceDuesOtherCharges[@hdnIdx].Description" value="" />
+                                                </td>
+                                                <td><input type="number" class="txtrow chargesAmountDue" name="BalanceDuesOtherCharges[@hdnIdx].AmountDue" value="" @reqClass /></td>
+                                                <td><a href="javascript:void(0)" class="removeChargeItem" data-chargeitemid="@item.ItemId">X</a></td>
+                                            </tr>
+                                        }
+                                        <tr class="charge_row">
+                                            <td class="hidden"><input type="text" class="txtrow hidden" name="BalanceDuesOtherCharges[@idx].ItemId" value="@item.ItemId" /></td>
+                                            <td>
+                                                <input type="text" data-val="true" data-val-required="Required." class="txtrow" name="BalanceDuesOtherCharges[@idx].TariffRefNo" value="@item.TariffRefNo" @reqClass />
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@idx].TariffRefNo" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownList("BalanceDuesOtherCharges[" + idx + "].ChargeCode", new SelectList(Model.ChargeList, "ChargeCode", "ChargeCodes", item.ChargeCode), "-- select --", new { @class = "txtrow bolOtherChargeCode", @required = @reqClass, @style = "width: 280px !important;", data_val_required = "Required" })
+                                                <br /><span class="field-validation-valid" data-valmsg-for="BalanceDuesOtherCharges[@idx].ChargeCode" data-valmsg-replace="true"></span>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="txtrow otherChargeDesc notRequired" name="BalanceDuesOtherCharges[@idx].Description" value="@item.Description" />
+                                            </td>
+                                            <td><input type="number" class="txtrow chargesAmountDue" name="BalanceDuesOtherCharges[@idx].AmountDue" value="@item.AmountDue.ToString("F")" @reqClass /></td>
+                                            <td><a href="javascript:void(0)" class="removeChargeItem" data-chargeitemid="@item.ItemId">X</a></td>
+                                        </tr>
+
+                                        idx++;
+                                        hdnclass = "";
+                                        reqClass = "required";
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        @*<button id="add-bol-charge-row" class="btn btn-default">Add New Row</button>*@
+                        <input type="button" id="add-bol-charge-row" class="btn btn-default" value="Add New Row" />
+                    </div>
+                </div>
+                <div id="OtherDesBlock">
+                    <div class="row">
+                        <div class="col-md-12 input-section">
+                            <label for="ErrorDescription" class="mylabel control-label col-md-3 bol-label">Notes</label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(x => x.ErrorDescription, new { @class = "form-control bol-textarea-input", cols = "35", rows = "2" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Additional Notes</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.AdditionalDescription, null, new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">BD Description</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(x => x.Description)
+                                <div id="bdDescription" style="border: 1px solid #e8e8e8; padding:15px;"></div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Total Charges</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.TotalCharges, null, new { @class = "form-control bol-input", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Amount Paid</label>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(x => x.AmountPaid, null, new { @class = "form-control bol-input" })
+                            </div>
+                            <label for="inputUrl" class="mylabel control-label col-md-1 bol-label">Currency</label>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(x => x.Currency, Model.Currencies, "-- select currency --", new { @class = "form-control bol-input" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12 input-section">
+                            <label for="inputUrl" class="mylabel control-label col-md-3 bol-label">Balance Due Amount</label>
+                            <div class="col-md-3">
+                                @{
+                                    // Html.EnableClientValidation(true);
+                                }
+                                @Html.TextBoxFor(x => x.AmountDue, null, new { @class = "form-control bol-input", @readonly = "readonly", @data_val = "true", @type = "number" })
+                                <span class="field-validation-valid" data-valmsg-for="AmountDue" data-valmsg-replace="true"></span>
+                                @{
+                                   // Html.EnableClientValidation(false);
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-12 input-section">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <input type="button" id="AddDes" class="btn btn-default" value="Create Description" />
+                                <button id="AddBalDue" class="btn btn-default">Add Balance Due</button>
+                                @*<input type="submit" class="btn btn-default" value="Add Balance Due" />*@
+                            </div>
+                        </div>
+                        <div class="col-lg-12 input-section">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-6">
+                                <div id="lblMessage" class="text-danger"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @Html.HiddenFor(x => x.BolHeaderDetails.BOLNo)
+        ;
+        @Html.HiddenFor(x => x.BalanceDue.BalanceId)
+        ;
+        @Html.HiddenFor(x => x.PaymentId)
+        ;
+        @*@Html.HiddenFor(x => x.TotalAmountDue);*@
+    }
+    <partial name="PageFooter" />
+
+    <script src="@(Common.MyRoot)/Scripts/AddBalanceDue.js?c=@Common.VersionNo"></script>
+
+    <script>
+        function OnBegin() {
+            $("#AddBalDue").attr('disabled', 'disabled');
+        }
+        function SubmitSuccess(ajaxContext) {
+            console.log("Success");
+            console.log(ajaxContext);
+            if (ajaxContext == "Success") {
+                console.log("Close window");
+                window.close();
+                //window.location.href = "@(Common.MyRoot)BOL/Index";
+            }
+            else {
+                $("#lblMessage").html(ajaxContext);
+                $("#AddBalDue").removeAttr('disabled');
+            }
+        }
+        function OnFailure(ajaxContext) {
+            console.log("Fail");
+            console.log(ajaxContext);
+            $("#lblMessage").html(ajaxContext.responseText);
+            $("#AddBalDue").removeAttr('disabled');
+        }
+    </script>
+</body>
+</html>

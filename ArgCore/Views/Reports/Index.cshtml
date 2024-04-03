@@ -1,0 +1,266 @@
+﻿@model ArgCore.Models.Reports
+@{
+    Layout = "";
+}
+@using ArgCore.Helpers
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@Model.CommonObjects.Heading</title>
+    <partial name="PageHeader" />
+    <link href="~/res/css/Main.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="admin-dashboard" class="row">
+        @*id="cbp-spmenu-s2"  class="sidebar-menu cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"*@
+        <div id="colPush" class="col-md-3 leftBlock">
+            <div class="scroll-view" tabindex="5000" style="overflow: hidden; outline: none;">
+                <div id="logo">
+                    <a href="@(Common.MyRoot)">
+                        <img src="@(Common.MyRoot)images/ARG-LOGO-DASHBOARD.png">
+                    </a>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-image">
+                        <img class="admin-img" src="/images/ProfilePic.png">
+                        <h5 class="site-admin">@Common.CurrentUserRole</h5>
+                        <h4 class="per-name">@Common.CurrentUserName</h4>
+                        @if (Common.GetCurrentUserLastLogin() != null)
+                        {
+                            <h5 class="lastLogin">Last Login: @Common.GetCurrentUserLastLogin()</h5>
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <partial name="LeftMenu" />
+            </div>
+        </div>
+        <div id="colMain" class="col-md-9 rightBlock">
+            <div class="dash2 row">
+                <ul class="main-dashboard content-container">
+                    <li id="trig" class="toggleLeftMenu">
+                        <a class="show-right-button" id="showRightPush"><i class="glyphicon glyphicon-menu-hamburger"></i></a>
+                    </li>
+                    <li>
+                        <h1>
+                            @if (Model != null && !string.IsNullOrWhiteSpace(@Model.CommonObjects.TopHeading))
+                            {
+                                @Model.CommonObjects.TopHeading
+                            }
+                            else
+                            {
+                                var heading = new Common.CommonObjects().TopHeading;
+                                @Html.Raw(heading)
+                                ;
+                            }
+                        </h1>
+                    </li>
+                    <li class="right text-right rightOptions">
+                        <a href="@(Common.MyRoot)Account/LogOff">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="content-container">
+                    <div id="Reports" class="main-content row form-horizontal">
+                        <h2>@Model.CommonObjects.Heading</h2>
+
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Select Report:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(x => x.ReportID, Model.SSISReports, null, new { id = "ddlReports", @class = "form-control SSISReports" })
+                            </div>
+                        </div>
+                        <div class="form-group hidden" id="ClientDropdown">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Client:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "--Select Client--", new { id = "ddlClient", @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group hidden" id="AnalystDiv">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Analyst:</label>
+                            <div class="col-md-5">
+                                <input type="text" name="Analyst" id="Analyst" class="form-control" value="%" />
+                            </div>
+                        </div>
+                        <div class="form-group hidden" id="ProcessReportsbtn">
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4"></label>
+                                <div class="col-md-5 d-flex">
+                                    <div class="radio-buttons-container justify-content-center">
+                                        <div class="radio-button">
+                                            <input name="ReportType" id="XLS" class="radio-button__input" value="XLS" type="radio" checked>
+                                            <label for="XLS" class="radio-button__label">
+                                                <span class="radio-button__custom"></span>
+                                                XLS
+                                            </label>
+                                        </div>
+                                        <div class="radio-button">
+                                            <input name="ReportType" id="PDF" class="radio-button__input" value="PDF" type="radio">
+                                            <label for="PDF" class="radio-button__label">
+                                                <span class="radio-button__custom"></span>
+                                                PDF
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @*<div class="col-md-6 setRadio textend">
+                                    <input type="radio" id="XLS" name="ReportType" value="XLS" checked>
+                                    <label for="XLS">XLS</label><br>
+                                    </div>
+                                    <div class="col-md-4 setRadio">
+                                    <input type="radio" id="PDF" name="ReportType" value="PDF">
+                                    <label for="PDF">PDF</label><br>
+                                    </div>*@
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUrl" class="mylabel control-label col-md-4"></label>
+                                <div class="col-md-5 text-center">
+                                    <input type="button" id="ProcessReports" class="btn btn-lg mr0" value="Generate Report" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="ProcessReportsMessage">
+                            <label for="inputUrl" class="mylabel control-label col-md-4"></label>
+                            <div class="col-md-5">
+                                <div id="RptlblMsg" class="text-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="PageFooter" />
+    <script>
+        $(document).ready(function () {
+            $("#ddlReports").val('');
+
+            $("#ddlReports").on("change", function () {
+                var Report = $("#ddlReports").find(":selected").val();
+                if (Report == "ARG_Management_Snapshot") {
+                    $("#RptlblMsg").empty();
+                    $("#ClientDropdown").find($('option')).attr('selected', false);
+                    $("#ProcessReportsbtn").addClass("hidden");
+                    $("#ClientDropdown").removeClass("hidden");
+                    $("#AnalystDiv").addClass("hidden");
+                }
+                else if (Report == "ARG_Pending_Balance_Dues" || Report == "RevenueByClientAnalyst" || Report == "Revenue_Analyst_Productivity") {
+                    $("#RptlblMsg").empty();
+                    $("#ClientDropdown").addClass("hidden");
+                    $("#Analyst").attr("value", "%");
+                    $("#Analyst").val("%");
+                    $("#AnalystDiv").removeClass("hidden");
+                    $("#ProcessReportsbtn").removeClass("hidden");
+                }
+                else {
+                    $("#ddlReports").val('');
+                    $("#RptlblMsg").empty();
+                    $("#ClientDropdown").find($('option')).attr('selected', false);
+                    $("#ProcessReportsbtn").addClass("hidden");
+                    $("#ClientDropdown").addClass("hidden");
+                    $("#AnalystDiv").addClass("hidden");
+                }
+            });
+        });
+
+    </script>
+
+    <div id="Diagnostics"></div>
+
+    <partial name="PopUpBox" />
+    <div class="modal modal-fullscreen fade" id="modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+@*@{Layout = "~/Views/Shared/_AdminLayout.cshtml";}
+    @model ARG.Models.Reports*@
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <div id="Reports" class="main-content row form-horizontal">
+        <h2>@Model.CommonObjects.Heading</h2>
+
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-4">Select Report:</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ReportID, Model.SSISReports, "--Select Report--", new { id = "ddlReports", @class = "form-control SSISReports" })
+            </div>
+        </div>
+        <div class="form-group hidden" id="ClientDropdown">
+            <label for="inputUrl" class="mylabel control-label col-md-4">Client:</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "--Select Client--", new { id = "ddlClient", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group hidden" id="AnalystDiv">
+            <label for="inputUrl" class="mylabel control-label col-md-4">Analyst:</label>
+            <div class="col-md-5">
+                <input type="text" name="Analyst" id="Analyst" class="form-control" value="%" />
+            </div>
+        </div>
+        <div class="form-group hidden" id="ProcessReportsbtn">
+            <div class="form-group">
+                <label for="inputUrl" class="mylabel control-label col-md-4"></label>
+                <div class="col-md-5 d-flex">
+                    <div class="col-md-6 setRadio textend">
+                        <input type="radio" id="XLS" name="ReportType" value="XLS" checked>
+                        <label for="XLS">XLS</label><br>
+                    </div>
+                    <div class="col-md-4 setRadio">
+                        <input type="radio" id="PDF" name="ReportType" value="PDF">
+                        <label for="PDF">PDF</label><br>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputUrl" class="mylabel control-label col-md-4"></label>
+                <div class="col-md-5">
+                    <input type="button" id="ProcessReports" class="btn btn-lg" value="Generate Report" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group" id="ProcessReportsMessage">
+            <label for="inputUrl" class="mylabel control-label col-md-4"></label>
+            <div class="col-md-5">
+                <div id="RptlblMsg"></div>
+            </div>
+        </div>
+    </div>*@
+
+@*<script>
+        $(document).ready(function () {
+            $("#ddlReports").on("change", function () {
+                var Report = $("#ddlReports").chosen().val();
+                if (Report == "ARG_Management_Snapshot") {
+                    $("#RptlblMsg").empty();
+                    $("#ClientDropdown").removeClass("hidden");
+                    $("#AnalystDiv").addClass("hidden");
+                }
+                else if (Report == "ARG_Pending_Balance_Dues" || Report == "RevenueByClientAnalyst" || Report == "Revenue_Analyst_Productivity") {
+                    $("#RptlblMsg").empty();
+                    $("#ClientDropdown").addClass("hidden");
+                    $("#Analyst").attr("value", "%");
+                    $("#Analyst").val("%");
+                    $("#AnalystDiv").removeClass("hidden");
+                    $("#ProcessReportsbtn").removeClass("hidden");
+                }
+                else {
+                    $("#RptlblMsg").empty();
+                    $("#ProcessReportsbtn").addClass("hidden");
+                    $("#ClientDropdown").addClass("hidden");
+                    $("#AnalystDiv").addClass("hidden");
+                }
+            });
+        });
+
+    </script>*@

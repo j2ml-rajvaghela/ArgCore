@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Zoom";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<style>
+    .thb {
+        width: 70px;
+        max-width: 70px;
+        height: 100px;
+        max-width: 100px;
+    }
+</style>
+<div class="container">
+    <div class="row thumbnails" style="position:absolute; top:70px; right:0;">
+        <a href="~/images/zoom/sample1z.jpg" data-standard="~/images/zoom/3_standard_1.jpg">
+            <img class="thb" src="~/images/zoom/sample1.jpg" alt="" />
+        </a>
+        <a href="~/images/zoom/sample2z.jpg" data-standard="~/images/zoom/3_standard_2.jpg">
+            <img class="thb" src="~/images/zoom/sample2.jpg" alt="" />
+        </a>
+        <a href="~/images/zoom/sample3z.jpg" data-standard="~/images/zoom/3_standard_3.jpg">
+            <img class="thb" src="~/images/zoom/sample3.jpg" alt="" />
+        </a>
+        <a href="~/images/zoom/sample4z.jpg" data-standard="~/images/zoom/3_standard_4.jpg">
+            <img class="thb" src="~/images/zoom/sample4.jpg" alt="" />
+        </a>
+    </div>
+    <div class="easyzoom easyzoom--overlay easyzoom--with-thumbnails"
+         style="z-index:2000; position:absolute; top:170px; right:0; display:none;">
+        <a href="~/images/zoom/sample1.jpg">
+            <img src="~/images/zoom/3_standard_1.jpg" alt="" width="500" height="700" />
+        </a>
+    </div>
+</div>
+
+@*<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>*@
+@*<script src="dist/easyzoom.js"></script>*@
+@section Scripts {
+    <script>
+        // Instantiate EasyZoom instances
+        var $easyzoom = $('.easyzoom').easyZoom();
+
+        // Setup thumbnails example
+        var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
+
+        $('.thumbnails').on('click', 'a', function(e) {
+            var $this = $(this);
+            e.preventDefault();
+            // Use EasyZoom's `swap` method
+            api1.swap($this.data('standard'), $this.attr('href'));
+            $(".easyzoom").show().focus();
+        });
+        $(".easyzoom").mouseleave(function () { $(this).hide("slide", { direction: "right"  }, 400); });
+    </script>
+}

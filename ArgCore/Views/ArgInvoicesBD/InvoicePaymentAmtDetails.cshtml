@@ -1,0 +1,158 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.InvoicePaymentAmtDetails
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Invoice Payment Amount Details</title>
+    <style>
+        body {
+            color: #82797b;
+        }
+
+        .modal {
+            top: -190px !important;
+            bottom: 10px !important;
+        }
+
+        .modal-open .modal {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="bdPaymentDetails">
+        <div class="headingBlock row">
+            <span class="heading">Payment Detail </span>
+            @*<span class="head-details">Cust. ID: @Model.BalanceDueInfo.CustomerId | Bol#: @Model.BalanceDueInfo.Bol</span>*@
+        </div>
+        @{
+            decimal totalPayments = 0;
+        }
+        @if (Model.InvoicePayments != null && Model.InvoicePayments.Any())
+        {
+            <table id="collComments-list" class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="company">Company</th>
+                        <th class="dateTime">Invoice Date</th>
+                        <th class="invoice">Invoice#</th>
+                        <th class="invoice">Payment Reference</th>
+                        <th class="invoice">Payment Date</th>
+                        <th class="invoice">Payment Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="collComments-details">
+                    @foreach (var item in Model.InvoicePayments)
+                    {
+                        <tr>
+                            <td class="company">@item.Company</td>
+                            <td class="dateTime">@item.InvoiceDate.ToString("d")</td>
+                            <td class="invoice">@item.Invoice</td>
+                            <td class="invoice">@item.PaymentReference</td>
+                            <td class="date">@item.PaymentDate.ToString("d")</td>
+                            <td class="invoice">@item.PaymentAmount</td>
+                        </tr>
+                        totalPayments += @item.PaymentAmount;
+                    }
+                    @*<tr>
+                <td colspan="5" class="right text-right">Totals:</td>
+                <td class="totalPaymentAmount">@totalPayments</td>
+                </tr>*@
+                </tbody>
+            </table>
+        }
+        else
+        {
+            @Html.Raw("No Invoice payments found!")
+        }
+        @if (Model.InvoiceInfo != null && Model.InvoiceInfo.InvoiceId > 0 && Model.InvoiceInfo.InvoiceStatus == "Open")
+        {
+            using (Html.AjaxBeginForm("SaveInvoicePayments", "ArgInvoicesBD", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "SubmitSuccess", OnBegin = "OnBegin" }, new { @class = "form-horizontal frmAddPayment" }))
+            {
+                @Html.HiddenFor(x => x.InvoiceInfo.InvoiceId)
+                @Html.HiddenFor(x => x.InvoiceInfo.CompanyId)
+                @Html.HiddenFor(x => x.TotalPaymentAmount, new { Value = @totalPayments })
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Method</label>
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(x => x.PaymentMethod, new List<SelectListItem>{
+                    new SelectListItem { Text = "Check", Value = "Check"},
+                    new SelectListItem { Text = "Wire", Value = "Wire"}  },
+                                     new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Reference No</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.PaymentReference, new { @class = "form-control", data_val_required = "PaymentReference field is required", @required = "required" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Date</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.PaymentDate, null, new { @class = "form-control datepicker", data_val = "false" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="inputUrl" class="mylabel control-label col-md-2">Payment Amount</label>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(x => x.InvoicePaymentAmount, new { @class = "form-control", data_val_required = "BDPaymentAmount field is required", @required = "required" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div id="lblPaymentAmountMsg" style="color: green; font-size: 20px;"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-lg btnSave btnInvoicePayment"><img src="~/images/save.png" /> Save</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" value="Exit" class="close-animatedModal btn btn-lg btn-default" style="margin-right: 50px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;   font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <button type="button" value="Exit" class="close-animatedModal btn btn-lg btn-default" style="margin-right: 50px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;   font-size: 20px;    padding: 10px 16px;"><i class="fa fa-sign-out"></i> Exit</button>
+        }
+    </div>
+    <script>
+        function OnBegin() {
+
+            $(".btnInvoicePayment").attr('disabled', 'disabled');
+        }
+        $("#InvoicePaymentAmount").val('');
+        function ToJavaScriptDate(value) {
+            var pattern = /Date\(([^)]+)\)/;
+            var results = pattern.exec(value);
+            var dt = new Date(parseFloat(results[1]));
+            return dt.getDate() + "/" + (dt.getMonth() + 1) + "/" + dt.getFullYear();
+        }
+        function SubmitSuccess(ajaxContext) {
+            $(".btnInvoicePayment").removeAttr('disabled');
+            $("#lblPaymentAmountMsg").html(ajaxContext.Message);
+            var date = ToJavaScriptDate(ajaxContext.InvoicePayments.InvoiceDate);
+            console.log(date);
+            var html = '<tr><td class="company">' + ajaxContext.InvoicePayments.Company + '</td>';
+            html += '<td class="dateTime">' + date + '</td><td class="invoice">' + ajaxContext.InvoicePayments.Invoice + '</td><td class="invoice">' + ajaxContext.InvoicePayments.PaymentAmount + '</td></tr>';
+            console.log(html);
+            $(".collComments-details").prepend(html);
+            $("#InvoicePaymentAmount").val('');
+        }
+    </script>
+</body>
+</html>

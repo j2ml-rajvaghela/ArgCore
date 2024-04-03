@@ -1,0 +1,906 @@
+﻿@{
+    Layout = "";
+}
+@model ArgCore.Models.BalanceDues
+@using ArgCore.Helpers
+@using CustomExtensions;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@Model.CommonObjects.Heading</title>
+    <partial name="PageHeader" />
+
+    <link href="~/res/css/Main.css" rel="stylesheet" />
+
+    @*<style>
+    body {
+    font-family: 'Montserrat', Helvetica, Arial, Lucida, sans-serif !important;
+    padding-top: 0 !important;
+    background-color: #2d3e4e;
+    padding: 0;
+    }
+
+    #logo {
+    background-color: #212D39;
+    text-align: center;
+    /*height: 28%;*/
+    padding: 5%;
+    }
+
+    .leftBlock {
+    background-image: url('../../images/image-BG.png');
+    background-position: center bottom;
+    background-color: #2D3E4E;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    }
+
+    img.admin-img {
+    margin-top: 5%;
+    }
+
+    h4, h5 {
+    color: #fff;
+    }
+
+    h5.lastLogin {
+    color: #7B828B;
+    }
+
+    .admin-image {
+    text-align: center;
+    }
+
+    h5.site-admin {
+    background-color: #475A6C;
+    width: 25%;
+    margin-left: 37%;
+    padding: 2px;
+    border-radius: 3px;
+    }
+
+    span.col-md-3 {
+    text-align: right;
+    color: #fff;
+    }
+
+    .main-dashboard.col-md-9 {
+    background-color: #FFFFFF;
+    }
+
+    .techno.col-md-2 {
+    margin-top: 2%;
+    margin-left: -5%;
+    color: #A3A2A3;
+    }
+
+    .bell.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+    }
+
+    .search.col-md-2 {
+    margin-top: 2%;
+    margin-left: -10%;
+    color: #A3A2A3;
+    }
+
+    .side-menu .static a {
+    text-decoration: none;
+    }
+
+    a:hover {
+    color: white;
+    }
+
+    .logout1 {
+    float: right;
+    color: #CDCDCD;
+    }
+
+    .head-online {
+    font-size: 20px;
+    color: #838182;
+    font-weight: 700;
+    }
+
+    .scheduleDet {
+    margin-bottom: 20px;
+    }
+
+    h5.second-content {
+    font-style: italic;
+    color: #7F7D7E;
+    }
+
+    li.static:active {
+    background-color: #263643;
+    border-right: 1px solid #5FCE9B;
+    }
+
+    .heading {
+    padding-bottom: 30px;
+    }
+
+    .countDetails {
+    text-align: center;
+    }
+
+    /*.label {
+    width: 100%;
+    top: 22.5%;
+    position: absolute;
+    left: 0;
+    line-height: 34px;
+    }*/
+
+    .labelName {
+    font-size: 23px;
+    font-weight: normal;
+    }
+
+    .count {
+    font-weight: normal;
+    color: #9A9A9A;
+    font-size: 40px;
+    margin-top: 6%;
+    }
+
+    .labelText {
+    font-size: 16px;
+    line-height: 3;
+    font-weight: normal;
+    width: 68%;
+    margin-left: 19%;
+    margin-top: 22px;
+    }
+
+    .main-content {
+    background-color: #F4F5F7;
+    min-height: 1100px;
+    }
+
+    .dash2 {
+    background-color: #FFFFFF;
+    }
+
+    h3.heading {
+    color: #949393;
+    }
+
+    .active-title {
+    margin-left: 10px;
+    }
+
+    .activelogDetails {
+    margin-bottom: 20px;
+    height: 45px;
+    }
+
+    .labelText h4 {
+    color: #9A9A9A;
+    }
+
+    .welcome {
+    color: #4E4B4A;
+    }
+
+    .recent-sign {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+    }
+
+    .activitylog, .log-price {
+    padding: 12px;
+    font-size: 20px;
+    }
+
+    .logtimedetails {
+    padding: 0 20px;
+    font-size: 18px;
+    }
+
+    .activity-log {
+    color: #838182;
+    background-color: #FFFFFF !important;
+    border: 3px solid #EAEBEC !important;
+    padding: 25px;
+    margin-left: 12px;
+    }
+
+    .uppercase-txt {
+    text-transform: uppercase;
+    color: white;
+    }
+
+    .no-padding {
+    padding: 0;
+    }
+
+    .parent-menu-item {
+    font-size: 18px;
+    }
+
+    .parent-menu-item a {
+    color: white;
+    }
+
+    .bottom-block {
+    padding-top: 12px;
+    }
+
+    .static {
+    margin-bottom: 0 !important;
+    }
+
+    #colPush {
+    -webkit-transition: width 0.3s ease, margin 0.3s ease;
+    -moz-transition: width 0.3s ease, margin 0.3s ease;
+    -o-transition: width 0.3s ease, margin 0.3s ease;
+    transition: width 0.3s ease, margin 0.3s ease;
+    }
+
+    #trig {
+    color: #4f4c4b;
+    margin: 5px 10px 0 0;
+    cursor: pointer;
+    }
+
+    .toggleLeftMenu {
+    background-color: white;
+    }
+
+    .toggleLeftMenu a:hover {
+    color: #4f4c4b;
+    }
+
+    .glyphicon-menu-hamburger {
+    font-size: 24px;
+    }
+
+    .col-md-0 {
+    display: none;
+    }
+    </style>*@
+</head>
+<body>
+    <div id="admin-dashboard" class="row">
+        @*id="cbp-spmenu-s2"  class="sidebar-menu cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"*@
+        <div id="colPush" class="col-md-3 leftBlock">
+            <div class="scroll-view" tabindex="5000" style="overflow: hidden; outline: none;">
+                <div id="logo">
+                    <a href="@(Common.MyRoot)">
+                        <img src="~/images/ARG-LOGO-DASHBOARD.png">
+                    </a>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-image">
+                        <img class="admin-img" src="~/images/ProfilePic.png">
+                        <h5 class="site-admin">@Common.CurrentUserRole</h5>
+                        <h4 class="per-name">@Common.CurrentUserName</h4>
+                        @if (Common.GetCurrentUserLastLogin() != null)
+                        {
+                            <h5 class="lastLogin">Last Login: @Common.GetCurrentUserLastLogin()</h5>
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <partial name="LeftMenu"/>
+            </div>
+        </div>
+        <div id="colMain" class="col-md-9 rightBlock">
+            <div class="dash2 row">
+                <ul class="main-dashboard content-container">
+                    <li id="trig" class="toggleLeftMenu">
+                        <a class="show-right-button" id="showRightPush"><i class="glyphicon glyphicon-menu-hamburger"></i></a>
+                    </li>
+                    <li>
+                        <h1>
+                            @if (Model != null && !string.IsNullOrWhiteSpace(@Model.CommonObjects.TopHeading))
+                            {
+                                @Model.CommonObjects.TopHeading
+                            }
+                            else
+                            {
+                                var heading = new Common.CommonObjects().TopHeading;
+                                @Html.Raw(heading)
+                                ;
+                            }
+                        </h1>
+                    </li>
+                    @*<li>
+                    <img src="/images/techno.png">
+                    </li>
+                    <li>
+                    <img src="/images/bell.png">
+                    </li>
+                    <li>
+                    <img src="/images/search.png">
+                    </li>*@
+                    <li class="right text-right rightOptions">
+                        <a href="@(Common.MyRoot)Account/LogOff">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="content-container">
+                    <div id="SearchBalanceResults" class="main-content row">
+                        @using (Html.BeginForm("Index", "BalanceDues", FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                           @*  Html.EnableClientValidation(false); *@
+                            <div class="balDueSearchForm">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h2>@Model.CommonObjects.Heading</h2>
+                                    </div>
+                                    @*Now we adding from AuditingResults page.. at right bottom
+                                <div class="col-md-4 text-right right addItem">
+                                <a href="@(Common.MyRoot)BalanceDues/Save?balanceId=0" title="Add Balance">+ Add Balance</a>
+                                </div>*@
+                                </div>
+                                @{
+                                    var noClearClass = "";
+                                }
+                                @if (Model.CompanyId > 0)
+                                {
+                                    noClearClass = " neverclear";
+                                }
+                                @Html.HiddenFor(x => x.SearchOptions.BalanceId)
+                                <div class="form-group">
+                                    <label for="inputUrl" class="mylabel control-label col-md-3">Client</label>
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "--Select Client--", new { id = "ddlClients", @class = "form-control SelectActiveClient" + @noClearClass })
+                                    </div>
+                                </div>
+                                @if (Model.CompanyId <= 0)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="clientLabel col-md-5">Please select client to get filters for searching results!</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Region</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.Regions, Model.Regions, new { id = "ddlRegions", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Regions != null ? String.Join(" ,", Model.SearchOptions.Regions) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice Type</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.InvoiceTypes, Model.InvoiceTypes, new { id = "ddlInvoiceTypes", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.InvoiceTypes != null ? String.Join(",", Model.SearchOptions.InvoiceTypes) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Balance Due Error Codes</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.BDErrorCodes, Model.BDErrorCodes, new { id = "ddlBdErrorCode", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.BDErrorCodes != null ? String.Join(",", Model.SearchOptions.BDErrorCodes) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Close Reason Codes</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.CloseReasonCodes, Model.CloseReasonCodes, new { id = "ddlCloseReasonCode", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.CloseReasonCodes != null ? String.Join(",", Model.SearchOptions.CloseReasonCodes) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">BD Other Charge Codes</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.BDOtherChargeCodes, Model.BDOtherChargeCodes, new { id = "ddlBdErrorCode", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.BDOtherChargeCodes != null ? String.Join(",", Model.SearchOptions.BDOtherChargeCodes) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Customer</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.CustomerIds, Model.Customers, new { id = "ddlCustomers", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.CustomerIds != null ? String.Join(",", Model.SearchOptions.CustomerIds) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Customer Location Code</label>
+                                        <div class="col-md-5">
+                                            @Html.TextBoxFor(x => x.SearchOptions.CustomerLocationCode, null, new { @class = "form-control", maxlength = "5" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice#</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.BalanceDueInvoices, Model.InvoiceNo, new { id = "ddlInvoiceNo", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.BalanceDueInvoices != null ? String.Join(",", Model.SearchOptions.BalanceDueInvoices) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Move Type</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.MoveType, Model.MoveTypes, new { id = "ddlMoveType", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.MoveType != null ? String.Join(",", Model.SearchOptions.MoveType) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Vessel</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.Vessel, Model.Vessels, new { id = "ddlVessels", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Vessel != null ? String.Join(",", Model.SearchOptions.Vessel) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Voyage</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.Voyage, Model.Voyages, new { id = "ddlVoyages", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.Voyage != null ? String.Join(",", Model.SearchOptions.Voyage) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("Ceva"))
+                                        {
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">HAWB/HBL date between</label>
+                                        }
+                                        else
+                                        {
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">Bol date between</label>
+
+                                        }
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BolExecutionStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BolExecutionEndDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice date between</label>
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BalanceDueInvoiceStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BalanceDueInvoiceEndDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Payment date between</label>
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BalanceDuePaymentStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.BalanceDuePaymentEndDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Date audited between</label>
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.DateAddedStart, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.DateAddedEnd, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Invoice Status</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.InvoiceStatus, Model.InvoiceStatus, new { id = "ddlInvStatus", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.InvoiceStatus != null ? String.Join(",", Model.SearchOptions.InvoiceStatus) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Collection Status</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.CollectionStatus, Model.CollectionStatus, new { id = "ddlCollStatus", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.CollectionStatus != null ? String.Join(",", Model.SearchOptions.CollectionStatus) : "" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Client GL Status</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.ClientGlStatus, Model.ClientGlStatus, new { multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.ClientGlStatus != null ? String.Join(",", Model.SearchOptions.ClientGlStatus) : "" })
+                                        </div>
+                                    </div>
+                                    if (!Common.CurrentUserInfo.IsClientManager || !Common.CurrentUserInfo.IsClientUser)
+                                    {
+                                        <div class="form-group">
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">Revenue Analyst Auditor</label>
+                                            <div class="col-md-5">
+                                                @Html.DropDownListFor(x => x.SearchOptions.RevenueAnalystAuditors, Model.RevenueAnalystAuditors, new { multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.RevenueAnalystAuditors != null ? String.Join(",", Model.SearchOptions.RevenueAnalystAuditors) : "" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">Revenue Analyst Collector</label>
+                                            <div class="col-md-5">
+                                                @Html.DropDownListFor(x => x.SearchOptions.RevenueAnalystCollectors, Model.RevenueAnalystCollectors, new { multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.RevenueAnalystCollectors != null ? String.Join(",", Model.SearchOptions.RevenueAnalystCollectors) : "" })
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Origin Location Code</label>
+                                        <div class="col-md-5">
+                                            @Html.ListBoxFor(x => x.SearchOptions.OriginLocationCode, Model.OriginLocationCodes, new { id = "ddlOrigin", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.OriginLocationCode != null ? String.Join(",", Model.SearchOptions.OriginLocationCode) : "" })
+                                            @*@Html.DropDownListFor(x => x.SearchOptions.OriginLocationCode, Model.OriginLocationCodes, "-- All --", new { @class = "form-control", maxlength = "100" })*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Port Of Loading</label>
+                                        <div class="col-md-5">
+                                            @Html.ListBoxFor(x => x.SearchOptions.PortOfLoading, Model.POL, new { id = "ddlPOL", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.PortOfLoading != null ? String.Join(",", Model.SearchOptions.PortOfLoading) : "" })
+                                            @*@Html.DropDownListFor(x => x.SearchOptions.PortOfLoading, Model.POL, "-- All --", new { @class = "form-control", maxlength = "100" })*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Port Of Discharge</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.SearchOptions.PortOfDischarge, Model.POD, new { id = "ddlPOD", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.PortOfDischarge != null ? String.Join(",", Model.SearchOptions.PortOfDischarge) : "" })
+                                            @*@Html.DropDownListFor(x => x.SearchOptions.PortOfDischarge, Model.POD, "-- All --", new { @class = "form-control", maxlength = "100" })*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">DestinationLocationCode</label>
+                                        <div class="col-md-5">
+                                            @Html.ListBoxFor(x => x.SearchOptions.DestinationLocationCode, Model.DestinationLocationCodes, new { id = "ddlOrigin", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.DestinationLocationCode != null ? String.Join(",", Model.SearchOptions.DestinationLocationCode) : "" })
+                                            @*@Html.DropDownListFor(x => x.SearchOptions.DestinationLocationCode, Model.DestinationLocationCodes, "-- All --", new { @class = "form-control", maxlength = "100" })*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Booking ID</label>
+                                        <div class="col-md-5">
+                                            @Html.TextBoxFor(x => x.SearchOptions.BookingId, null, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("Ceva"))
+                                        {
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">HAWB/HBOL/House/Ref#</label>
+                                        }
+                                        else
+                                        {
+                                            <label for="inputUrl" class="mylabel control-label col-md-3">BOL No.</label>
+
+                                        }
+                                        <div class="col-md-5">
+                                            @Html.TextBoxFor(x => x.SearchOptions.Bol, null, new { @class = "form-control", maxlength = "100" })
+                                        </div>
+                                    </div>
+                                    <div class="btnReasrItemInfo">
+                                        <button type="submit" id="GetBDResults" class="btn btn-lg btnLoadData">
+                                            <img src="~/images/GetResults.png" /> Get Results
+                                        </button>
+                                        <button id="ClearBDForm" type="button" class="btn btn-lg right"><img src="/images/ClearForm.png" class="clearFormIcon" /> Clear Form</button>
+                                    </div>
+                                    <div id="lblClientReportMsg" style="font-size:18px;color:#c00000;"></div>
+                                }
+                                @if (Model.BalanceDuesList != null && Model.BalanceDuesList.Count > 0)
+                                {
+                                    <div class="generateBlock col-md-12">
+                                        @if (!Common.CurrentUserInfo.IsClientManager || !Common.CurrentUserInfo.IsClientUser)
+                                        {
+                                            if (Common.CanRunAction.GenerateAuditReview)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-4 checkBox">
+                                                        <input type="checkbox" class="generateAuditReview action-@Common.GlobalObjects.GenerateAuditReview.ToSlug()">
+                                                        <label>Generate Audit Review</label>
+                                                    </div>
+                                                    <div class="col-md-6 checkBox hidden" id="hiddenPendingApproval">
+                                                        <input type="checkbox" class="updatePendingApproval">
+                                                        <label><strong>Update Pending Balance Due status to Pending Approval</strong></label>
+                                                    </div>
+                                                </div>
+                                            }
+                                            if (Common.CurrentUserInfo.IsAdmin || (Common.CurrentUserInfo.IsARGManager && Common.IsCurrentCompanyAssigned))
+                                            {
+                                                if (Common.CanRunAction.GenerateCustStatements)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-4 checkBox">
+                                                            <input type="checkbox" class="generateInvoices">
+                                                            <label>Generate Customer Statement</label>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                <div class="row">
+                                                    <div class="col-md-4 checkBox">
+                                                        <input type="checkbox" class="changeBDStatus">
+                                                        <label>Change Balance Due Status to</label>
+                                                    </div>
+                                                    <div class="col-md-8 ddlInvoiceStatus">
+                                                        @Html.DropDownListFor(x => x.SearchOptions.BDInvoiceStatus, new SelectList(Common.BDInvoiceStatus, "Value", "Text"), "-- select status --", new { id = "ddlBDInvoiceStatus", @class = "form-control hidden" })
+                                                    </div>
+                                                </div>
+                                                if (Common.CanRunAction.EmailCustomerStatements)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-4 checkBox">
+                                                            <input type="checkbox" class="generateEmailInvoices">
+                                                            <label>Email Customer Statements</label>
+                                                        </div>
+                                                        <div class="col-md-4 ddlEmailTemp">
+                                                            @Html.DropDownListFor(x => x.SearchOptions.EmailTemplate, Model.EmailTemplates, "-- select email template --", new { id = "ddlEmailTemplate", @class = "form-control hidden" })
+                                                        </div>
+                                                        <div class="col-md-4 ddlSMTPUsers">
+                                                            @Html.DropDownListFor(x => x.SearchOptions.SMTPUser, Model.SMTPUsers, "-- select smtp user --", new { id = "ddlSMTPUsers", @class = "form-control hidden" })
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                        @*ClientManager: and ClientUser: allowing user to "Output to Spreadsheet"*@
+                                        @if (Common.CanRunAction.BDOutputToSpreadsheet)
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-4 checkBox">
+                                                    <input type="checkbox" class="outputToSpreadsheet">
+                                                    <label>Output to Spreadsheet</label>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div id="StatusResults"></div>
+                                        <div id="EmailInvoiceResults"></div>
+                                        <div class="col-md-12">
+                                            <input type="button" id="ProcessResults" class="btn btn-lg" value="Process" />
+                                        </div>
+                                        <div id="lblMsg"></div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    @if (Model.BalanceDuesList != null && Model.BalanceDuesList.Count > 0)
+                    {
+                        <script>
+                            var bdIds = @Html.Raw(JavaScript.Serialize(Model.BalanceDuesList.Select(x => x.BalanceId).ToList()));
+                        </script>
+                        <div id="balDueSearch">
+                            <div class="row">
+
+                                <div class="col-md-12 QueryTotal">
+                                    <b>Query total:</b>
+                                    <span class="lblCount">Total Customers: <span class="totalCustomerCount count">@Model.CustomerCount</span></span> |
+                                    <span class="lblCount">Total BOL: <span class="totalBOLCount count">@Model.BOLCount</span></span> |
+                                    <span class="lblCount">Balance Due Count: <span class="totalBDCount count">@Model.TotalBDCount</span></span> |
+                                    <span class="lblCount">Total Balance Due Amount: <span class="totalBDAmount count">@Model.TotalBD</span></span> |
+                                    <span class="lblCount">Total Balance Due Paid Amount: <span class="totalBDPaidAmount count">@Model.TotalBDPaidAmount</span></span>
+                                </div>
+                                @*<div class="col-md-1 text-right right options exportDataIcon">
+                            <img src="~/images/export.png" />
+                            </div>*@
+                            </div>
+                            <table id="balanceSearch-list" class="table text-center row">
+                                <thead>
+                                    <tr>
+                                        @*<th class="company">COMPANY</th>*@
+                                        <th class="region">REGION</th>
+                                        <th class="customer">CUST#</th>
+                                        <th class="booking">BOOKING</th>
+                                        @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("Ceva"))
+                                        {
+                                            <th class="bol">HAWB/HBL</th>
+                                            <th class="bolDate">HAWB/HBL DATE</th>
+                                        }
+                                        else
+                                        {
+                                            <th class="bol">BOL</th>
+                                            <th class="bolDate">BOL DATE</th>
+                                        }
+
+                                        <th class="balDue">BD Amount</th>
+                                        <th class="bdAmntPaid">BD Amount Paid</th>
+                                        <th class="invNo">BD Invoice #</th>
+                                        <th class="invDate">INV DATE</th>
+                                        <th class="status">Status</th>
+                                        <th class="collStatus">Collection Status</th>
+                                        <th class="GLStatus">Client GL Status</th>
+                                        <th class="bdErrorCode">BD Error Code</th>
+                                        <th class="origin">Origin</th>
+                                        <th class="portOfLoad">POL</th>
+                                        <th class="portOfDis">POD</th>
+                                        <th class="dest">Dest</th>
+                                        @*<th class="hidden"></th>*@
+                                    </tr>
+                                </thead>
+                                <tbody class="balanceSearch-details">
+                                    @foreach (var item in Model.BalanceDuesList)
+                                    {
+                                        <tr>
+                                            @*<td class="company">@item.Company</td>*@
+                                            <td class="region">@item.Region</td>
+                                            <td class="customer">
+                                                @if (!string.IsNullOrWhiteSpace(@item.Customer))
+                                                {
+                                                    @*<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modal-fullscreen">*@
+                                                    @*<a data-toggle="modal" data-target="#modal-fullscreen" href="@(Common.MyRoot)Customers/SaveBasedOnCustomerId?customerId=@(item.CustomerId)&rnd=@(DateTime.Now)">*@
+                                                    if (Common.CanRunAction.EditCustomerOnBDScreen)
+                                                    {
+                                                        <a class="bootbox-pop modal-fullscreen action-@Common.GlobalObjects.EditCustomerOnBDScreen.ToSlug()" href="@(Common.MyRoot)Customers/SaveBasedOnCustomerId?customerId=@(item.CustomerId)">
+                                                            @item.CustomerId @item.Customer.Left(15)
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.CustomerId @item.Customer.Left(15)
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @item.CustomerId @item.Customer.Left(15)
+                                                }
+                                            </td>
+                                            <td class="booking">@item.BookingId</td>
+                                            <td class="bol">
+                                                @if (Arg.DataAccess.ActiveClient.Info.DBName.Contains("Ceva"))
+                                                {
+                                                    <a href="@(Common.MyRoot)/booking/AuditingResults?bolNo=@item.Bol&CompanyId=@item.CompanyId" target="_blank">@item.Bol</a>
+
+                                                }
+                                                else
+                                                {
+                                                    <a href="@(Common.MyRoot)/Bol/AuditingResults?bolNo=@item.Bol&CompanyId=@item.CompanyId" target="_blank">@item.Bol</a>
+
+                                                }
+                                            </td>
+                                            <td class="bolDate">@item.BolExecutionDate.ToString("d")</td>
+                                            <td class="balDue">
+                                                @if (Common.CanRunAction.ViewBDInfo)
+                                                {
+                                                    <a class="animatedPopUp" href="javascript:void(0);" data-ajax="@(Common.MyRoot)BalanceDues/BDDetails?balanceId=@item.BalanceId">
+                                                        @(String.Format("{0:n}", item.BalanceDueAmount))
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    @(String.Format("{0:n}", item.BalanceDueAmount))
+                                                }
+                                            </td>
+                                            <td class="bdAmntPaid">
+                                                @if (Common.CanRunAction.BDAmountPaidPopUp)
+                                                {
+                                                    <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)BalanceDues/BDPaymentAmountDetails?balanceId=@item.BalanceId" class="animatedPopUp action-@Common.GlobalObjects.BDAmountPaidPopUp.ToSlug()">
+                                                        @(String.Format("{0:n}", item.AmountPaid))
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    @(String.Format("{0:n}", item.AmountPaid))
+                                                }
+                                            </td>
+                                            <td class="invNo">@item.BalanceDueInvoice</td>
+                                            <td class="invDate">@Convert.ToDateTime(item.BalanceDueInvoiceDate).ToString("d")</td>
+                                            <td class="status">
+                                                <span class="status-@item.InvoiceStatus.ToLower() status-label">
+                                                    @if (Common.CanRunAction.ChangeBDStatusTo)
+                                                    {
+                                                        <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)BalanceDues/InvoiceStatusDetails?balanceId=@item.BalanceId" class="animatedPopUp">@item.InvoiceStatus</a>
+
+                                                    }
+                                                    @*@if (Common.CurrentUserInfo.IsAdmin || (Common.CurrentUserInfo.IsARGManager && Common.IsCurrentCompanyAssigned))
+                                            {
+                                            <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)BalanceDues/InvoiceStatusDetails?balanceId=@item.BalanceId" class="animatedPopUp">@item.InvoiceStatus</a>
+                                            }*@
+                                                    else
+                                                    {
+                                                        @item.InvoiceStatus
+                                                    }
+                                                </span>
+                                            </td>
+                                            <td class="collStatus">
+                                                @*data-balanceid="@item.BalanceId"*@
+                                                <span class="status-@item.CollectionStatus.ToLower() status-label">
+                                                    @if (Common.CanRunAction.ChangeCollectionStatus)
+                                                    {
+                                                        <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)BalanceDues/CollectionStatusDetails?balanceId=@item.BalanceId" class="animatedPopUp">@item.CollectionStatus</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @item.CollectionStatus
+                                                    }
+                                                </span>
+                                            </td>
+                                            <td class="GLStatus">
+                                                <span class="status-@item.ClientGlStatus.ToLower() status-label">
+                                                    @*@if (Common.CurrentUserInfo.IsAdmin || (Common.CurrentUserInfo.IsARGManager && Common.IsCurrentCompanyAssigned))
+                                            {*@
+                                                    <a href="javascript:void(0);" data-ajax="@(Common.MyRoot)BalanceDues/ClientGLStatusDetails?balanceId=@item.BalanceId" class="animatedPopUp">@item.ClientGlStatus</a>
+                                                    @*}
+                                            else
+                                            {
+                                            @item.ClientGlStatus
+                                            }*@
+                                                </span>
+                                            </td>
+                                            <td class="bdErrorCode">@item.BDErrorCode</td>
+                                            <td class="origin">@item.OriginLocationCode</td>
+                                            <td class="portOfLoad">@item.PortOfLoading</td>
+                                            <td class="portOfDis">@item.PortOfDischarge</td>
+                                            <td class="dest">@item.DestinationLocationCode</td>
+                                            @*<td class="hidden bdId">@item.BalanceId</td>*@
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @*<div id='myModal' class='modal fade in' style="overflow:hidden !important;position: absolute;top: 50%;">
+                        <div class="modal-dialog" style="width: 1200px;">
+                        <div class="modal-content">
+                        <div id='myModalContent'></div>
+                        </div>
+                        </div>
+                        </div>*@
+                        </div>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Model.Message))
+                    {
+                        @Html.Raw("<h3>" + Model.Message + "</h3>")
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="PageFooter" />
+    <script>
+        var searchOptionsForExport = {};
+        $(document).ready(function () {
+            $(".generateAuditReview").on("change", function () {
+                if ($(this).is(":checked")) {
+                    $("#hiddenPendingApproval").removeClass("hidden");
+                } else {
+                    $("#hiddenPendingApproval").addClass("hidden");
+                }
+            });
+
+            if (@Model.CompanyId> 0) {
+                $("#ddlClients").val(@Model.CompanyId);
+            }
+            searchOptionsForExport = {
+                CustomerId: "@(Model.SearchOptions.CustomerId ?? "%")",
+                BalanceDueInvoiceStartDate: "@Model.SearchOptions.BalanceDueInvoiceStartDate",
+                BalanceDueInvoiceEndDate: "@Model.SearchOptions.BalanceDueInvoiceEndDate",
+                DateAddedStart: "@Model.SearchOptions.DateAddedStart",
+                DateAddedEnd: "@Model.SearchOptions.DateAddedEnd",
+                CollectionStatus: "@(Model.SearchOptions.CollectionStatus != null ? string.Join(",", Model.SearchOptions.CollectionStatus) : "%")",
+                BalanceDueAmount: "@(Model.SearchOptions.BalanceDueAmount == 0 ? 999999999 : Model.SearchOptions.BalanceDueAmount)",
+                BalanceDueAmountSign: "<",
+                CloseReasonCode: "@(Model.SearchOptions.CloseReasonCode ?? "%")",
+                Region: "@(Model.SearchOptions.Regions != null ? string.Join(",", @Model.SearchOptions.Regions) : "%")",
+                BolExecutionStartDate: "@Model.SearchOptions.BolExecutionStartDate",
+                BolExecutionEndDate: "@Model.SearchOptions.BolExecutionEndDate",
+                InvoiceStatus: "@(Model.SearchOptions.InvoiceStatus != null ? string.Join(",", @Model.SearchOptions.InvoiceStatus) : "Pending")",
+                PortOfLoading: "@(Model.SearchOptions.PortOfLoading != null ? string.Join(",", Model.SearchOptions.PortOfLoading) : "%")",
+                PortOfDischarge: "@(Model.SearchOptions.PortOfDischarge != null ? string.Join(",", Model.SearchOptions.PortOfDischarge) : "%")",
+                BDErrorCodes: "@(Model.SearchOptions.BDErrorCodes != null ? string.Join(",", Model.SearchOptions.BDErrorCodes) : "%")",
+                InvoiceType: "@(Model.SearchOptions.InvoiceTypes != null ? string.Join(",", Model.SearchOptions.InvoiceTypes) : "%")",
+            };
+        });
+    </script>
+    <script src="@(Common.MyRoot)/Scripts/BalanceDueQuery.js?c=@Common.VersionNo"></script>
+    <!-- modal placeholder-->
+    @*<script>
+    $(function () {
+    $.ajaxSetup({ cache: false });
+    $("a[data-modal]").on("click", function (e) {
+    $('#myModalContent').load(this.href, function () {
+    $('#myModal').modal({
+    keyboard: true
+    }, 'show');
+    });
+    return false;
+    });
+    });
+    </script>*@
+    <div id="Diagnostics"></div>
+
+    @Html.Partial("PopUpBox")
+    <div class="modal modal-fullscreen fade" id="modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

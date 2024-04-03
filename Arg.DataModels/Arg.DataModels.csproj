@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Dapper.ColumnMapper" Version="1.3.0" />
+    <PackageReference Include="Dapper.Contrib.Extensions.Tablename" Version="1.1.1" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.67.0.3309" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Arg.Agility.DataModels\Arg.Agility.DataModels.csproj" />
+  </ItemGroup>
+
+</Project>

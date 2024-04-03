@@ -1,0 +1,25 @@
+﻿<!-- main menu-->
+<li>@Html.ActionLink("Home", "Index", "Home")</li>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
+{
+    <li>@Html.ActionLink("Dashboard", "Index", "Admin")</li>
+    <li>@Html.ActionLink("Clients", "ManageClients", "Admin")</li>
+    <li>@Html.ActionLink("Groups", "ManageGroups", "Admin")</li>
+    <li>@Html.ActionLink("Permissions", "ManagePermissions", "Admin")</li>
+    @*<li>@Html.ActionLink("Regions", "ManageRegions", "Admin")</li>*@
+}
+@if (User.Identity.IsAuthenticated && User.IsInRole("ARGManager"))
+{
+    <li>@Html.ActionLink("Dashboard", "Index", "Manager")</li>
+    <li>@Html.ActionLink("Clients", "ManageClients", "Manager")</li>
+    <li>@Html.ActionLink("Customers", "ManageCustomers", "Manager")</li>
+    <li>@Html.ActionLink("BOLs", "WorkWithBillofLadings", "Client")</li>
+}
+@if (User.Identity.IsAuthenticated && User.IsInRole("ARGAnalyst"))
+{
+    <li>@Html.ActionLink("Analyst Menu", "About", "Home")</li>
+}
+@if (User.Identity.IsAuthenticated && User.IsInRole("ClientManager"))
+{
+    <li>@Html.ActionLink("Client Manager Menu", "About", "Home")</li>
+}

@@ -1,0 +1,51 @@
+﻿@model ArgCore.Models.BdOtherChargeCodes
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div id="AddBdOtherChargeCode" class="main-content row">
+    @using (Html.BeginForm("Save", "BdOtherChargeCodes", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.ChargeCodeDetail.BDOtherChargeCodeId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Client</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ChargeCodeDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlCompanies", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ChargeCodeDetail.CompanyId)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Charge Code</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ChargeCodeDetail.ChargeCode, null, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.ChargeCodeDetail.ChargeCode)
+            </div>
+        </div>
+        if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <label for="inputUrl" class="mylabel control-label col-md-2"></label>
+
+            <div class="form-group">
+                <div class="col-md-5">
+                    @Html.Raw(Model.ErrorMessage)
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2">Description</label>
+            <div class="col-md-5">
+                @Html.TextAreaFor(x => x.ChargeCodeDetail.Description, new { @class = "form-control", maxlength = "100" })
+                @Html.ValidationMessageFor(x => x.ChargeCodeDetail.Description)
+            </div>
+        </div>
+        <div class="btnReasrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "BdOtherChargeCodes", new { otherChargeCodeId = @Model.ChargeCodeDetail.BDOtherChargeCodeId }, new { @class = "btn btn-lg btnDelete" })
+            </div>
+            <div class="col-xs-12 col-md-8 right text-right">
+                <button type="submit" class="btn btn-lg btnSave"><i class="fa fa-floppy-o"></i> Save</button>
+                <button type="button" class="btn btn-lg btnCancel"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>

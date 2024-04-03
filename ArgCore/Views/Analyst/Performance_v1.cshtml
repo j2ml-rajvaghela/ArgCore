@@ -1,0 +1,286 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.AnalystPerformance
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.CommonObjects.Heading</title>
+    <partial name="PageHeader" />
+    <link href="~/res/css/Main.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="admin-dashboard" class="row">
+        @*id="cbp-spmenu-s2"  class="sidebar-menu cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"*@
+        <div id="colPush" class="col-md-3 leftBlock">
+            <div class="scroll-view" tabindex="5000" style="overflow: hidden; outline: none;">
+                <div id="logo">
+                    <a href="@(Common.MyRoot)">
+                        <img src="@(Common.MyRoot)images/ARG-LOGO-DASHBOARD.png">
+                    </a>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-image">
+                        <img class="admin-img" src="~/images/ProfilePic.png">
+                        <h5 class="site-admin">@Common.CurrentUserRole</h5>
+                        <h4 class="per-name">@Common.CurrentUserName</h4>
+                        @if (Common.GetCurrentUserLastLogin() != null)
+                        {
+                            <h5 class="lastLogin">Last Login: @Common.GetCurrentUserLastLogin()</h5>
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <partial name="LeftMenu" />
+            </div>
+        </div>
+        <div id="colMain" class="col-md-9 rightBlock">
+            <div class="dash2 row">
+                <ul class="main-dashboard content-container">
+                    <li id="trig" class="toggleLeftMenu">
+                        <a class="show-right-button" id="showRightPush"><i class="glyphicon glyphicon-menu-hamburger"></i></a>
+                    </li>
+                    <li>
+                        <h1>
+                            @if (Model != null && !string.IsNullOrWhiteSpace(@Model.CommonObjects.TopHeading))
+                            {
+                                @Model.CommonObjects.TopHeading
+                            }
+                            else
+                            {
+                                var heading = new Common.CommonObjects().TopHeading;
+                                @Html.Raw(heading)
+                                ;
+                            }
+                        </h1>
+                    </li>
+                    <li class="right text-right rightOptions">
+                        <a href="~/Account/LogOff">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="content-container">
+                    <div class="main-content row">
+                        <div id="SearchAnalystPerformance">
+                            @using (Html.BeginForm("Performance_v1", "Analyst", FormMethod.Post, new { @class = "form-horizontal" }))
+                            {
+                               
+                                <div class="researchItemSearchForm">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h2>@Model.CommonObjects.Heading</h2>
+                                        </div>
+                                        <div class="col-md-4 text-right right addItem">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Client</label>
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(x => x.CompanyId, Model.Companies, "-- select client --", new { id = "ddlClients", @class = "form-control SelectActiveClientPerformance" })
+                                            @*@Html.DropDownListFor(x => x.SearchOptions.Clients, Model.Companies, new { id = "ddlClients", multiple = "", @class = "form-control" })*@
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Customer</label>
+                                        <div class="col-md-5">
+                                            @Html.ListBoxFor(x => x.SearchOptions.ShipperID, Model.Shippers, new { id = "ddlShippers", multiple = "", @class = "form-control chzn-select" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Analyst</label>
+                                        <div class="col-md-5">
+                                            @Html.ListBoxFor(x => x.SearchOptions.Analyst, Model.Analyst, new { id = "ddlAuditors", multiple = "", @class = "form-control chzn-select" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputUrl" class="mylabel control-label col-md-3">Transaction View Date range</label>
+                                        <div class="col-md-5 dateBlock">
+                                            <div class="col-md-5">
+                                                @*<input class="form-control BDDatepicker" id="SearchOptions_DepartureStartDate" name="SearchOptions.DepartureStartDate" type="date" value="@Model.SearchOptions.DepartureStartDate">*@
+                                                @Html.TextBoxFor(x => x.SearchOptions.TransactionViewStartDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                                            </div>
+                                            <label class="col-md-2">and</label>
+                                            <div class="col-md-5">
+                                                @*<input class="form-control DepEndDatepicker" id="SearchOptions_DepartureEndDate" name="SearchOptions.DepartureEndDate" type="date" value="@Model.SearchOptions.DepartureEndDate">*@
+                                                @Html.TextBoxFor(x => x.SearchOptions.TransactionViewEndDate, null, new { @class = "form-control DepEndDatepicker", data_val_required = "false" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btnReasrItemInfo">
+                                        <button type="submit" id="GetPerformaceResults" class="btn btn-lg btnLoadData"><img src="~/images/GetResults.png" />Get Results</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.AnalystList != null && Model.AnalystList.Count > 0)
+                        {
+                            <table id="research-list" class="table text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="company">NAME</th>
+                                        <th class="viewdate">VIEW DATE</th>
+                                        <th class="viewdate">COUNT</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="research-details">
+                                    @foreach (var item in Model.AnalystList)
+                                    {
+                                        <tr>
+                                            <td class="company">@item.ClientName</td>
+                                            <td class="region">@item.ViewDate.ToString("d")</td>
+                                            <td class="shipper">@item.EventCount</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            @Html.Raw("<h3>No items found!</h3>")
+                        }
+                        <div class="DetailInfo">
+                            @if (Model.AnalystList != null && Model.AnalystList.Count > 0)
+                            {
+                                <table class="row revRecByOrigin" style="width:100%;margin-top:50px;min-height:900px !important;">
+                                    <tr>
+                                        <td class="myLabel" style="padding-top: 30px;font-size:25px;"><b>Analyst Performance</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <canvas id="analystperformance" style="margin-top: 50px;"></canvas>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <partial name="PageFooter" />
+    @*@Html.Partial("PopUpBox")*@
+    <script src="~/res/js/Chart.bundle.min.js?c=13 type="text/javascript"></script>
+    @*<script src="https://atlas-st.nextpageit.com/res/js/Chart.bundle.min.js?c=13" type="text/javascript"></script>*@
+    <script src="~/Scripts/ClientMngmntReport.js?c=@Common.VersionNo"></script>
+    @if (Model.AnalystList == null)
+    {
+        return;
+    }
+
+    <script>
+        //function numberWithCommas(x) {
+        //    var parts = x.toString().split(".");
+        //    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        //    return parts.join(".");
+        //}
+        //Bar Chart
+        var barXAxisData;
+        var barYAxisData;
+        var userNameColor;
+        var analystName;
+        //barXAxisData = @Html.Raw(JavaScript.Serialize(Model.AnalystList.Select(x => x.ViewDate.ToString("d"))));
+        barXAxisData = @Html.Raw(JavaScript.Serialize(Model.AnalystList.Select(x => x.GraphAnalyst)));
+
+        barYAxisData = @Html.Raw(JavaScript.Serialize(Model.AnalystList.Select(x => x.EventCount)));
+        analystName = @Html.Raw(JavaScript.Serialize(Model.AnalystList.Select(x => x.ClientName)));
+
+        userNameColor = @Html.Raw(JavaScript.Serialize(Model.AnalystList.Select(x => x.Color)));
+        console.log(userNameColor);
+        //for (var i = 0; i < barYAxisData.length; i++) {
+        //    barYAxisData[i] = numberWithCommas(barYAxisData[i]);
+        //    //console.log(barYAxisData[i]);
+        //}
+        if (barXAxisData.length > 0 && barYAxisData.length > 0) {
+            var barData = {
+                labels: barXAxisData,
+                datasets: [
+                    {
+                        label: 'Analyst Performance',
+                        backgroundColor: userNameColor,
+                        //backgroundColor: "#8edfdf",
+                        //borderColor: "#4CC0C0",
+                        borderColor: userNameColor,
+
+                        borderWidth: 2,
+                        hoverBackgroundColor: userNameColor,
+                        hoverBorderColor: userNameColor,
+                        //hoverBorderColor: "#4CC0C0",
+                        data: barYAxisData,
+                    }
+                ]
+            };
+            var barOption = {
+                legend: {
+                    display: false
+                },
+                scaleLabel:
+                    function (label) { return label.value.toString().replace(/\B(?=(\d{2})+(?!\d))/g, ","); },
+                //tooltips:{
+                //    callbacks: {
+                //        label: function(tooltipItem, barYAxisData) {
+                //            var value = barYAxisData.datasets[0].data[tooltipItem.index];
+                //            var label = barYAxisData.labels[tooltipItem.index];
+                //            return label + ' ' + percentage + '%';
+                //        }
+                //    }
+                //},
+                scales: {
+                    yAxes: [{
+                        //valueFormatString:  "#,##0.##",
+                        stacked: true,
+                        gridLines: {
+                            display: false
+                        }, ticks: {
+                            fontSize: 14, beginAtZero: true
+                        },
+                        //scaleLabel: function (valuePayload) {
+                        //    return Number(valuePayload.value).toFixed(2).replace('.',',');
+                        //},
+                        //         scaleLabel:
+                        //function(label){return  label.value.toString().replace(/\B(?=(\d{2})+(?!\d))/g, ",");}
+                        //scaleLabel: {
+                        //    display: true,
+                        //    labelString: 'Recovered',
+                        //    fontColor: "black",
+                        //    fontSize: 18
+                        //}
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: {
+                            fontSize: 14
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Count',
+                            fontColor: "black",
+                            fontSize: 18
+                        }
+                    }]
+                }
+            };
+
+            var barCanvas = document.getElementById('analystperformance');
+            var myBarChart = Chart.Bar(barCanvas, {
+                data: barData,
+                options: barOption
+            });
+        }
+    </script>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        if (@Model.CompanyId> 0) {
+            $("#ddlClients").val(@Model.CompanyId);
+        }
+
+    });
+</script>

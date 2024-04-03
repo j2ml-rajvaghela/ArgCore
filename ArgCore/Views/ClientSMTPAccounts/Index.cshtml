@@ -1,0 +1,73 @@
+﻿@model ArgCore.Models.ClientSMTPAccounts
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@* @using Dashboard *@
+<div class="main-content row">
+    <div id="ClientSMTPAccounts">
+        @using (Html.BeginForm("Index", "ClientSMTPAccounts", FormMethod.Post, new { @class = "form-horizontal" }))
+        {
+           @*  Html.EnableClientValidation(false); *@
+            @Html.HiddenFor(x => x.SearchOptions.SMTPAccountId)
+            <div class="clientSearchForm">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>@Model.CommonObjects.Heading</h2>
+                    </div>
+                    <div class="col-md-4 text-right right addItem">
+                        <a href="~/ClientSMTPAccounts/Save?SMTPAccountId=0" title="Add SMTP Account">+ Add SMTP Account</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="inputUrl" class="mylabel control-label col-md-4">Client Name</label>
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(x => x.SearchOptions.CompanyId, Model.Companies, "-- select client --", new { id = "ddlCompanies", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 btnReasrItemInfo">
+                        <button type="submit" class="btn btn-lg btnLoadData"><img src="~/images/GetResults.png" /> Get Results</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @if (Model.SmtpAccountsList != null && Model.SmtpAccountsList.Count > 0)
+    {
+        <table id="SmtpAccountsList-list" class="table text-center">
+            <thead>
+                <tr>
+                    <th class="cName">CLIENT NAME</th>
+                    <th class="email">FROM EMAIL</th>
+                    <th class="server">Server</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="client-details">
+                @foreach (var item in Model.SmtpAccountsList)
+                {
+                    <tr>
+                        <td class="row">
+                            <span class="name">@item.Company</span>
+                        </td>
+                        <td class="email">
+                            @item.FromEmail
+                        </td>
+                        <td class="phone">@item.SMTPClient</td>
+                        <td>
+                            <a href="~/ClientSMTPAccounts/Save?SMTPAccountId=@item.SMTPAccountId" title="Edit SMTP Account">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        @Html.Raw("<h3>No accounts found!</h3>")
+    }
+</div>

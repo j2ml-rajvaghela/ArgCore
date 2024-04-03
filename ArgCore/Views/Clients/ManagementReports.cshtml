@@ -1,0 +1,463 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.ClientManagementReports
+@* @using Dashboard *@
+@{Layout = "";}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@Model.CommonObjects.Heading</title>
+    <partial name="PageHeader"/>
+    <link href="~/res/css/Main.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="admin-dashboard" class="row">
+        <div id="colPush" class="col-md-3 leftBlock">
+            <div class="scroll-view" tabindex="5000" style="overflow: hidden; outline: none;">
+                <div id="logo">
+                    <a href="@(Common.MyRoot)">
+                        <img src="~/images/ARG-LOGO-DASHBOARD.png">
+                    </a>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-image">
+                        <img class="admin-img" src="/images/ProfilePic.png">
+                        <h5 class="site-admin">@Common.CurrentUserRole</h5>
+                        <h4 class="per-name">@Common.CurrentUserName</h4>
+                        @if (Common.GetCurrentUserLastLogin() != null)
+                        {
+                        <h5 class="lastLogin">Last Login: @Common.GetCurrentUserLastLogin()</h5>
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                 <partial name="LeftMenu"/>
+            </div>
+        </div>
+        <div id="colMain" class="col-md-9 rightBlock">
+            <div class="dash2 row">
+                <ul class="main-dashboard content-container">
+                    <li id="trig" class="toggleLeftMenu">
+                        <a class="show-right-button" id="showRightPush"><i class="glyphicon glyphicon-menu-hamburger"></i></a>
+                    </li>
+                    <li>
+                        <h1>
+                            @if (Model != null && !string.IsNullOrWhiteSpace(@Model.CommonObjects.TopHeading))
+                            {
+                            @Model.CommonObjects.TopHeading
+                            }
+                            else
+                            {
+                                var heading = new Common.CommonObjects().TopHeading;
+                            @Html.Raw(heading);
+                            }
+                        </h1>
+                    </li>
+                    <li class="right text-right rightOptions">
+                        <a href="@(Common.MyRoot)Account/LogOff">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="content-container">
+                    <div class="main-content row">
+                        <div id="ClientManagementReports">
+                            @using (Html.BeginForm("ManagementReports", "Clients", FormMethod.Post, new { @class = "form-horizontal" }))
+                            {
+                              @*   Html.EnableClientValidation(false); *@
+                            <div class="clientSearchForm">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h2>@Model.CommonObjects.Heading</h2>
+                                    </div>
+                                </div>
+                                @Html.HiddenFor(x => x.SearchOptions.ClientId)
+                                <div class="form-group">
+                                    <label for="inputUrl" class="mylabel control-label col-md-2">Client Name</label>
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(x => x.SearchOptions.CompanyId, Model.Companies, "-- select client --", new { id = "ddlClients", @class = "form-control SelectActiveClient neverclear" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputUrl" class="mylabel control-label col-md-2">Region</label>
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(x => x.SearchOptions.Regions, Model.Regions, new { id = "ddlRegions", multiple = "", @class = "form-control chzn-select" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputUrl" class="mylabel control-label col-md-2">Report type</label>
+                                    <div class="col-md-5">
+                                        @Html.DropDownListFor(x => x.SearchOptions.ReportTypes, Model.ReportTypes, new { id = "ddlReportTypes", multiple = "", @class = "form-control chzn-select", @selectedvals = Model.SearchOptions.ReportTypes != null ? String.Join(" ,", Model.SearchOptions.ReportTypes) : "" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputUrl" class="mylabel control-label col-md-2">Date between</label>
+                                    <div class="col-md-5 dateBlock">
+                                        <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.ClientStartDate, null, new { @class = "form-control BDDatepicker dateCtrl", data_val_required = "false" })
+                                        </div>
+                                        <label class="col-md-2">and</label>
+                                        <div class="col-md-5">
+                                                @Html.TextBoxFor(x => x.SearchOptions.ClientEndDate, null, new { @class = "form-control BDDatepicker dateCtrl", data_val_required = "false" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="options" style="margin-top:20px;">
+                                    <button type="submit" id="GetClientReportResults" class="btn btn-lg btn-primary">
+                                        <img src="~/images/GetResults.png" /> Get Results
+                                    </button>
+                                    @{var query = "?";}
+                                    @if (Model.SearchOptions.CompanyId > 0)
+                                        {
+                                            query += "companyId=" + Model.SearchOptions.CompanyId + "&";
+                                        }
+                                    @{string regions;}
+                                    @if (Model.SearchOptions.Regions != null && Model.SearchOptions.Regions.Any())
+                                        {
+                                            regions = string.Join(",", Model.SearchOptions.Regions);
+                                        }
+                                        else
+                                        {
+                                            regions = "null";
+                                        }
+
+                                    @if (Model.SearchOptions.ClientStartDate != null && Model.SearchOptions.ClientEndDate != null)
+                                        {
+                                            if ((Model.RevenueRecovered != null && Model.RevenueRecovered.Any()) || Model.OverchargeRevenueRecovered != null && Model.OverchargeRevenueRecovered.Any())
+                                            {
+                                    <a href="javascript:void(0)" class="btn btn-lg btn-success" id="GenerateClientReportPdf">
+                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generate PDF
+                                    </a>
+                                            }
+                                        }
+                                </div>
+                                <div id="lblClientReportMsg" style="font-size:18px;color:#c00000;"></div>
+                            </div>
+                                            }
+
+                            @if (Model.OverchargeRevenueRecovered != null && Model.OverchargeRevenueRecovered.Any())
+                            {
+                                <partial name="OverchargeManagementReportDetails" model="@Model"/>
+                                <div id="reportseparator"></div>
+
+                            }
+                            else
+                            {
+                            @Html.Raw(Model.SearchOptions.Message)
+                            }
+                            @if ((Model.RevenueRecovered != null && Model.RevenueRecovered.Any()))
+                            {
+
+                              <partial name="OverchargeManagementReportDetails" model="@Model"/>
+
+                            }
+
+                            else
+                            {
+                            @Html.Raw(Model.SearchOptions.Message)
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <partial name="PageFooter"/>
+    <script src="@(Common.MyRoot)res/js/Chart.bundle.min.js?c=13" type="text/javascript"></script>
+    @*<script src="https://atlas-st.nextpageit.com/res/js/Chart.bundle.min.js?c=13" type="text/javascript"></script>*@
+    @*<script src="@(Common.MyRoot)/Scripts/ClientMngmntReport.js?c=@Common.VersionNo"></script>
+        @if (Model.RevenueLossTrend == null)
+        {
+            return;
+        }
+        <script>
+            Chart.pluginService.register({
+                beforeRender: function (chart) {
+                    if (chart.config.options.showAllTooltips) {
+                        // create an array of tooltips
+                        // we can't use the chart tooltip because there is only one tooltip per chart
+                        chart.pluginTooltips = [];
+                        chart.config.data.datasets.forEach(function (dataset, i) {
+                            chart.getDatasetMeta(i).data.forEach(function (sector, j) {
+                                chart.pluginTooltips.push(new Chart.Tooltip({
+                                    _chart: chart.chart,
+                                    _chartInstance: chart,
+                                    _data: chart.data,
+                                    _options: chart.options,
+                                    _active: [sector]
+                                }, chart));
+                            });
+                        });
+
+                        // turn off normal tooltips
+                        chart.options.tooltips.enabled = false;
+                    }
+                },
+                afterDraw: function (chart, easing) {
+                    if (chart.config.options.showAllTooltips) {
+                        // we don't want the permanent tooltips to animate, so don't do anything till the animation runs atleast once
+                        if (!chart.allTooltipsOnce) {
+                            if (easing !== 1)
+                                return;
+                            chart.allTooltipsOnce = true;
+                        }
+
+                        // turn on tooltips
+                        chart.options.tooltips.enabled = true;
+                        Chart.helpers.each(chart.pluginTooltips, function (tooltip) {
+                            tooltip.initialize();
+                            tooltip.update();
+                            // we don't actually need this since we are not animating tooltips
+                            tooltip.pivot();
+                            tooltip.transition(easing).draw();
+                        });
+                        chart.options.tooltips.enabled = false;
+                    }
+                }
+            })
+        </script>
+        <script>
+            //Line Chart
+            var lineXAxisData;
+            var lineYAxisData;
+            var lineXAxisData = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.ScopeDate)));
+            //alert(lineXAxisData);
+            //var lineXAxisDataLabel = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.ScopeDateTooltipLabel)));
+            var lineYAxisData = @Html.Raw(JavaScript.Serialize(Model.RevenueLossTrend.Select(x => x.LossRateFormatted)));
+            if (lineXAxisData.length > 0 && lineYAxisData.length > 0)
+            {
+                //function ToJavaScriptDate(value) {
+                //    var pattern = /Date\(([^)]+)\)/;
+                //    var results = pattern.exec(value);
+                //    var dt = new Date(parseFloat(results[1]));
+                //    return dt.getDate() + "/" + (dt.getMonth() + 1) + "/" + dt.getFullYear();
+                //}
+                //for (var i = 0; i < lineXAxisData.length; i++) {
+                //    lineXAxisData[i] = ToJavaScriptDate(lineXAxisData[i]);
+                //    //console.log(lineXAxisData[i]);
+                //}
+
+                var lineOptions = {
+                    type: 'line',
+                    data: {
+                        labels:lineXAxisData,
+                        datasets: [
+                            {
+                                label: 'Loss Rate',
+                                data: lineYAxisData,
+                                borderColor: '#4CC0C0',
+                                backgroundColor: '#d0f8f8',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        tooltips: {
+                            callbacks: {
+                                title: function (tooltipItem, data) { return 'Scope Date: '+ data.labels[tooltipItem[0].index]; }
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        showAllTooltips: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    fontSize: 14,
+                                    beginAtZero: true
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Revenue Recovered Rate (%)',
+                                    fontColor: "black",
+                                    fontSize: 18
+                                }
+                            }],
+                            xAxes: [{
+                                ticks: {
+                                    fontSize: 14
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Scope Date',
+                                    fontColor: "black",
+                                    fontSize: 18
+                                }
+                            }]
+                        }
+                    }
+                }
+
+                var lineCtx = document.getElementById('revenueLossTrend').getContext('2d');
+                new Chart(lineCtx, lineOptions);
+            }
+        </script>
+        @if (Model.RevLossByBDErrorCode == null)
+        {
+            return;
+        }
+        <script>
+            //Pie Chart
+            var pieLabels; var pieData;
+
+            pieLabels = @Html.Raw(JavaScript.Serialize(Model.RevLossByBDErrorCode.Select(x => x.BDErrorCode)));
+            pieData = @Html.Raw(JavaScript.Serialize(Model.RevLossByBDErrorCode.Select(x => x.PaymentAmount)));
+            var data={
+                labels: pieLabels,
+                datasets: [{
+                    backgroundColor: [
+                      "#2ecc71",
+                      "#3498db",
+                      "#95a5a6",
+                      "#9b59b6",
+                      "#f1c40f",
+                      "#e74c3c",
+                      "#34495e"
+                    ],
+                    data: pieData
+                }]
+            };
+
+            var pieCtx = document.getElementById("revLossByBDErrorCode").getContext('2d');
+            var myPieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: data,
+                options: {
+                    showAllTooltips: true
+                }
+            });
+        </script>
+        @if (Model.RevByCustomer == null)
+        {
+            return;
+        }
+        <script>
+            //Pie Chart
+            var pieCustLabels; var pieCustData;
+            pieCustLabels = @Html.Raw(JavaScript.Serialize(Model.RevByCustomer.Select(x => x.CustomerID)));
+            pieCustData = @Html.Raw(JavaScript.Serialize(Model.RevByCustomer.Select(x => x.PaymentTotal)));
+            var data={
+                labels: pieCustLabels,
+                datasets: [{
+                    backgroundColor: [
+                      //"#2ecc71","c00000","#E9EAEC","#212D39",
+                      //"#3498db",
+                      //"#95a5a6",
+                      //"#9b59b6",
+                      //"#f1c40f","#5A738E","#23527c","#A3A2A3","#5FCE9B",
+                      //"#e74c3c",
+                      //"#34495e"
+                      "#337ab7","#5cb85c","#878787","#5bc0de","#ec693b","#f1c40f","#95a5a6","#937070","#339967","#937039",
+                      "#9c3b3b","#626262","#d34d1e","#c00000","#5A738E","#d9534f","#34495e","#517c95","#b65b5b","#1ca2b6"
+                    ],
+                    data: pieCustData
+                }]
+            };
+
+            var pieCtx = document.getElementById("revenueByCustomer").getContext('2d');
+            var myPieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: data
+                //,options: {
+                //    showAllTooltips: true
+                //}
+            });
+        </script>
+        @if (Model.RevRecoveredByOrigin == null)
+        {
+            return;
+        }
+        <script>
+            //function numberWithCommas(x) {
+            //    var parts = x.toString().split(".");
+            //    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //    return parts.join(".");
+            //}
+            //Bar Chart
+            var barXAxisData;
+            var barYAxisData;
+
+            barXAxisData = @Html.Raw(JavaScript.Serialize(Model.RevRecoveredByOrigin.Select(x => x.OriginLocationCode)));
+            barYAxisData = @Html.Raw(JavaScript.Serialize(Model.RevRecoveredByOrigin.Select(x => x.PaymentAmount)));
+            //for (var i = 0; i < barYAxisData.length; i++) {
+            //    barYAxisData[i] = numberWithCommas(barYAxisData[i]);
+            //    //console.log(barYAxisData[i]);
+            //}
+            if (barXAxisData.length > 0 && barYAxisData.length > 0)
+            {
+                var barData = {
+                    labels: barXAxisData,
+                    datasets: [
+                        {
+                            label: 'Revenue Recovered',
+                            backgroundColor: "#8edfdf",
+                            borderColor: "#4CC0C0",
+                            borderWidth: 2,
+                            hoverBackgroundColor: "#8edfdf",
+                            hoverBorderColor: "#4CC0C0",
+                            data: barYAxisData,
+                        }
+                    ]
+                };
+                var barOption = {
+                    legend: {
+                        display: false
+                    },
+                    scaleLabel:
+                  function(label){return  label.value.toString().replace(/\B(?=(\d{2})+(?!\d))/g, ",");},
+                    //tooltips:{
+                    //    callbacks: {
+                    //        label: function(tooltipItem, barYAxisData) {
+                    //            var value = barYAxisData.datasets[0].data[tooltipItem.index];
+                    //            var label = barYAxisData.labels[tooltipItem.index];
+                    //            return label + ' ' + percentage + '%';
+                    //        }
+                    //    }
+                    //},
+                    scales: {
+                        yAxes:[{
+                            //valueFormatString:  "#,##0.##",
+                            stacked:true,
+                            gridLines: {
+                                display:false
+                            }, ticks: {
+                                fontSize: 14,beginAtZero: true
+                            },
+                            //scaleLabel: function (valuePayload) {
+                            //    return Number(valuePayload.value).toFixed(2).replace('.',',');
+                            //},
+                            //         scaleLabel:
+                            //function(label){return  label.value.toString().replace(/\B(?=(\d{2})+(?!\d))/g, ",");}
+                            //scaleLabel: {
+                            //    display: true,
+                            //    labelString: 'Recovered',
+                            //    fontColor: "black",
+                            //    fontSize: 18
+                            //}
+                        }],
+                        xAxes:[{
+                            gridLines: {
+                                display:false
+                            },
+                            ticks: {
+                                fontSize: 14
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Origin',
+                                fontColor: "black",
+                                fontSize: 18
+                            }
+                        }]
+                    }
+                };
+
+                var barCanvas = document.getElementById('revenueRecByOrigin');
+                var myBarChart = Chart.Bar(barCanvas,{
+                    data:barData,
+                    options:barOption
+                });
+            }
+        </script>*@
+</body>
+</html>

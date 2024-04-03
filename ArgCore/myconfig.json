@@ -1,0 +1,10 @@
+﻿{
+  "emailCredentialUserName": "atlas.argglobal@gmail.com",
+  "emailSentFrom": "atlas.argglobal@gmail.com",
+  "emailPwd": "520Stokes17",
+  "emailSmtpClient": "smtp.gmail.com",
+  "emailPort": "emailPort",
+  "ClientsDBName": "ClientPasha",
+  "FilesServerDrive": "I:\\clients\\",
+  "DBName": "argocean"
+}

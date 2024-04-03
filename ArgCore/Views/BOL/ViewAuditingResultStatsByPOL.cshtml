@@ -1,0 +1,115 @@
+﻿@using ArgCore.Helpers
+@{
+    Layout = "";
+}
+@model ArgCore.Models.BOLAuditingResults
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BOL Auditing Result Stats</title>
+    <partial name="PageHeader" />
+    <style>
+        body {
+            padding: 0;
+            background-color: #F4F5F7 !important;
+        }
+    </style>
+    <script src="https://rawgit.com/mozilla/pdf.js/gh-pages/build/pdf.js"></script>
+    <script src="https://rawgit.com/mozilla/pdf.js/master/web/compatibility.js"></script>
+</head>
+<body>
+    <div id="BOLAudResultStats" class="main-content row">
+        @{
+            var queryId = Context.Request.Query["queryId"];
+            var groupType = Context.Request.Query["group"];
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Message))
+        {
+            @Html.Raw(Model.Message)
+            return;
+        }
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-2 stats-Filter">Select Filter</label>
+            <div class="col-md-3">
+                @Html.DropDownList("Stats-filter-list", new SelectList(Common.StatsFilterList, "Value", "Text", groupType), "---Select---", new { data_queryid = queryId, @class = "form-control" })
+            </div>
+        </div>
+        @if (Model.BolAuditResultStats != null && Model.BolAuditResultStats.Any() || Model.AgilityBolAuditResultStats != null && Model.AgilityBolAuditResultStats.Any())
+        {
+            <div class="right pull-right">
+                @if (!string.IsNullOrEmpty(Model.SpreedSheetUrl))
+                {
+                    if (Model.SpreedSheetUrl.Contains("re-login"))
+                    {
+                        @Html.Raw(Model.SpreedSheetUrl)
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" target="_blank" href="@Model.SpreedSheetUrl">Output to Spreadsheet</a>
+                    }
+                }
+            </div>
+            <table id="stats-list" class="table text-center">
+                <thead>
+                    <tr>
+                        <th class="options">Options</th>
+
+                        <th class="destination">POL</th>
+                        <th class="shippCount">Shippment Count</th>
+                        <th class="minCharge">Min. Charges</th>
+                        <th class="maxCharge">Max. Charges</th>
+                        <th class="difference">Difference</th>
+                        <th class="stndDvation">Standard Deviation</th>
+                    </tr>
+                </thead>
+                <tbody class="client-details">
+                    @if (Model.BolAuditResultStats != null && Model.BolAuditResultStats.Any())
+                    {
+                        foreach (var item in Model.BolAuditResultStats)
+                        {
+                            //var url = HttpContext.Current.Request.Url;
+
+                            //string queryId = HttpUtility.ParseQueryString(url).Get("queryId");
+                            <tr>
+                                <td>
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)BOL/Index?POL=@item.POL&queryId=@queryId">View </a>|
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Bol/AuditingResults?POL=@item.POL&stats=stats&QueryId=@queryId&idx=1"> Auditing results screen </a>|
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Bol/ViewAuditingResultTableFormat?POL=@item.POL&stats=stats&QueryId=@queryId"> Auditing table results</a>
+                                </td>
+                                <td class="origin">@item.POL</td>
+                                <td class="shippCount">@item.ShipmentCount</td>
+                                <td class="minCharge">@item.MinCharges.ToString("F")</td>
+                                <td class="maxCharge">@item.MaxCharges.ToString("F")</td>
+                                <td class="difference">@item.Difference.ToString("F")</td>
+                                <td class="stndDvation">@item.StandardDeviation.ToString("F")</td>
+                            </tr>
+                        }
+                    }
+                    @if (Model.AgilityBolAuditResultStats != null && Model.AgilityBolAuditResultStats.Any())
+                    {
+                        foreach (var item in Model.AgilityBolAuditResultStats)
+                        {
+                            <tr>
+                                <td>
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)BOL/Index?shipperId=@item.Shipper&orig=@item.Origin&dest=@item.Destination&queryId=@queryId">View </a>|
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Bol/AuditingResults?shipperId=@item.Shipper&orig=@item.Origin&dest=@item.Destination&stats=stats&queryId=@queryId&idx=1"> Auditing results screen </a>|
+                                    <a target="_blank" class="ViewAuditStats" href="@(Common.MyRoot)Bol/ViewAuditingResultTableFormat?shipperId=@item.Shipper&orig=@item.Origin&dest=@item.Destination&stats=stats&queryId=@queryId"> Auditing table results</a>
+                                </td>
+
+                                <td class="origin">@item.PortOfExit</td>
+                                <td class="shippCount">@item.ShipmentCount</td>
+                                <td class="minCharge">@item.MinCharges.ToString("F")</td>
+                                <td class="maxCharge">@item.MaxCharges.ToString("F")</td>
+                                <td class="difference">@item.Difference.ToString("F")</td>
+                                <td class="stndDvation">@item.StandardDeviation.ToString("F")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <partial name="PageFooter" />
+</body>
+</html>

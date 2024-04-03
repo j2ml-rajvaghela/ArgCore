@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = Arg.Terms.Resource1.pgTitleBillofLadings;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="divclientinfo">
+    <fieldset class="fieldsethdr">
+        <legend>@Arg.Terms.Resource1.lblCustomerInfo</legend>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID:</div>
+            <div class="col-md-1" data-bind="text:clientid"></div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblClient</div>
+            <div class="col-md-6"><span data-bind="text:clientname"></span> (<span data-bind="text:clientnickname"></span>)</div>
+        </div>
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID:</div>
+            <div class="col-md-1" data-bind="text:customerid"></div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblCustomer</div>
+            <div class="col-md-6"><span data-bind="text:customername"></span></div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblRecords: <span id="reccnt"></span></div>
+        </div>
+    </fieldset>
+</div>
+
+<div id="divmain">
+    <fieldset>
+        @*<legend><button id="btnaddclient" class="btn btn-primary btn-thin">@arg.terms.Resource1.btnAddClient</button></legend>*@
+        <div class="row gridhdr">
+            <div class="col-md-1">@Arg.Terms.Resource1.lblEdit</div>
+            <div class="col-md-1">@Arg.Terms.Resource1.lblID</div>
+            <div class="col-md-2">@Arg.Terms.Resource1.lblBOLNumber</div>
+            <div class="col-md-3">@Arg.Terms.Resource1.lblOrigin</div>
+            <div class="col-md-3">@Arg.Terms.Resource1.lblDestination</div>
+        </div>
+        <div data-bind="foreach:items">
+            <div class="row">
+                <div class="col-md-1"><i class="mdi mdi-pencil-box-outline icngrn elnk" data-bind="attr:{'id':'e' + clientid}" style="cursor:pointer;"></i></div>
+                <div class="col-md-1" data-bind="text:billofladingid"></div>
+                <div class="col-md-3" data-bind="text:bolnumber"></div>
+                <div class="col-md-3" data-bind="text:origin"></div>
+                <div class="col-md-3" data-bind="text:destination"></div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var clientid = "@ViewBag.clientid";
+        var customerid = "@ViewBag.customerid";
+        var clnt;
+
+        $(document).ready(function () {
+            setProgressBar();
+            InitializeViewModel();
+            log.info("managebol; clientid=" + clientid);
+            getDataX("customer", customerDataResponse, customerid);
+            getData("billofladings", clientid, customerid);
+        });
+
+        function InitializeViewModel() {
+            ko.applyBindings(viewModel, $("#divmain")[0]);
+        }
+
+        // load view model so Knockout can bind to it
+        function getDataResponse(response) {
+            log.info("get response");
+            try {
+                for (i = 0; i < response.length; i++) {
+                    viewModel.items.push(response[i]);
+                }
+                $("#reccnt").text(response.length);
+                finishProgressBar();
+                $(".elnk").on("click", function () { editClient(this); });
+            } catch (e) {
+                log.error("get response: " + e.message);
+                setMessage("get data error: " + e.message, "error");
+            }
+        };
+
+        class customerModel {
+            constructor(rec) {
+                this.customerid = ko.observable(rec.customerid || 0);
+                this.customername = ko.observable(rec.customername || "");
+                this.clientid = ko.observable(rec.clientid || 0);
+                this.clientname = ko.observable(rec.clientname || "");
+                this.clientnickname = ko.observable(rec.clientnickname || "");
+                this.isactive = ko.observable(rec.isactive || false);
+            }
+        }
+
+        function customerDataResponse(response) {
+            log.info("customerDataResponse");
+            try {
+                clnt = new customerModel(response);
+                ko.cleanNode($("#divclientinfo")[0])
+                ko.applyBindings(clnt, $("#divclientinfo")[0]);
+            } catch (e) {
+                log.error("clientDataResponse: " + e.message);
+                setMessage("clientDataResponse: " + e.message, "error");
+            }
+        }
+    </script>
+
+}

@@ -1,0 +1,303 @@
+﻿@model ArgCore.Models.ResearchItems
+@{
+    Layout = "";
+}
+<div id="AddResearchItem" class="main-content row">
+    @using (Html.AjaxBeginForm("Save", "Research", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "SaveResearchSuccess" }, new { id = "frmSaveResearchItems", @class = "form-horizontal" }))
+    {
+        <h2>@Model.CommonObjects.Heading</h2>
+        @Html.HiddenFor(x => x.ResearchItemDetail.ResearchId)
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Client</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ResearchItemDetail.CompanyId, Model.Companies, "-- select client --", new { id = "ddlCompanies", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.CompanyId)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Region</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ResearchItemDetail.Region, Model.Regions, new { id = "ddlRegions", maxlength = "10", @class = "form-control" })
+                @*@Html.TextBoxFor(x => x.ResearchItemDetail.Region, null, new { @class = "form-control", maxlength = "10" })*@
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.Region)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Status</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ResearchItemDetail.Status, Model.Status, "--select status--", new { @class = "form-control" })
+                @*@Html.TextBoxFor(x => x.ResearchItemDetail.Status, null, new { @class = "form-control", maxlength = "100" })*@
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.Status)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Booking ID</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ResearchItemDetail.BookingId, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.BookingId)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">BOL#</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ResearchItemDetail.BOL, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.BOL)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">BOL Execution Date</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ResearchItemDetail.BolExecutionDate, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.BolExecutionDate)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Research Reason Code</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ResearchItemDetail.ResearchReasonCode, Model.ReasonCodes, "-- select reason code --", new { id = "ddlReasonCodes", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.ResearchReasonCode)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Revenue Analyst Auditor</label>
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => x.ResearchItemDetail.RevenueAnalystAuditor, Model.Auditors, "-- select auditor --", new { id = "ddlAuditors", @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.RevenueAnalystAuditor)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Comments</label>
+            <div class="col-md-5">
+                @Html.TextAreaFor(x => x.ResearchItemDetail.Comments, new { @class = "form-control ckeditor", maxlength = "500" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.Comments)
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">Last Modified</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ResearchItemDetail.LastModified, null, new { @class = "form-control BDDatepicker", data_val_required = "false" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.LastModified)
+                @*confirm validation*@
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputUrl" class="mylabel control-label col-md-3">LastModified By</label>
+            <div class="col-md-5">
+                @Html.TextBoxFor(x => x.ResearchItemDetail.LastModifiedBy, null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.ResearchItemDetail.LastModifiedBy)
+                @*confirm validation*@
+            </div>
+        </div>
+        @*<div class="form-group">
+    <label for="inputUrl" class="mylabel control-label col-md-3">Revenue Analyst Auditor</label>
+    <div class="col-md-5">
+    @Html.TextBoxFor(x => x.ResearchItemDetail.RevenueAnalystAuditor, null, new { @class = "form-control", maxlength = "100" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.RevenueAnalystAuditor)
+    </div>
+    </div>*@
+
+        @*<div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content ">Customer</label>
+    @Html.DropDownListFor(x => x.ResearchItemDetail.CustomerId, Model.Customers, "-- select customer --", new { id = "ddlCustomers", @class = "form-control" })
+    </div>
+    </div>*@
+        @*<div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Shippers Reference No.</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ShipperRefNumber, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ShipperRefNumber)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Forward Reference No.</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ForwarderRefNumber, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ForwarderRefNumber)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Transaction Reference No.</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.TransactionRefNumber, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.TransactionRefNumber)
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Purchase Order No.</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.PurchaseOrderNumber, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.PurchaseOrderNumber)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Tariff Reference No.</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.TariffRefNumber, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.TariffRefNumber)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Vessel</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.Vessel, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.Vessel)
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Voyage</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.Voyage, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.Voyage)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Origin</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.Origin, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.Origin)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Place of Carrier Receipt</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.PlaceofCarrierReceipt, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.PlaceofCarrierReceipt)
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">ETD</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ETD, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ETD)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Port Of Load</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.PortOfLoad, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.PortOfLoad)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Destination</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.Destination, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.Destination)
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Place Of Carrrier Delivery</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.PlaceOfCarrrierDelivery, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.PlaceOfCarrrierDelivery)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">ETA</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ETA, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ETA)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Port Of Discharge</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.PortOfDischarge, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.PortOfDischarge)
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Move Type</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.MoveType, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.MoveType)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Shipment Type(FCL,LCL)</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ShipmentType, null, new { @class = "form-control", maxlength = "45" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ShipmentType)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Control Total Number Containers</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ControlTotalNumberContainers, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ControlTotalNumberContainers)
+    </div>
+    </div>
+    </div>*@
+        @*<div class="row">
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Control Total Number Packages</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ControlTotalNumberPackages, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ControlTotalNumberPackages)
+    </div>
+    </div>
+    <div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Control Total Shipment Weight</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.ControlTotalShipmentWeight, null, new { onkeypress = "return event.charCode >= 48 && event.charCode <= 57", @class = "form-control" })
+    @Html.ValidationMessageFor(x => x.ResearchItemDetail.ControlTotalShipmentWeight)
+    </div>
+    </div>
+    </div>*@
+        @*<div class="col-md-4">
+    <div class="form-group">
+    <label for="inputUrl" class="mylabel label-content">Customer Location Code</label>
+    @Html.TextBoxFor(x => x.ResearchItemDetail.CustomerLocationCode, null, new { @class = "form-control", maxlength = "5" })
+    </div>
+    </div>*@
+        <div class="row">
+            <div id="lblBDMsg" style="color:green;margin-left: 40px;font-size: 20px;"></div>
+        </div>
+        <div class="btnResrItemInfo">
+            <div class="col-xs-12 col-md-4">
+                @Html.ActionLink("Delete", "Delete", "Research", new { researchId = @Model.ResearchItemDetail.ResearchId }, new { @class = "btn btn-lg btnDelete" })
+                @*<button type="button" class="btn btn-lg btnDelete"><i class="fa fa-trash-o"></i> Delete</button>*@
+            </div>
+            <div class="col-xs-12 col-md-8">
+                <button type="submit" class="btn btn-lg btnSave" style="margin-left:724px"><i class="fa fa-floppy-o"></i> Save</button>
+                @* <button type="button" value="Exit" class="close-animatedModal btn btn-lg btn-default" style="margin-right:661px;line-height: 1.3333333;background-color: #808080 !important;color: white; font-weight: normal; border: none; opacity: 1; width: 120px;   font-size: 20px;"><i class="fa fa-sign-out"></i> Exit</button>*@
+                <button type="button" class="btn btn-lg btnCancel close-animatedModal"><i class="fa fa-ban"></i> Cancel</button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse('#frmSaveResearchItems');
+    });
+
+    $(".BDDatepicker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'mm-dd-yy',
+        yearRange: "-10:+40"
+    });
+    function SaveResearchSuccess(ajaxContext) {
+        if (ajaxContext != "undefined" && ajaxContext.ResearchId != "undefined" && ajaxContext != "Error") {
+            $("#lblBDMsg").text("Succesfully Saved");
+            $(".close").click();
+            window.location.reload();
+        }
+        else {
+            $("#lblBDMsg").text(ajaxContext);
+        }
+    }
+</script>

@@ -1,0 +1,32 @@
+﻿@using ArgCore.Helpers
+@model ArgCore.Models.Regions
+
+@if (Model.RegionsList != null && Model.RegionsList.Count > 0 && !Model.IsGetRegion)
+{
+    <table id="regions-list" class="table text-center">
+        <thead>
+            <tr>
+                <th class="company">Client</th>
+                <th class="region">REGION</th>
+                <th class="description">DESCRIPTION</th>
+            </tr>
+        </thead>
+        <tbody class="region-details">
+            @foreach (var item in Model.RegionsList)
+            {
+                <tr>
+                    <td class="company">@item.Company</td>
+                    <td class="region">
+                        <a href="~/Regions/Save?regionId=@item.RegionId" title="Edit Region">@item.Region</a>
+                    </td>
+                    <td class="description">@item.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.IsGetRegion)
+{
+    @Html.DropDownListFor(x => x.RegionId, Model.RegionsDropdownList, "-- Select Region --", new { id = "ddlRegions", @class = "form-control Region Regionfl" })
+}
+
