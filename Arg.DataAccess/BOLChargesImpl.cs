@@ -17,7 +17,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bOLCharges = connection.Query<BOLChargesModel>(query, new { @BolNo = bolNo }).ToList();
+                var bOLCharges = connection.Query<BOLChargesModel>(query, new { BolNo = bolNo }).ToList();
                 return bOLCharges;
             }
         }
@@ -31,7 +31,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bOLOceanCharges = connection.Query<BOLChargesModel>(query, new { @OceanCharges = oceanCharges, @BOLNo = bolNo}).ToList();
+                var bOLOceanCharges = connection.Query<BOLChargesModel>(query, new { OceanCharges = oceanCharges, BOLNo = bolNo}).ToList();
                 return bOLOceanCharges;
             }
         }
@@ -67,7 +67,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var pashaAmountDue = connection.QueryFirstOrDefault<decimal>(query, new { @BolNo = bolNo });
+                var pashaAmountDue = connection.QueryFirstOrDefault<decimal>(query, new { BolNo = bolNo });
                 return pashaAmountDue;
             }
         }
@@ -80,7 +80,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var PashaBDOtherCharges = connection.Query<BOLChargesModel>(query, new { @BolNo = bolNo }).ToList();
+                var PashaBDOtherCharges = connection.Query<BOLChargesModel>(query, new { BolNo = bolNo }).ToList();
                 return PashaBDOtherCharges;
             }
         }

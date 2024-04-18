@@ -19,7 +19,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bookingsRemarks = connection.Query<BookingsRemarks>(query, new { @BolNo = bolNo}).ToList();
+                var bookingsRemarks = connection.Query<BookingsRemarks>(query, new { BolNo = bolNo}).ToList();
                 return bookingsRemarks;
             }
         }

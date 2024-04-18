@@ -11,7 +11,7 @@ namespace Arg.DataAccess
         public List<DataModels.PlaybookComments> GetPlaybookComments(int playId)
         {
             string query = $"SELECT p.*,CONCAT(u.FirstName,' ',u.LastName) AS CollectorName,LEFT(p.Comment,100) AS ShortComment FROM PlaybookComments p" +
-                           $"INNER JOIN {_dbName}..dbo.AspNetUsers u ON u.Id = p.AddedBy" +
+                           $"INNER JOIN {_dbName}.dbo.AspNetUsers u ON u.Id = p.AddedBy" +
                            $"WHERE (p.PlayId=@PlayId OR @PlayId = 0);";
 
             using (var connection = Common.ClientDatabase)

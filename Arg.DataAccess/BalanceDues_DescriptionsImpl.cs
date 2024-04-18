@@ -18,10 +18,9 @@ namespace Arg.DataAccess
                                    OR (@InvoiceType = 'under' AND ErrorType LIKE 'UB%'))
                                    ORDER BY ErrorType, Description;";
 
-            var parameters = new { CompanyId = companyId, InvoiceType = invoiceType };
             using (var connection = Common.Database)
             {
-                var balanceDuesDesc = connection.Query<BalanceDues_Descriptions>(query, parameters).ToList();
+                var balanceDuesDesc = connection.Query<BalanceDues_Descriptions>(query, new { CompanyId = companyId, InvoiceType = invoiceType }).ToList();
                 return balanceDuesDesc;
             }
         }

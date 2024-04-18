@@ -146,7 +146,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var invoicedChargesDetail = connection.Query<InvoiceCharge>(query, new { @BOKPRT = code}).ToList();
+                var invoicedChargesDetail = connection.Query<InvoiceCharge>(query, new { BOKPRT = code}).ToList();
                 return invoicedChargesDetail;
             }
         }

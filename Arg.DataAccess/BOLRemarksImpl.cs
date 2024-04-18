@@ -18,7 +18,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bOLRemarks = connection.Query<BOLRemarks>(query, new { @BolNo = bolNo }).ToList();
+                var bOLRemarks = connection.Query<BOLRemarks>(query, new { BolNo = bolNo }).ToList();
                 return bOLRemarks;
             }
         }

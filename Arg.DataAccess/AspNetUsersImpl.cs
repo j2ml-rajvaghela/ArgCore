@@ -114,7 +114,7 @@ namespace Arg.DataAccess
             const string query = "DELETE FROM AspNetUsers WHERE Id=@UserId;";
             using (var connection = Common.Database)
             { 
-                var result = connection.Execute(query, new { @UserId = userId });
+                var result = connection.Execute(query, new { UserId = userId });
                 return result;
             }
         }

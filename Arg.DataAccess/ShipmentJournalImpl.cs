@@ -19,7 +19,7 @@ namespace Arg.DataAccess
                
             using (var connection = Common.ClientDatabase)
             {
-                var shipment = connection.QueryFirstOrDefault<ShipmentJournal>(query, new { @ShipmentNo = shipmentNo });
+                var shipment = connection.QueryFirstOrDefault<ShipmentJournal>(query, new { ShipmentNo = shipmentNo });
                 return shipment;
             }
         }

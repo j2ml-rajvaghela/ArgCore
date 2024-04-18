@@ -18,7 +18,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.Database)
             {
-                var queryResults = connection.Query<DataModels.BOLAuditSorting>(query, new { @ClientId = clientId, @LoginId = loginId} ).ToList();
+                var queryResults = connection.Query<DataModels.BOLAuditSorting>(query, new { ClientId = clientId, LoginId = loginId } ).ToList();
                 return queryResults;
             }
         }
@@ -37,7 +37,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.Database)
             {
-                var deleteSorting = connection.Execute(query, new { @ClientId = clientId, @LoginId = loginId });
+                var deleteSorting = connection.Execute(query, new { ClientId = clientId, LoginId = loginId });
                 return deleteSorting;
             }
         }

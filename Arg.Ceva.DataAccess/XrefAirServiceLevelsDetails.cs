@@ -37,7 +37,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var servlVlDescription = connection.QueryFirstOrDefault<XrefAirServiceLevelsDetail>(query, new { @SERVLVL = code });
+                var servlVlDescription = connection.QueryFirstOrDefault<XrefAirServiceLevelsDetail>(query, new { SERVLVL = code });
                 return servlVlDescription;
             }
         }

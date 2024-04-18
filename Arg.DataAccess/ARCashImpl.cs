@@ -17,7 +17,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var amountPaid = connection.ExecuteScalar<decimal>(query, parameters);
+                var amountPaid = connection.ExecuteScalar<decimal>(query, new { @BOL = bolNo, @PayorID = customerId });
                 return amountPaid;
             }
         }

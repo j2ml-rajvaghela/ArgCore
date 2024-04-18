@@ -54,7 +54,7 @@ namespace Arg.DataAccess
             const string query = "DELETE FROM TableSettings WHERE TableSettId=@MappingId;";
             using (var connection = Common.ClientDatabase)
             {
-                var result = connection.Execute(query, new { @MappingId = mappingId });
+                var result = connection.Execute(query, new { MappingId = mappingId });
                 return result;
             }
         }

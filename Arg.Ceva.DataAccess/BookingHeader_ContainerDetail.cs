@@ -105,7 +105,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var containerDetail = connection.Query<ContainerDetail>(query, new { HBLNO = HBLNO}).ToList();
+                var containerDetail = connection.Query<ContainerDetail>(query, new { @HBLNO = HBLNO}).ToList();
                 return containerDetail;
             }
         }

@@ -22,7 +22,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var participants = connection.QueryFirstOrDefault<DataModels.Participants>(query, new { @ParticipantId  = customerId });
+                var participants = connection.QueryFirstOrDefault<DataModels.Participants>(query, new { ParticipantId  = customerId });
                 return participants;
             }
         }

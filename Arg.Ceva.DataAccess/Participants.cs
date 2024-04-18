@@ -34,7 +34,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var shipper = connection.QueryFirstOrDefault<Participant>(query, new { @ParticipantID = SHPRNO });
+                var shipper = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = SHPRNO });
                 return shipper;
             }
         }
@@ -46,7 +46,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var payor = connection.QueryFirstOrDefault<Participant>(query, new { @ParticipantID = CSORNO });
+                var payor = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = CSORNO });
                 return payor;
             }
         }
@@ -76,7 +76,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var consignee = connection.QueryFirstOrDefault<Participant>(query, new { @ParticipantID = CSEENO});
+                var consignee = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = CSEENO});
                 return consignee;
             }
         }

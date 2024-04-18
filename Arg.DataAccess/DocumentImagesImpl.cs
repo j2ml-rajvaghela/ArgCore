@@ -16,7 +16,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var documentImages = connection.Query<DocumentImages>(query, new { @BolNo = bolNo, @BookingId = bookingId }).ToList();
+                var documentImages = connection.Query<DocumentImages>(query, new { BolNo = bolNo, BookingId = bookingId }).ToList();
                 var files = new List<DocumentImages>();
                 var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
                 files.AddRange(pf);

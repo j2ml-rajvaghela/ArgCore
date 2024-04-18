@@ -19,7 +19,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bookingInfo = connection.QueryFirstOrDefault<Bookings>(query, new { @BolNo = bolNo});
+                var bookingInfo = connection.QueryFirstOrDefault<Bookings>(query, new { BolNo = bolNo});
                 return bookingInfo;
             }
         }
@@ -34,7 +34,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bookingItemDetail = connection.QueryFirstOrDefault<Bookings>(query, new { @BolNo = bolNo });
+                var bookingItemDetail = connection.QueryFirstOrDefault<Bookings>(query, new { BolNo = bolNo });
                 return bookingItemDetail;
             }
         }
@@ -54,7 +54,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bolHeaderSection = connection.QueryFirstOrDefault<Bookings>(query, new { @BolNo = bolNo });
+                var bolHeaderSection = connection.QueryFirstOrDefault<Bookings>(query, new { BolNo = bolNo });
                 return bolHeaderSection;
             }
         }

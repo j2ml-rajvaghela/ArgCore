@@ -49,7 +49,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var pol = connection.QueryFirstOrDefault<Location>(query, new { @LocationID = code });
+                var pol = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
                 return pol;
             }
         }
@@ -61,7 +61,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var pod = connection.QueryFirstOrDefault<Location>(query, new { @LocationID = code});
+                var pod = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code});
                 return pod;
             }
         }

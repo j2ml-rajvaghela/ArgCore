@@ -32,7 +32,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bOLReferences = connection.Query<DataModels.BOLReference>(query, new { @BolNo = bolNo }).ToList();
+                var bOLReferences = connection.Query<DataModels.BOLReference>(query, new { BolNo = bolNo }).ToList();
                 return bOLReferences;
             }
         }
@@ -44,7 +44,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bOLReference = connection.QueryFirstOrDefault<DataModels.BOLReference>(query, new { @BolNo = bolNo, @RefType = refType });
+                var bOLReference = connection.QueryFirstOrDefault<DataModels.BOLReference>(query, new { BolNo = bolNo, RefType = refType });
                 return bOLReference;
             }
         }

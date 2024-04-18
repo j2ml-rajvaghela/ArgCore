@@ -20,7 +20,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var bOLItemDetail = connection.Query<BOLCommodity>(query, new { @BolNO  = bolNo }).ToList();
+                var bOLItemDetail = connection.Query<BOLCommodity>(query, new { BolNO  = bolNo }).ToList();
                 return bOLItemDetail;
             }
         }

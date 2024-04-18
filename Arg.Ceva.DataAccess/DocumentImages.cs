@@ -117,7 +117,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var documentImages = connection.Query<DocumentImage>(query, new { @HAWBBLNO = bolNo }).ToList();
+                var documentImages = connection.Query<DocumentImage>(query, new { HAWBBLNO = bolNo }).ToList();
                 var files = new List<DocumentImage>();
                 var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
                 files.AddRange(pf);

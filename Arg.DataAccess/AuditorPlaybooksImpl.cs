@@ -34,7 +34,7 @@ namespace Arg.DataAccess
             
             using (var connection = Common.ClientDatabase)
             {
-                var auditorPlaybook = connection.QueryFirstOrDefault<DataModels.AuditorPlaybook>(query, new { @PlayId = playId, @CompanyId = companyId });
+                var auditorPlaybook = connection.QueryFirstOrDefault<DataModels.AuditorPlaybook>(query, new { PlayId = playId, CompanyId = companyId });
                 return auditorPlaybook;
             }
         }
@@ -54,7 +54,7 @@ namespace Arg.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var result = connection.Execute(query, new { @PlayId = playId, @CompanyId = companyId });
+                var result = connection.Execute(query, new { PlayId = playId, CompanyId = companyId });
                 return result;
             }
         }

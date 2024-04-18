@@ -102,7 +102,7 @@ namespace Arg.Ceva.DataAccess
 
             using (var connection = Common.ClientDatabase)
             {
-                var invoicedChargesDetail = connection.Query<InvoiceHeader>(query, new { @BOKPRT = BOKPRT }).ToList();
+                var invoicedChargesDetail = connection.Query<InvoiceHeader>(query, new { BOKPRT = BOKPRT }).ToList();
                 return invoicedChargesDetail;
             }
         }
