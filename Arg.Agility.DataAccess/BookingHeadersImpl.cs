@@ -46,9 +46,7 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.PortOfExit IS NOT NULL
                                    ORDER BY PortOfExit;";
 
-
             return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-
         }
 
         public List<BOLHeaders> GetPortofEntry()
@@ -59,9 +57,7 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.PortOfEntry IS NOT NULL
                                    ORDER BY PortOfEntry;";
 
-
             return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-
         }
 
         public List<BOLHeaders> GetServiceMovementType()
@@ -71,9 +67,7 @@ namespace Arg.Agility.DataAccess
                                    WHERE ServiceMovementType <> 'null'
                                    ORDER BY ServiceMovementType;";
 
-
             return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-
         }
 
         public string GetCarrierName(string carrierCode)
@@ -82,10 +76,7 @@ namespace Arg.Agility.DataAccess
                                    FROM Carriers 
                                    WHERE CarrierCode=@CarrierCode;";
 
-
             return _connection.QueryFirstOrDefault<string>(query, new { CarrierCode = carrierCode });
-
-
         }
 
         public BOLHeaders GetBOLHeaderSection(string jobNumber)
@@ -100,9 +91,7 @@ namespace Arg.Agility.DataAccess
                                    LEFT JOIN BOLHeaders bh ON bh.JobNumber = h.JobNumber 
                                    WHERE h.JobNumber=@JobNumber;";
 
-
             return _connection.QueryFirstOrDefault<BOLHeaders>(query, new { JobNumber = jobNumber });
-
         }
 
         public ShipmentTrackingDetails GetShipmentTrackingDetails(string jobNumber)
@@ -131,7 +120,6 @@ namespace Arg.Agility.DataAccess
                                    actunittaxw AS ActUnitTaxW FROM BOLContainerDetails h
                                    WHERE h.jobnumber=@JobNumber;";
 
-
             return _connection.Query<BOLContainerDetails>(query, new { @JobNumber = jobNumber }).ToList();
         }
 
@@ -145,7 +133,6 @@ namespace Arg.Agility.DataAccess
                                    ORDER BY ClientID, InvoiceNumber, InvoiceDate,ClientIDName,InvoiceCurrency;";
 
             return _connection.Query<SalesInvoices>(query, new { @JobNumber = jobNumber }).ToList();
-
         }
 
         public List<PurchaseInvoices> GetSupplierInvoicing(string jobNumber)
@@ -155,10 +142,7 @@ namespace Arg.Agility.DataAccess
                                    WHERE h.JobNumber=@JobNumber
                                    ORDER BY SupplierID, InvoiceNumber;";
 
-
             return _connection.Query<PurchaseInvoices>(query, new { @JobNumber = jobNumber }).ToList();
-
-
         }
 
         public List<DocumentImages> GetDocumentImage(string jobNumber)
