@@ -44,8 +44,8 @@ namespace Arg.DataAccess
 {
     public class Common
     {
-        public static AspNetRolesImpl AspNetRoles = new AspNetRolesImpl();
-        public static AppActionsImpl AppActions = new AppActionsImpl();
+        public static readonly AspNetRolesImpl AspNetRoles = new();
+        public static readonly AppActionsImpl AppActions = new();
 
 
         private static IConfiguration _configuration;
@@ -56,7 +56,6 @@ namespace Arg.DataAccess
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;  
         }
-
 
         public static string GetIPAddress()
         {
@@ -141,26 +140,12 @@ namespace Arg.DataAccess
         {
             get
             {
-                if (_httpContextAccessor.HttpContext == null)
+                if (_httpContextAccessor?.HttpContext?.User?.Identity == null)
                 {
                     return "";
                 }
-
-                if (_httpContextAccessor.HttpContext.User == null)
-                {
-                    return "";
-                }
-
-                System.Security.Principal.IPrincipal currentUser = _httpContextAccessor.HttpContext.User;
-
-                if (currentUser.Identity == null)
-                {
-                    return "";
-                }
-
-                var userId = "35f7710d-ba3e-4e3d-96c0-6013518d8e59";                  //currentUser.Identity.Name;
-                return userId;
-            }
+                return _httpContextAccessor.HttpContext.User.Identity.Name ?? ""; // var userId = "35f7710d-ba3e-4e3d-96c0-6013518d8e59";  
+            } 
         }
 
         public static string CurrentUserName
@@ -182,17 +167,12 @@ namespace Arg.DataAccess
         {
             get
             {
-                var currentUserRole = "";
-                if (CurrentUserId.Length <= 0)
+                if (string.IsNullOrEmpty(CurrentUserId))
                 {
                     return "";
                 }
                 var userRoles = AspNetRoles.GetAspNetUserRole(CurrentUserId);
-                if (userRoles != null)
-                {
-                    currentUserRole = userRoles.RoleName;
-                }
-                return currentUserRole;
+                return userRoles?.RoleName ?? "";
             }
         }
 
@@ -234,12 +214,27 @@ namespace Arg.DataAccess
 
         public static class CanRunAction
         {
+            // Research Items
             public static bool ViewAllClientBalanceDueActivity => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientBalanceDueActivity);
             public static bool CloseResearchItem => IsActionAssignedToCurrentRole(GlobalObjects.CloseResearchItem);
+
+            // BolAuditingResults
+            public static bool BolAuditingResultsShowNavigation => IsActionAssignedToCurrentRole(GlobalObjects.BolAuditingResultsShowNavigation);
+
+            // Dashboard
+            public static bool ClientDashboard => IsActionAssignedToCurrentRole(GlobalObjects.ClientDashboard);
+            public static bool ViewAllWeeklyBalanceDuesCollected => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllWeeklyBalanceDuesCollected);
+            public static bool ViewAllClientPendingBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingBalanceDues);
+            public static bool ViewAllClientPendingApprovalBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingApprovalBalanceDues);
+            public static bool ViewOpenInvoices => IsActionAssignedToCurrentRole(GlobalObjects.ViewOpenInvoices);
+
+            // ARGInvoices
             public static bool AddNewInvoice => IsActionAssignedToCurrentRole(GlobalObjects.AddNewInvoice);
             public static bool AddBDToInvoice => IsActionAssignedToCurrentRole(GlobalObjects.AddBDToInvoice);
             public static bool InvoiceCommissions => IsActionAssignedToCurrentRole(GlobalObjects.InvoiceCommissions);
             public static bool PostingInvoicePayment => IsActionAssignedToCurrentRole(GlobalObjects.PostingInvoicePayment);
+
+            // Balance Dues
             public static bool GenerateAuditReview => IsActionAssignedToCurrentRole(GlobalObjects.GenerateAuditReview);
             public static bool GenerateCustStatements => IsActionAssignedToCurrentRole(GlobalObjects.GenerateCustStatements);
             public static bool EmailCustomerStatements => IsActionAssignedToCurrentRole(GlobalObjects.EmailCustomerStatements);
@@ -251,11 +246,18 @@ namespace Arg.DataAccess
             public static bool ChangeCollectionStatus => IsActionAssignedToCurrentRole(GlobalObjects.ChangeCollectionStatus);
             public static bool EditBDRevenueAnalystFields => IsActionAssignedToCurrentRole(GlobalObjects.EditBDRevenueAnalystFields);
             public static bool AddBalanceDue => IsActionAssignedToCurrentRole(GlobalObjects.AddBalanceDue);
+
+            // AuditorPlaybook
             public static bool AddAuditorPlaybookSQL => IsActionAssignedToCurrentRole(GlobalObjects.AddAuditorPlaybookSQL);
             public static bool PlayAuditorPlaybook => IsActionAssignedToCurrentRole(GlobalObjects.PlayAuditorPlaybook);
             public static bool DeleteAuditorPlaybook => IsActionAssignedToCurrentRole(GlobalObjects.DeleteAuditorPlaybook);
             public static bool UpdateAuditorPlaybook => IsActionAssignedToCurrentRole(GlobalObjects.UpdateAuditorPlaybook);
             public static bool UpdateAuditorPlaybookSQL => IsActionAssignedToCurrentRole(GlobalObjects.UpdateAuditorPlaybookSQL);
+
+            // Commissions
+            public static bool ViewAllClientCommissions => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientCommissions);
+
+            //View Other User Role Commissions
             public static bool ViewOtherUserRoleCommissionsClientManager => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsClientManager);
             public static bool ViewOtherUserRoleCommissionsARGSalesAnalyst => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsARGSalesAnalyst);
             public static bool ViewOtherUserRoleCommissionsARGManager => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsARGManager);
@@ -263,43 +265,54 @@ namespace Arg.DataAccess
             public static bool ViewOtherUserRoleCommissionsInfoXRevenueAnalyst => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsInfoXRevenueAnalyst);
             public static bool ViewOtherUserRoleCommissionsInfoXAuditManage => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsInfoXAuditManage);
             public static bool ViewOtherUserRoleCommissionsRevenueAnalyst => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsRevenueAnalyst);
-            public static bool ClientDashboard => IsActionAssignedToCurrentRole(GlobalObjects.ClientDashboard);
-            public static bool ViewAllWeeklyBalanceDuesCollected => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllWeeklyBalanceDuesCollected);
-            public static bool ViewAllClientPendingBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingBalanceDues);
-            public static bool ViewAllClientPendingApprovalBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingApprovalBalanceDues);
-            public static bool ViewOpenInvoices => IsActionAssignedToCurrentRole(GlobalObjects.ViewOpenInvoices);
-            public static bool BolAuditingResultsShowNavigation => IsActionAssignedToCurrentRole(GlobalObjects.BolAuditingResultsShowNavigation);
-            public static bool ViewAllClientCommissions => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientCommissions);
-
         }
 
         public static class GlobalObjects
         {
+            // Research Items
             public static string CloseResearchItem = "ResearchItems.CloseResearchItem";
+
+            // BolAuditingResults
             public static string BolAuditingResultsShowNavigation = "BolAuditingResults.ShowNavigation";
+
+            // Dashboard
             public static string ViewAllClientBalanceDueActivity = "Dashboard.ViewAllClientBalanceDueActivity";
+            public static string ClientDashboard = "Dashboard.Client";
+            public static string ViewOpenInvoices = "Dashboard.ViewOpenInvoices";
+            public static string ViewAllClientPendingBalanceDues = "Dashboard.ViewAllClientPendingBalanceDues";
+            public static string ViewAllWeeklyBalanceDuesCollected = "Dashboard.ViewAllWeeklyBalanceDuesCollected";
+            public static string ViewAllClientPendingApprovalBalanceDues = "Dashboard.ViewAllClientPendingApprovalBalanceDues";
+
+            // ARGInvoices
             public static string AddNewInvoice = "ARGInvoices.AddNewInvoice";
             public static string AddBDToInvoice = "ARGInvoices.AddBDToInvoice";
             public static string InvoiceCommissions = "ARGInvoices.Commissions";
             public static string PostingInvoicePayment = "ARGInvoices.PostingInvoicePayment";
+
+            // Balance Dues
             public static string GenerateAuditReview = "BalanceDues.GenerateAuditReview";
             public static string GenerateCustStatements = "BalanceDues.GenerateCustomerStatements";
-            //not used ends
             public static string EmailCustomerStatements = "BalanceDues.EmailCustomerStatements";
             public static string BDOutputToSpreadsheet = "BalanceDues.BDOutputToSpreadsheet";
             public static string EditCustomerOnBDScreen = "BalanceDues.EditCustomer";
             public static string ViewBDInfo = "BalanceDues.ViewBDInfo";
             public static string BDAmountPaidPopUp = "BalanceDues.PostPayment";
-            //not used
             public static string ChangeBDStatusTo = "BalanceDues.ChangeBalanceDueStatusto";
             public static string ChangeCollectionStatus = "BalanceDues.ChangeCollectionStatus";
             public static string EditBDRevenueAnalystFields = "BalanceDues.EditBDRevenueAnalystFields";
             public static string AddBalanceDue = "AuditingScreen.AddBalanceDue";
+
+            // AuditorPlaybook
             public static string AddAuditorPlaybookSQL = "AuditorPlaybookSQL.Add";
             public static string DeleteAuditorPlaybook = "AuditorPlaybook.Delete";
             public static string UpdateAuditorPlaybook = "AuditorPlaybook.Update";
             public static string PlayAuditorPlaybook = "AuditorPlaybook.Play";
             public static string UpdateAuditorPlaybookSQL = "AuditorPlaybookSQL.Update";
+
+            // Commissions
+            public static string ViewAllClientCommissions = "Commissions.ViewAllClientCommissions";
+
+            // View Other User Role Commissions
             public static string ViewOtherUserRoleCommissionsClientManager = "ViewOtherUserRoleCommissionsClientManager";
             public static string ViewOtherUserRoleCommissionsARGSalesAnalyst = "ViewOtherUserRoleCommissionsARGSalesAnalyst";
             public static string ViewOtherUserRoleCommissionsARGManager = "ViewOtherUserRoleCommissionsARGManager";
@@ -307,12 +320,7 @@ namespace Arg.DataAccess
             public static string ViewOtherUserRoleCommissionsInfoXRevenueAnalyst = "ViewOtherUserRoleCommissionsInfoXRevenueAnalyst";
             public static string ViewOtherUserRoleCommissionsInfoXAuditManage = "ViewOtherUserRoleCommissionsInfoXAuditManager";
             public static string ViewOtherUserRoleCommissionsRevenueAnalyst = "ViewOtherUserRoleCommissionsRevenueAnalyst";
-            public static string ClientDashboard = "Dashboard.Client";
-            public static string ViewOpenInvoices = "Dashboard.ViewOpenInvoices";
-            public static string ViewAllClientPendingBalanceDues = "Dashboard.ViewAllClientPendingBalanceDues";
-            public static string ViewAllWeeklyBalanceDuesCollected = "Dashboard.ViewAllWeeklyBalanceDuesCollected";
-            public static string ViewAllClientPendingApprovalBalanceDues = "Dashboard.ViewAllClientPendingApprovalBalanceDues";
-            public static string ViewAllClientCommissions = "Commissions.ViewAllClientCommissions";
+
         }
     }
 }

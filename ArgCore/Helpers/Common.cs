@@ -2,6 +2,7 @@
 using Arg.Ceva.DataAccess;
 using Arg.DataAccess;
 using Arg.DataModels;
+using ArgCore.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
@@ -83,92 +84,91 @@ namespace ArgCore.Helpers
                 return db;
         }
 
-        public static ActivityStatsImpl ActivityStats = new ActivityStatsImpl();
-        public static AspNetUsersImpl AspNetUsers = new AspNetUsersImpl();
-        public static AspNetRolesImpl AspNetRoles = new AspNetRolesImpl();
-        public static AspNetUserRolesImpl AspNetUserRoles = new AspNetUserRolesImpl();
-        public static TemplatesImpl Templates = new TemplatesImpl();
-        public static IPAddressRestrictionImpl IPAddressRestriction = new IPAddressRestrictionImpl();
-        public static TemplateCatsImpl TemplateCats = new TemplateCatsImpl();
-        public static RSReasonCodesImpl RSReasonCodes = new RSReasonCodesImpl();
-        public static MenuItemsImpl MenuItems = new MenuItemsImpl();
-        public static MenusImpl Menus = new MenusImpl();
-        public static RegionsImpl Regions = new RegionsImpl();
-        public static CustomersImpl Customers = new CustomersImpl();
-        public static ArgClientsImpl ArgClients = new ArgClientsImpl();
-        public static SettingGroupsImpl SettingGroups = new SettingGroupsImpl();
-        public static SettingsImpl Settings = new SettingsImpl();
-        public static BalanceDues_Customers_ContactsImpl CustomerContacts = new BalanceDues_Customers_ContactsImpl();
-        public static BdErrorCodesImpl BDErrorCodes = new BdErrorCodesImpl();
-        public static ClientSMTPAccountsImpl ClientSMTPAccounts = new ClientSMTPAccountsImpl();
-        public static CurrencyConversionRatesImpl CurrencyConversionRates = new CurrencyConversionRatesImpl();
-        public static CommissionRatesImpl CommissionRates = new CommissionRatesImpl();
-        public static CommissionsImpl Commissions = new CommissionsImpl();
-        public static AppActionsImpl AppActions = new AppActionsImpl();
-        public static UserCompanyRelsImpl UserCompanyRels = new UserCompanyRelsImpl();
-        public static AppActionRoleRelsImpl AppActionRoleRels = new AppActionRoleRelsImpl();
-        public static BdOtherChargeCodesImpl bdOtherChargeCodes = new BdOtherChargeCodesImpl();
-        public static ResearchItemsImpl ResearchItems = new ResearchItemsImpl();
-        public static ArgInvoicesImpl ArgInvoices = new ArgInvoicesImpl();
-        public static BalanceDuesImpl BalanceDues = new BalanceDuesImpl();
-        public static RoleMenuRelsImpl RoleMenuRels = new RoleMenuRelsImpl();
-        public static ClientsImpl Clients = new ClientsImpl();
-        public static Countries Countries = new Countries();
-        public static BOLHeaderImpl BOLHeader = new BOLHeaderImpl();
-        public static BookingHeader BookingHeaders = new BookingHeader();
-        public static MappingsImpl Mappings = new MappingsImpl();
-        public static TableSettingsImpl TableSettings = new TableSettingsImpl();
-        public static ArgInvoicesBDImpl ArgInvoicesBD = new ArgInvoicesBDImpl();
-        public static BalanceDues_PaymentsImpl BalanceDuesPayments = new BalanceDues_PaymentsImpl();
-        public static CollectionCommentsImpl CollectionComments = new CollectionCommentsImpl();
-        public static ArgInvoices_PaymentsImpl ArgInvoicePayments = new ArgInvoices_PaymentsImpl();
-        public static BalanceDues_OtherChargesImpl BalanceDuesOtherCharges = new BalanceDues_OtherChargesImpl();
-        public static ARCashImpl ARCash = new ARCashImpl();
-        public static QueryResultsImpl QueryResults = new QueryResultsImpl();
-        public static XrefAirServiceLevels XrefAirServiceLevels = new XrefAirServiceLevels();
-        public static XrefAirServiceLevelsDetails XrefAirServiceLevelsDetails = new XrefAirServiceLevelsDetails();
-        public static BookingHeader_ContainerDetail ContainerDetails = new BookingHeader_ContainerDetail();
-        public static Arg.Ceva.DataAccess.DocumentImages DocImages = new Arg.Ceva.DataAccess.DocumentImages();
-        public static InvoiceCharges InvoiceCharges = new InvoiceCharges();
-        public static XrefBookingTypes XrefBookingTypes = new XrefBookingTypes();
-        public static Arg.Ceva.DataAccess.Participants Participant = new Arg.Ceva.DataAccess.Participants();
-        public static XrefPackagingCodes XrefPackagingCodes = new XrefPackagingCodes();
-        public static XrefOceanCarriers XrefOceanCarriers = new XrefOceanCarriers();
-        public static XrefGoodsTypes XrefGoodsTypes = new XrefGoodsTypes();
-        public static Locations Location = new Locations();
-        public static XrefCountries XrefCountries = new XrefCountries();
-        public static XrefAirCarriers XrefAirCarriers = new XrefAirCarriers();
-        public static BalanceDues_DescriptionsImpl BalanceDuesDescriptions = new BalanceDues_DescriptionsImpl();
-        public static BDOtherChargeCodeImpl BDOtherChargesCodes = new BDOtherChargeCodeImpl();
-        public static BalanceDues_CollectionStatusesImpl CollectionStatuses = new BalanceDues_CollectionStatusesImpl();
-        public static GmailUtilities GmailUtilities = new GmailUtilities();
-        public static InvoiceSummaryImpl InvoiceSummary = new InvoiceSummaryImpl();
-        public static BalanceDues_CloseReasonCodesImpl CloseReasonCode = new BalanceDues_CloseReasonCodesImpl();
-        public static BOLAuditSortingImpl BOLAuditSorting = new BOLAuditSortingImpl();
-        public static AuditorPlaybooksImpl AuditorPlaybooks = new AuditorPlaybooksImpl();
-        public static PlaybookCommentImpl PlaybookComment = new PlaybookCommentImpl();
-        public static ShipmentJournalImpl ShipmentJournal = new ShipmentJournalImpl();
-        public static AgilityBOLHeaderImpl AgilityBOLHeader = new AgilityBOLHeaderImpl();
-        public static BOLChargesImpl BOLCharges = new BOLChargesImpl();
-        public static AgilityQueryResultsImpl AgilityQueryResults = new AgilityQueryResultsImpl();
-        public static ContainerEventTypesImpl ContainerEventTypes = new ContainerEventTypesImpl();
-        public static BOLContainersImpl BOLContainers = new BOLContainersImpl();
-        public static BOLHazardousImpl BOLHazardous = new BOLHazardousImpl();
-        public static BOLReferenceImpl BOLReference = new BOLReferenceImpl();
-        public static BOLContainerDetailsImpl ContainerDetailsImpl = new BOLContainerDetailsImpl();
-        public static BookingsImpl Bookings = new BookingsImpl();
-        public static Arg.DataAccess.DocumentImagesImpl DocumentImages = new Arg.DataAccess.DocumentImagesImpl();
-        public static BOLCommodityImpl BOLCommodity = new BOLCommodityImpl();
-        public static ContainerEventHistoryImpl ContainerEventHistory = new ContainerEventHistoryImpl();
-        public static BookingsRemarksImpl BookingsRemarks = new BookingsRemarksImpl();
-        public static BookingsNotesImpl BookingsNotes = new BookingsNotesImpl();
-        public static BOLRemarksImpl BOLRemarks = new BOLRemarksImpl();
-        public static BookingHeadersImpl AgilityBookingHeaders = new BookingHeadersImpl();
-        public static ParticipantsImpl Participants = new ParticipantsImpl();
-        public static SalesInvoicesImpl salesBOLCharges = new SalesInvoicesImpl();
+        public static readonly ActivityStatsImpl ActivityStats = new();
+        public static readonly AspNetUsersImpl AspNetUsers = new();
+        public static readonly AspNetRolesImpl AspNetRoles = new();
+        public static readonly AspNetUserRolesImpl AspNetUserRoles = new();
+        public static readonly  TemplatesImpl Templates = new();
+        public static readonly IPAddressRestrictionImpl IPAddressRestriction = new();
+        public static readonly TemplateCatsImpl TemplateCats = new();
+        public static readonly RSReasonCodesImpl RSReasonCodes = new();
+        public static readonly MenuItemsImpl MenuItems = new();
+        public static readonly MenusImpl Menus = new();
+        public static readonly RegionsImpl Regions = new();
+        public static readonly CustomersImpl Customers = new();
+        public static readonly ArgClientsImpl ArgClients = new();
+        public static readonly SettingGroupsImpl SettingGroups = new();
+        public static readonly SettingsImpl Settings = new();
+        public static readonly BalanceDues_Customers_ContactsImpl CustomerContacts = new();
+        public static readonly BdErrorCodesImpl BDErrorCodes = new();
+        public static readonly ClientSMTPAccountsImpl ClientSMTPAccounts = new();
+        public static readonly CurrencyConversionRatesImpl CurrencyConversionRates = new();
+        public static readonly CommissionRatesImpl CommissionRates = new();
+        public static readonly CommissionsImpl Commissions = new();
+        public static readonly AppActionsImpl AppActions = new();
+        public static readonly UserCompanyRelsImpl UserCompanyRels = new();
+        public static readonly AppActionRoleRelsImpl AppActionRoleRels = new();
+        public static readonly BdOtherChargeCodesImpl bdOtherChargeCodes = new();
+        public static readonly ResearchItemsImpl ResearchItems = new();
+        public static readonly ArgInvoicesImpl ArgInvoices = new();
+        public static readonly BalanceDuesImpl BalanceDues = new();
+        public static readonly RoleMenuRelsImpl RoleMenuRels = new();
+        public static readonly ClientsImpl Clients = new();
+        public static readonly Countries Countries = new();
+        public static readonly BOLHeaderImpl BOLHeader = new();
+        public static readonly BookingHeader BookingHeaders = new();
+        public static readonly MappingsImpl Mappings = new();
+        public static readonly TableSettingsImpl TableSettings = new();
+        public static readonly ArgInvoicesBDImpl ArgInvoicesBD = new();
+        public static readonly BalanceDues_PaymentsImpl BalanceDuesPayments = new();
+        public static readonly CollectionCommentsImpl CollectionComments = new();
+        public static readonly ArgInvoices_PaymentsImpl ArgInvoicePayments = new();
+        public static readonly BalanceDues_OtherChargesImpl BalanceDuesOtherCharges = new();
+        public static readonly ARCashImpl ARCash = new();
+        public static readonly QueryResultsImpl QueryResults = new();
+        public static readonly XrefAirServiceLevels XrefAirServiceLevels = new();
+        public static readonly XrefAirServiceLevelsDetails XrefAirServiceLevelsDetails = new();
+        public static readonly BookingHeader_ContainerDetail ContainerDetails = new();
+        public static readonly Arg.Ceva.DataAccess.DocumentImages DocImages = new();
+        public static readonly InvoiceCharges InvoiceCharges = new();
+        public static readonly XrefBookingTypes XrefBookingTypes = new();
+        public static readonly Arg.Ceva.DataAccess.Participants Participant = new();
+        public static readonly XrefPackagingCodes XrefPackagingCodes = new();
+        public static readonly XrefOceanCarriers XrefOceanCarriers = new();
+        public static readonly XrefGoodsTypes XrefGoodsTypes = new();
+        public static readonly Locations Location = new();
+        public static readonly XrefCountries XrefCountries = new();
+        public static readonly XrefAirCarriers XrefAirCarriers = new();
+        public static readonly BalanceDues_DescriptionsImpl BalanceDuesDescriptions = new();
+        public static readonly BDOtherChargeCodeImpl BDOtherChargesCodes = new();
+        public static readonly BalanceDues_CollectionStatusesImpl CollectionStatuses = new();
+        public static readonly GmailUtilities GmailUtilities = new();
+        public static readonly InvoiceSummaryImpl InvoiceSummary = new();
+        public static readonly BalanceDues_CloseReasonCodesImpl CloseReasonCode = new();
+        public static readonly BOLAuditSortingImpl BOLAuditSorting = new();
+        public static readonly AuditorPlaybooksImpl AuditorPlaybooks = new();
+        public static readonly PlaybookCommentImpl PlaybookComment = new();
+        public static readonly ShipmentJournalImpl ShipmentJournal = new();
+        public static readonly AgilityBOLHeaderImpl AgilityBOLHeader = new();
+        public static readonly BOLChargesImpl BOLCharges = new BOLChargesImpl();
+        public static readonly AgilityQueryResultsImpl AgilityQueryResults = new();
+        public static readonly ContainerEventTypesImpl ContainerEventTypes = new();
+        public static readonly BOLContainersImpl BOLContainers = new();
+        public static readonly BOLHazardousImpl BOLHazardous = new();
+        public static readonly BOLReferenceImpl BOLReference = new();
+        public static readonly BOLContainerDetailsImpl ContainerDetailsImpl = new();
+        public static readonly BookingsImpl Bookings = new();
+        public static readonly Arg.DataAccess.DocumentImagesImpl DocumentImages = new();
+        public static readonly BOLCommodityImpl BOLCommodity = new BOLCommodityImpl();
+        public static readonly ContainerEventHistoryImpl ContainerEventHistory = new();
+        public static readonly BookingsRemarksImpl BookingsRemarks = new();
+        public static readonly BookingsNotesImpl BookingsNotes = new();
+        public static readonly BOLRemarksImpl BOLRemarks = new();
+        public static readonly BookingHeadersImpl AgilityBookingHeaders = new();
+        public static readonly ParticipantsImpl Participants = new();
+        public static readonly SalesInvoicesImpl salesBOLCharges = new();
 
-        public static ApplicationUserManager UserManager => _httpContextAccessor.HttpContext.RequestServices.GetService(typeof(ApplicationUserManager))
-                                                              as ApplicationUserManager;
+        public static ApplicationUserManager UserManager => _httpContextAccessor.HttpContext.RequestServices.GetService(typeof(ApplicationUserManager)) as ApplicationUserManager;
         public static string CurrentUserRoleId => AspNetRoles.GetAspNetRoleByName(CurrentUserRole)?.Id ?? "";
         public static IPrincipal CurrentUser => _httpContextAccessor.HttpContext?.User;
         public static string CurrentUserName => CurrentUser?.Identity?.Name?.Substring(CurrentUser.Identity.Name.IndexOf(@"\") + 1);
@@ -216,11 +216,11 @@ namespace ArgCore.Helpers
         }
 
 
-        public static List<string> ImportProgress = new List<string>();
-        public static string[] Scopes = { SheetsService.Scope.Spreadsheets, SheetsService.Scope.Drive };
+        public static List<string> ImportProgress { get; } = new List<string>();
+        public static string[] Scopes { get; } = { SheetsService.Scope.Spreadsheets, SheetsService.Scope.Drive };
         //public static string ApplicationName = "atlasv1-152711";
-        public static string ApplicationName = "level-facility-222705";
-        public static UserCredential _cred;
+        public static string ApplicationName { get; } = "level-facility-222705";
+        public static readonly UserCredential _cred;
 
         public static UserCredential UserCredential
         {
@@ -309,8 +309,6 @@ namespace ArgCore.Helpers
 
                 var userId = "35f7710d-ba3e-4e3d-96c0-6013518d8e59";   //currentUser.Identity.GetUserId();
                 return userId ?? "";
-                //var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                //return userId ?? "";
             }
         }
         public static string MyAppRoot
@@ -365,12 +363,12 @@ namespace ArgCore.Helpers
             }
         }
 
-        public static string[] StatusOptions = { "Open", "Closed" };
-        public static string[] ChargeCodeOperators = { "=", "<>" };
-        public static string[] InvoiceTypes = { "BOL Overcharge", "BOL Under-billing" };
+        public static readonly string[] StatusOptions = { "Open", "Closed" };
+        public static readonly string[] ChargeCodeOperators = { "=", "<>" };
+        public static readonly string[] InvoiceTypes = { "BOL Overcharge", "BOL Under-billing" };
 
 
-        public static List<SelectListItem> SSISReports = new List<SelectListItem>
+        public static readonly List<SelectListItem> SSISReports = new()
         {
             new SelectListItem { Text = "ARG Management Snapshot", Value = "ARG_Management_Snapshot" },
             new SelectListItem { Text = "ARG Pending Balance Dues", Value = "ARG_Pending_Balance_Dues" },
@@ -378,84 +376,84 @@ namespace ArgCore.Helpers
             new SelectListItem { Text = "Revenue Analyst Productivity", Value = "Revenue_Analyst_Productivity" }
         };
 
-        public static List<SelectListItem> Mode = new List<SelectListItem>
+        public static readonly List<SelectListItem> Mode = new()
         { 
             new SelectListItem { Text = "Ocean", Value = "O" },
             new SelectListItem { Text = "Air", Value = "P" }
         };
 
-        public static List<SelectListItem> BDInvoiceStatus = new List<SelectListItem>
+        public static readonly List<SelectListItem> BDInvoiceStatus = new()
         {
             new SelectListItem { Text = "Invoiced_NR (Invoiced to the client customer but no receivable has been set up in the client’s ledger)", Value = "Invoiced_NR" },
             new SelectListItem { Text = "Invoiced_REC (Invoiced to the client customer, and a receivable has been set up in the client’s ledger)", Value = "Invoiced_REC" },
             new SelectListItem { Text = "Closed (Balance due is closed)", Value = "Closed" }
         };
 
-        public static List<SelectListItem> InvoiceTypeforClientDemo = new List<SelectListItem>
+        public static readonly List<SelectListItem> InvoiceTypeforClientDemo = new()
         {
                new SelectListItem { Text = "BOL Invoice", Value = "BOL Invoice" },
                new SelectListItem { Text = "Per Diem Invoice", Value = "Per Diem Invoice" }
         };
 
-        public static List<SelectListItem> WeightUnits = new List<SelectListItem>
+        public static readonly List<SelectListItem> WeightUnits = new()
         {
                new SelectListItem { Text = "Pounds", Value = "Pounds" },
                new SelectListItem { Text = "Kilos", Value = "Kilos" }
         };
 
-        public static List<SelectListItem> StatsBookingFilterList = new List<SelectListItem>
+        public static readonly List<SelectListItem> StatsBookingFilterList = new()
         {
                new SelectListItem { Text = "Group by SHIPPER, POL, POD", Value = "1" },
                new SelectListItem { Text = "Group by POL, POD", Value = "2" },
                new SelectListItem { Text = "Group by POL", Value = "3" }
         };
 
-        public static List<SelectListItem> HazmatOptions = new List<SelectListItem>
+        public static readonly List<SelectListItem> HazmatOptions = new()
         {
                new SelectListItem { Text = "Yes", Value = true.ToString() },
                new SelectListItem { Text = "No", Value = false.ToString() }
         };
 
-        public static List<SelectListItem> MeasureUnits = new List<SelectListItem>
+        public static readonly List<SelectListItem> MeasureUnits = new()
         {
                new SelectListItem { Text = "Cubic Feet", Value = "Cubic Feet" },
                new SelectListItem { Text = "Cubic Meters", Value = "Cubic Meters" }
         };
 
-        public static List<SelectListItem> InvoiceTypesCeva = new List<SelectListItem>
+        public static readonly List<SelectListItem> InvoiceTypesCeva = new()
         {
                 new SelectListItem { Text = "HBL", Value = "HBL" },
                 new SelectListItem { Text = "HAWB", Value = "HAWB" }
         };
 
-        public static List<SelectListItem> ChargableWeightOperator = new List<SelectListItem>
+        public static readonly List<SelectListItem> ChargableWeightOperator = new()
         { 
                new SelectListItem { Text = "<", Value = "<" },
                new SelectListItem { Text = ">", Value = ">" },
                new SelectListItem { Text = "=", Value = "=" }
         };
 
-        public static List<SelectListItem> StatusType = new List<SelectListItem>
+        public static readonly List<SelectListItem> StatusType = new()
         {
                new SelectListItem { Text = "Open", Value = "1" },
                new SelectListItem { Text = "In Process", Value = "2" },
                new SelectListItem { Text = "Completed", Value = "4" }
         };
 
-        public static List<SelectListItem> Priority = new List<SelectListItem>
+        public static readonly List<SelectListItem> Priority = new()
         {
                new SelectListItem { Text = "High", Value = "1" },
                new SelectListItem { Text = "Medium", Value = "2" },
                new SelectListItem { Text = "Low", Value = "3" }
         };
 
-        public static List<SelectListItem> ItemTypes = new List<SelectListItem>
+        public static readonly List<SelectListItem> ItemTypes = new()
         {
                new SelectListItem { Text = "Container", Value = "Container" },
                new SelectListItem { Text = "Piece", Value = "Piece" }
         };
 
-        public static List<SelectListItem> StatsFilterList = new List<SelectListItem>
+        public static readonly List<SelectListItem> StatsFilterList = new()
         {
                new SelectListItem { Text = "Group by Origin/Destination", Value = "1" },
                new SelectListItem { Text = "Group by POL", Value = "2" },
@@ -551,12 +549,27 @@ namespace ArgCore.Helpers
 
         public static class CanRunAction
         {
+            // Research Items
             public static bool ViewAllClientBalanceDueActivity => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientBalanceDueActivity);
             public static bool CloseResearchItem => IsActionAssignedToCurrentRole(GlobalObjects.CloseResearchItem);
+
+            // BolAuditingResults
+            public static bool BolAuditingResultsShowNavigation => IsActionAssignedToCurrentRole(GlobalObjects.BolAuditingResultsShowNavigation);
+
+            // Dashboard
+            public static bool ClientDashboard => IsActionAssignedToCurrentRole(GlobalObjects.ClientDashboard);
+            public static bool ViewAllWeeklyBalanceDuesCollected => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllWeeklyBalanceDuesCollected);
+            public static bool ViewAllClientPendingBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingBalanceDues);
+            public static bool ViewAllClientPendingApprovalBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingApprovalBalanceDues);
+            public static bool ViewOpenInvoices => IsActionAssignedToCurrentRole(GlobalObjects.ViewOpenInvoices);
+
+            // ARGInvoices
             public static bool AddNewInvoice => IsActionAssignedToCurrentRole(GlobalObjects.AddNewInvoice);
             public static bool AddBDToInvoice => IsActionAssignedToCurrentRole(GlobalObjects.AddBDToInvoice);
             public static bool InvoiceCommissions => IsActionAssignedToCurrentRole(GlobalObjects.InvoiceCommissions);
             public static bool PostingInvoicePayment => IsActionAssignedToCurrentRole(GlobalObjects.PostingInvoicePayment);
+
+            // Balance Dues
             public static bool GenerateAuditReview => IsActionAssignedToCurrentRole(GlobalObjects.GenerateAuditReview);
             public static bool GenerateCustStatements => IsActionAssignedToCurrentRole(GlobalObjects.GenerateCustStatements);
             public static bool EmailCustomerStatements => IsActionAssignedToCurrentRole(GlobalObjects.EmailCustomerStatements);
@@ -568,11 +581,18 @@ namespace ArgCore.Helpers
             public static bool ChangeCollectionStatus => IsActionAssignedToCurrentRole(GlobalObjects.ChangeCollectionStatus);
             public static bool EditBDRevenueAnalystFields => IsActionAssignedToCurrentRole(GlobalObjects.EditBDRevenueAnalystFields);
             public static bool AddBalanceDue => IsActionAssignedToCurrentRole(GlobalObjects.AddBalanceDue);
+
+            // AuditorPlaybook
             public static bool AddAuditorPlaybookSQL => IsActionAssignedToCurrentRole(GlobalObjects.AddAuditorPlaybookSQL);
             public static bool PlayAuditorPlaybook => IsActionAssignedToCurrentRole(GlobalObjects.PlayAuditorPlaybook);
             public static bool DeleteAuditorPlaybook => IsActionAssignedToCurrentRole(GlobalObjects.DeleteAuditorPlaybook);
             public static bool UpdateAuditorPlaybook => IsActionAssignedToCurrentRole(GlobalObjects.UpdateAuditorPlaybook);
             public static bool UpdateAuditorPlaybookSQL => IsActionAssignedToCurrentRole(GlobalObjects.UpdateAuditorPlaybookSQL);
+
+            // Commissions
+            public static bool ViewAllClientCommissions => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientCommissions);
+
+            //View Other User Role Commissions
             public static bool ViewOtherUserRoleCommissionsClientManager => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsClientManager);
             public static bool ViewOtherUserRoleCommissionsARGSalesAnalyst => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsARGSalesAnalyst);
             public static bool ViewOtherUserRoleCommissionsARGManager => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsARGManager);
@@ -580,42 +600,55 @@ namespace ArgCore.Helpers
             public static bool ViewOtherUserRoleCommissionsInfoXRevenueAnalyst => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsInfoXRevenueAnalyst);
             public static bool ViewOtherUserRoleCommissionsInfoXAuditManage => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsInfoXAuditManage);
             public static bool ViewOtherUserRoleCommissionsRevenueAnalyst => IsActionAssignedToCurrentRole(GlobalObjects.ViewOtherUserRoleCommissionsRevenueAnalyst);
-            public static bool ClientDashboard => IsActionAssignedToCurrentRole(GlobalObjects.ClientDashboard);
-            public static bool ViewAllWeeklyBalanceDuesCollected => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllWeeklyBalanceDuesCollected);
-            public static bool ViewAllClientPendingBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingBalanceDues);
-            public static bool ViewAllClientPendingApprovalBalanceDues => IsActionAssignedToCurrentRole(GlobalObjects.ViewAllClientPendingApprovalBalanceDues);
-            public static bool ViewOpenInvoices => IsActionAssignedToCurrentRole(GlobalObjects.ViewOpenInvoices);
-            public static bool BolAuditingResultsShowNavigation => IsActionAssignedToCurrentRole(GlobalObjects.BolAuditingResultsShowNavigation);
 
         }
 
         public static class GlobalObjects
         {
+            // Research Items
             public static string CloseResearchItem = "ResearchItems.CloseResearchItem";
+
+            // BolAuditingResults
             public static string BolAuditingResultsShowNavigation = "BolAuditingResults.ShowNavigation";
+
+            // Dashboard
             public static string ViewAllClientBalanceDueActivity = "Dashboard.ViewAllClientBalanceDueActivity";
+            public static string ClientDashboard = "Dashboard.Client";
+            public static string ViewOpenInvoices = "Dashboard.ViewOpenInvoices";
+            public static string ViewAllClientPendingBalanceDues = "Dashboard.ViewAllClientPendingBalanceDues";
+            public static string ViewAllWeeklyBalanceDuesCollected = "Dashboard.ViewAllWeeklyBalanceDuesCollected";
+            public static string ViewAllClientPendingApprovalBalanceDues = "Dashboard.ViewAllClientPendingApprovalBalanceDues";
+
+            // ARGInvoices
             public static string AddNewInvoice = "ARGInvoices.AddNewInvoice";
             public static string AddBDToInvoice = "ARGInvoices.AddBDToInvoice";
             public static string InvoiceCommissions = "ARGInvoices.Commissions";
             public static string PostingInvoicePayment = "ARGInvoices.PostingInvoicePayment";
+
+            // Balance Dues
             public static string GenerateAuditReview = "BalanceDues.GenerateAuditReview";
             public static string GenerateCustStatements = "BalanceDues.GenerateCustomerStatements";
-            //not used ends
             public static string EmailCustomerStatements = "BalanceDues.EmailCustomerStatements";
             public static string BDOutputToSpreadsheet = "BalanceDues.BDOutputToSpreadsheet";
             public static string EditCustomerOnBDScreen = "BalanceDues.EditCustomer";
             public static string ViewBDInfo = "BalanceDues.ViewBDInfo";
             public static string BDAmountPaidPopUp = "BalanceDues.PostPayment";
-            //not used
             public static string ChangeBDStatusTo = "BalanceDues.ChangeBalanceDueStatusto";
             public static string ChangeCollectionStatus = "BalanceDues.ChangeCollectionStatus";
             public static string EditBDRevenueAnalystFields = "BalanceDues.EditBDRevenueAnalystFields";
             public static string AddBalanceDue = "AuditingScreen.AddBalanceDue";
+
+            // AuditorPlaybook
             public static string AddAuditorPlaybookSQL = "AuditorPlaybookSQL.Add";
             public static string DeleteAuditorPlaybook = "AuditorPlaybook.Delete";
             public static string UpdateAuditorPlaybook = "AuditorPlaybook.Update";
             public static string PlayAuditorPlaybook = "AuditorPlaybook.Play";
             public static string UpdateAuditorPlaybookSQL = "AuditorPlaybookSQL.Update";
+
+            // Commissions
+            public static string ViewAllClientCommissions = "Commissions.ViewAllClientCommissions";
+
+            // View Other User Role Commissions
             public static string ViewOtherUserRoleCommissionsClientManager = "ViewOtherUserRoleCommissionsClientManager";
             public static string ViewOtherUserRoleCommissionsARGSalesAnalyst = "ViewOtherUserRoleCommissionsARGSalesAnalyst";
             public static string ViewOtherUserRoleCommissionsARGManager = "ViewOtherUserRoleCommissionsARGManager";
@@ -623,14 +656,7 @@ namespace ArgCore.Helpers
             public static string ViewOtherUserRoleCommissionsInfoXRevenueAnalyst = "ViewOtherUserRoleCommissionsInfoXRevenueAnalyst";
             public static string ViewOtherUserRoleCommissionsInfoXAuditManage = "ViewOtherUserRoleCommissionsInfoXAuditManager";
             public static string ViewOtherUserRoleCommissionsRevenueAnalyst = "ViewOtherUserRoleCommissionsRevenueAnalyst";
-            public static string ClientDashboard = "Dashboard.Client";
-            public static string ViewOpenInvoices = "Dashboard.ViewOpenInvoices";
-            public static string ViewAllClientPendingBalanceDues = "Dashboard.ViewAllClientPendingBalanceDues";
-            public static string ViewAllWeeklyBalanceDuesCollected = "Dashboard.ViewAllWeeklyBalanceDuesCollected";
-            public static string ViewAllClientPendingApprovalBalanceDues = "Dashboard.ViewAllClientPendingApprovalBalanceDues";
         }
-
-       
 
         public static void GoToLogin()
         {
@@ -715,20 +741,12 @@ namespace ArgCore.Helpers
     {
         private string _userName;
         private string _passWord;
-        private string _domainName;
 
-        public CustomReportCredentials(string userName, string passWord, string domainName)
-        {
-            _userName = userName;
-            _passWord = passWord;
-            _domainName = domainName;
-        }
         public CustomReportCredentials(string userName, string passWord)
         {
             _userName = userName;
             _passWord = passWord;
         }
-
 
         public WindowsIdentity ImpersonationUser => null;
         public ICredentials NetworkCredentials => new NetworkCredential(_userName, _passWord);

@@ -71,7 +71,7 @@ namespace Arg.DataAccess
             SetDateFirst();
             var parameters = new DynamicParameters();
             parameters.Add("@UserId", userId, DbType.String);
-            parameters.Add("@EnumValue", enumValues, DbType.Object);
+            parameters.Add("@EnumValues", enumValues, DbType.Int32);
             using (var connection = Common.Database)
             {
                 var bdSetUps = connection.Query<BalanceDue>("GetBDSetUp", parameters, commandType: CommandType.StoredProcedure).ToList();
@@ -84,7 +84,7 @@ namespace Arg.DataAccess
             SetDateFirst();
             var parameters = new DynamicParameters();
             parameters.Add("@UserId", userId, DbType.String);
-            parameters.Add("@EnumValue", enumValues, DbType.Object);
+            parameters.Add("@EnumValues", enumValues, DbType.Int32);
             using (var connection = Common.Database)
             {
                 var bdCollected = connection.Query<BalanceDue>("GetBDCollected", parameters, commandType: CommandType.StoredProcedure).ToList();

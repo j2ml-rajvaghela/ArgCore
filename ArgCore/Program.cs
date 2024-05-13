@@ -121,6 +121,6 @@ app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Analyst}/{action=Performance}/{id?}");
+    pattern: "{controller=TemplateCats}/{action=Index}/{id?}");
 
 app.Run();
