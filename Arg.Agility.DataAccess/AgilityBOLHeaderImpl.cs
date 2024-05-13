@@ -5,6 +5,7 @@ using Arg.DataModels;
 using CacheManager.Core;
 using CustomExtensions;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
 
@@ -13,6 +14,11 @@ namespace Arg.Agility.DataAccess
     public class AgilityBOLHeaderImpl
     {
         private string _dbName = Common.DBName;
+        private readonly SqlConnection _connection;
+        public AgilityBOLHeaderImpl()
+        {
+            _connection = Common.ClientDatabase;
+        }
 
         public BOLHeaders GetBOLHeader(string jobNumber)
         {
@@ -22,151 +28,118 @@ namespace Arg.Agility.DataAccess
             {
                 parameters.Add("@JobNumber", jobNumber, DbType.String);
             }
-            const string query = @"SELECT * FROM BOLHeaders
+            const string query = @"SELECT * 
+                                   FROM BOLHeaders
                                    WHERE JobNumber=@JobNumber;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLHeader = connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
-                return bOLHeader;
-            }
+            return _connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
         }
 
         public List<BOLHeaders> GetServiceMovementType()
         {
-            const string query = @"SELECT DISTINCT b.ServiceMovementType , b.ServiceMovementType AS ServiceMovementTypeCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.ServiceMovementType , b.ServiceMovementType AS ServiceMovementTypeCode 
+                                   FROM BOLHeaders b
                                    WHERE ServiceMovementType <> 'null'
                                    ORDER BY ServiceMovementType;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var serviceMovementTypes = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return serviceMovementTypes;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetServiceLevel()
         {
-            const string query = @"SELECT DISTINCT b.ServiceLevel , b.ServiceLevel AS ServiceLevelCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.ServiceLevel , b.ServiceLevel AS ServiceLevelCode 
+                                   FROM BOLHeaders b
                                    WHERE ServiceLevel <> 'null'
                                    ORDER BY ServiceLevel;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var serviceLevels = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return serviceLevels;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetServiceType()
         {
-            const string query = @"SELECT DISTINCT b.ServiceType , b.ServiceType AS ServiceTypeCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.ServiceType , b.ServiceType AS ServiceTypeCode 
+                                   FROM BOLHeaders b
                                    WHERE ServiceType <> 'null'
                                    ORDER BY ServiceType;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var serviceTypes = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return serviceTypes;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetDistinctOrigin()
         {
-            const string query = @"SELECT DISTINCT b.Origin + ' ' + ISNULL(c.LocationName, '') AS origin , b.Origin AS OriginLocationCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.Origin + ' ' + ISNULL(c.LocationName, '') AS origin , b.Origin AS OriginLocationCode 
+                                   FROM BOLHeaders b
                                    LEFT JOIN LocationCodes c ON b.Origin = c.LocationCode
                                    WHERE b.Origin IS NOT NULL
                                    ORDER BY Origin;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctOrigins = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return distinctOrigins;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetPortOfExit()
         {
-            const string query = @"SELECT DISTINCT b.PortOfExit + ' ' + ISNULL(c.LocationName, '') AS PortOfExit , b.PortOfExit AS PortOfExitCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.PortOfExit + ' ' + ISNULL(c.LocationName, '') AS PortOfExit , b.PortOfExit AS PortOfExitCode 
+                                   FROM BOLHeaders b
                                    LEFT JOIN LocationCodes c ON b.PortOfExit = c.LocationCode
                                    WHERE b.PortOfExit IS NOT NULL
                                    ORDER BY PortOfExit;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var portOfExits = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return portOfExits;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetPortofEntry()
         {
-            const string query = @"SELECT DISTINCT b.PortofEntry + ' ' + ISNULL(c.LocationName, '') AS PortofEntry , b.PortofEntry AS PortofEntryCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.PortofEntry + ' ' + ISNULL(c.LocationName, '') AS PortofEntry , b.PortofEntry AS PortofEntryCode 
+                                   FROM BOLHeaders b
                                    LEFT JOIN LocationCodes c ON b.PortofEntry = c.LocationCode
                                    WHERE b.PortofEntry IS NOT NULL
                                    ORDER BY PortofEntry;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var portOfEntries = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return portOfEntries;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetDestination()
         {
-            const string query = @"SELECT DISTINCT b.Destination + ' ' + ISNULL(c.LocationName, '') AS Destination , b.Destination AS DestinationLocationCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.Destination + ' ' + ISNULL(c.LocationName, '') AS Destination , b.Destination AS DestinationLocationCode 
+                                   FROM BOLHeaders b
                                    LEFT JOIN LocationCodes c ON b.Destination = c.LocationCode
                                    WHERE b.Destination IS NOT NULL
                                    ORDER BY Destination;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var destinations = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return destinations;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetShipper()
         {
-            const string query = @"SELECT DISTINCT b.Shipper + ' ' + ISNULL(p.ParticipantName, '') AS Shipper , b.Shipper AS ShipperID FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.Shipper + ' ' + ISNULL(p.ParticipantName, '') AS Shipper , b.Shipper AS ShipperID 
+                                   FROM BOLHeaders b
                                    LEFT JOIN Participants p ON b.Shipper = p.ParticipantID
                                    WHERE b.Shipper IS NOT NULL
                                    ORDER BY Shipper;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var shippers = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return shippers;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetConsignee()
         {
-            const string query = @"SELECT DISTINCT b.Consignee + ' ' + ISNULL(p.ParticipantName, '') AS Consignee , b.Consignee AS ConsigneeID FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.Consignee + ' ' + ISNULL(p.ParticipantName, '') AS Consignee , b.Consignee AS ConsigneeID 
+                                   FROM BOLHeaders b
                                    LEFT JOIN Participants p ON b.ShConsigneeipper = p.ParticipantID
                                    WHERE b.Consignee IS NOT NULL
                                    ORDER BY Consignee;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var consignees = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return consignees;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetNotifyParty()
         {
-            const string query = @"SELECT DISTINCT b.NotifyParty + ' ' + ISNULL(p.ParticipantName, '') AS NotifyParty , b.NotifyParty AS NotifyPartyCode FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.NotifyParty + ' ' + ISNULL(p.ParticipantName, '') AS NotifyParty , b.NotifyParty AS NotifyPartyCode 
+                                   FROM BOLHeaders b
                                    LEFT JOIN Participants p ON b.NotifyParty = p.ParticipantID
                                    WHERE b.NotifyParty IS NOT NULL
                                    ORDER BY NotifyParty;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var notifyParties = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return notifyParties;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetExportingCarrier()
@@ -177,59 +150,43 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.ExportingCarrier IS NOT NULL
                                    ORDER BY ExportingCarrier;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var exportingCarriers = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return exportingCarriers;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BOLHeaders> GetPrepaidCollect()
         {
-            const string query = @"SELECT b.PrepaidCollect, b.PrepaidCollect AS PrepaidCollectCode FROM BOLHeaders b
+            const string query = @"SELECT b.PrepaidCollect, b.PrepaidCollect AS PrepaidCollectCode 
+                                   FROM BOLHeaders b
                                    WHERE b.PrepaidCollect IS NOT NULL
                                    ORDER BY PrepaidCollect;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var prepaidCollections = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-                return prepaidCollections;
-            }
+            return _connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<DataModels.Participants> GetAllParticipants()
         {
-            const string query = @"SELECT * FROM Participants;";
+            const string query = @"SELECT * 
+                                   FROM Participants;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var allParticipants = connection.Query<DataModels.Participants>(query, commandType: CommandType.Text).ToList();
-                return allParticipants;
-            }
+            return _connection.Query<DataModels.Participants>(query, commandType: CommandType.Text).ToList();
         }
 
         public int GetResultCount(Arg.DataModels.SearchOptions so)
         {
-            const string query = @"SELECT COUNT(*) AS ResultCount FROM BOLHeaders b;";
+            const string query = @"SELECT COUNT(*) AS ResultCount 
+                                   FROM BOLHeaders b;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultCount = Convert.ToInt32(connection.ExecuteScalar<object>(query, commandType: CommandType.Text));
-                return resultCount;
-            }
+            return Convert.ToInt32(_connection.ExecuteScalar<object>(query, commandType: CommandType.Text));
         }
 
         public List<DataModels.Generic> GetBOLCustomers()
         {
-            const string query = @"SELECT ParticipantID, CONCAT(ParticipantID, '  ' + ParticipantName) AS ParticipantName FROM Participants
+            const string query = @"SELECT ParticipantID, CONCAT(ParticipantID, '  ' + ParticipantName) AS ParticipantName 
+                                   FROM Participants
                                    WHERE ParticipantType = 'Payor'
                                    ORDER BY ParticipantName;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bolCustomers = connection.Query<DataModels.Generic>(query, commandType: CommandType.Text).ToList();
-                return bolCustomers;
-            }
+            return _connection.Query<DataModels.Generic>(query, commandType: CommandType.Text).ToList();
         }
 
         public BOLHeaders GetShipper(string jobNumber)
@@ -241,14 +198,12 @@ namespace Arg.Agility.DataAccess
                 parameters.Add("@JobNumber", jobNumber, DbType.String);
 
             }
-            const string query = @"SELECT DISTINCT b.ConsignmentID FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.ConsignmentID 
+                                   FROM BOLHeaders b
                                    WHERE b.JobNumber=@JobNumber;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var shipper = connection.QueryFirstOrDefault<BOLHeaders>(query,parameters);
-                return shipper;
-            }
+            return _connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
+
         }
 
         public BOLHeaders GetConsigneeReference(string jobNumber)
@@ -260,14 +215,12 @@ namespace Arg.Agility.DataAccess
                 parameters.Add("@JobNumber", jobNumber, DbType.String);
 
             }
-            const string query = @"SELECT DISTINCT b.ConsignmentID FROM BOLHeaders b
+            const string query = @"SELECT DISTINCT b.ConsignmentID 
+                                   FROM BOLHeaders b
                                    WHERE b.JobNumber=@JobNumber;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var consigneeReference = connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
-                return consigneeReference;
-            }
+
+            return _connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
         }
 
         public List<BalanceDue> GetCustomerBalanceDues(string bolNo, int companyId)
@@ -279,14 +232,11 @@ namespace Arg.Agility.DataAccess
             {
                 parameters.Add("@Bol", bolNo, DbType.String);
             }
-            const string query = @"SELECT * FROM BalanceDues
+            const string query = @"SELECT * 
+                                   FROM BalanceDues
                                    WHERE CompanyId=@CompanyId AND Bol=@Bol;";
 
-            using (var connection = Common.Database)
-            {
-                var balanceDues = connection.Query<Arg.DataModels.BalanceDue>(query, parameters).ToList();
-                return balanceDues;
-            }
+            return _connection.Query<Arg.DataModels.BalanceDue>(query, parameters).ToList();
         }
 
         private ICacheManager<List<BOLHeaders>> _manager = CacheFactory.Build<List<BOLHeaders>>(Core.Settings.DefaultCacheSettings);
@@ -409,11 +359,7 @@ namespace Arg.Agility.DataAccess
                 sql = sqlCmd;
             }
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var results = connection.Query<BOLHeaders>(sql).ToList();
-                return results;
-            }
+            return _connection.Query<BOLHeaders>(sql).ToList();
         }
 
         public List<BOLHeaders> GetAgilityAuditResultStats(Arg.DataModels.SearchOptions so, string clientName)
@@ -434,11 +380,7 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.Shipper,p.ParticipantName,bh.Origin,bh.Destination";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStats = connection.Query<BOLHeaders>(cmd).ToList();
-                return resultStats;
-            }
+            return _connection.Query<BOLHeaders>(cmd).ToList();
         }
 
         public List<BOLHeaders> GetAuditResultStatsByOrigin(Arg.DataModels.SearchOptions so, string clientName)
@@ -460,11 +402,7 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.Origin,bh.Destination";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStatsByOrigin = connection.Query<BOLHeaders>(cmd).ToList();
-                return resultStatsByOrigin;
-            }
+            return _connection.Query<BOLHeaders>(cmd).ToList();
         }
 
         public List<BOLHeaders> GetAuditResultStatsByPOL(Arg.DataModels.SearchOptions so, string clientName)
@@ -488,11 +426,7 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.PortOfExit";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStatsByPOL = connection.Query<BOLHeaders>(cmd).ToList();
-                return resultStatsByPOL;
-            }
+            return _connection.Query<BOLHeaders>(cmd).ToList();
         }
 
         public List<BOLHeaders> GetAuditResultStatsByShipper(Arg.DataModels.SearchOptions so, string clientName)
@@ -517,11 +451,7 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.Shipper";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStatsByShipper = connection.Query<BOLHeaders>(cmd).ToList();
-                return resultStatsByShipper;
-            }
+            return _connection.Query<BOLHeaders>(cmd).ToList();
         }
 
         public void BuildCmdWhereCondition1(ref string cmd, Arg.DataModels.SearchOptions so)
