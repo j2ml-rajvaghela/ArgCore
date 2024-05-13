@@ -220,7 +220,7 @@ namespace ArgCore.Helpers
         public static string[] Scopes { get; } = { SheetsService.Scope.Spreadsheets, SheetsService.Scope.Drive };
         //public static string ApplicationName = "atlasv1-152711";
         public static string ApplicationName { get; } = "level-facility-222705";
-        public static readonly UserCredential _cred;
+        public static UserCredential _cred;
 
         public static UserCredential UserCredential
         {
