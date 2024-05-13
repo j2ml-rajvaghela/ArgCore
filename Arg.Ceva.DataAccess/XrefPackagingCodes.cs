@@ -1,12 +1,20 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Arg.Ceva.DataAccess
 {
     public class XrefPackagingCodes
     {
+        private readonly SqlConnection _connection;
+
+        public XrefPackagingCodes()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Table("XrefPackagingCodes")]
         public class XrefPackagingCode
         {
@@ -16,24 +24,20 @@ namespace Arg.Ceva.DataAccess
 
         public XrefPackagingCode GetPackagingCode(string code)
         {
-            const string query = @"SELECT * FROM XrefPackagingCodes WHERE CODE=@CODE;";
+            const string query = @"SELECT * 
+                                   FROM XrefPackagingCodes 
+                                   WHERE CODE=@CODE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var packagingCode = connection.QueryFirstOrDefault<XrefPackagingCode>(query, new { @CODE = code });
-                return packagingCode;
-            }
+            return _connection.QueryFirstOrDefault<XrefPackagingCode>(query, new { @CODE = code });
         }
 
         public List<XrefPackagingCode> GetAllTypes()
         {
-            const string query = @"SELECT * FROM XrefPackagingCodes ORDER BY CODE;";
+            const string query = @"SELECT * 
+                                   FROM XrefPackagingCodes 
+                                   ORDER BY CODE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var allTypes = connection.Query<XrefPackagingCode>(query, commandType: CommandType.Text).ToList();
-                return allTypes;
-            }
+            return _connection.Query<XrefPackagingCode>(query, commandType: CommandType.Text).ToList();
         }
-    }   
+    }
 }

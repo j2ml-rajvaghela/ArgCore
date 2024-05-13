@@ -1,12 +1,20 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using static Arg.Ceva.DataAccess.Locations;
 namespace Arg.Ceva.DataAccess
 {
     public class Locations
     {
+        private readonly SqlConnection _connection;
+
+        public Locations()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Table("Locations")]
         public class Location
         {
@@ -32,38 +40,31 @@ namespace Arg.Ceva.DataAccess
 
         public Location GetLocation(string code)
         {
-            const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')') AS LocationName FROM Locations l
+            const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')') AS LocationName 
+                                   FROM Locations l
                                    WHERE LocationID=@LocationID;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var location = connection.QueryFirstOrDefault<Location>(query, new { @LocationID = code });
-                return location;
-            }
+            return _connection.QueryFirstOrDefault<Location>(query, new { @LocationID = code });
         }
 
         public Location GetPOL(string code)
         {
-            const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')',l.Address3) AS POLDetail FROM Locations l
+            const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')',l.Address3) AS POLDetail 
+                                   FROM Locations l
                                    WHERE l.LocationID=@LocationID;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var pol = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
-                return pol;
-            }
+            return _connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
         }
 
         public Location GetPOD(string code)
         {
-            const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')',l.Address3) AS PODDetail FROM Locations l
+            const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')',l.Address3) AS PODDetail 
+                                   FROM Locations l
                                    WHERE l.LocationID=@LocationID;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var pod = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code});
-                return pod;
-            }
+
+            return _connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
+
         }
     }
 }
