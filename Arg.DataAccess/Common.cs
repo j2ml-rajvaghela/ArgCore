@@ -44,8 +44,8 @@ namespace Arg.DataAccess
 {
     public class Common
     {
-        public static readonly AspNetRolesImpl AspNetRoles = new();
-        public static readonly AppActionsImpl AppActions = new();
+        public static AspNetRolesImpl AspNetRoles = new();
+        public static AppActionsImpl AppActions = new();
 
 
         private static IConfiguration _configuration;
