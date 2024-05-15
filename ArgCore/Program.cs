@@ -21,12 +21,20 @@ builder.Services.AddHttpContextAccessor();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddSingleton<DriveService>();
+builder.Services.AddScoped<DapperUserStore>();
+builder.Services.AddScoped<DapperContext>();
 
 builder.Services.AddDistributedMemoryCache();
 
-//Add session services
+// Identity setup
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddUserStore<DapperUserStore>()
+    .AddRoleStore<DapperUserStore>()
+    .AddDefaultTokenProviders();
+
+
+// Session services
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -34,15 +42,16 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
-
-//Add cookie service
+// Cookie service
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
+
+// IHttpContextAccessor
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddScoped<ApplicationSignInManager>();
@@ -90,14 +99,11 @@ builder.Services.AddScoped<ApplicationUserManager>(provider =>
 
 builder.Services.AddScoped<ApplicationSignInManager>();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddUserStore<DapperUserStore>()
-    .AddRoleStore<DapperUserStore>()
-    .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
+
+// Set HttpContextAccessor for Common and other services that need it
 Arg.DataAccess.Common.SetHttpContextAccessor(app.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>());
 ActiveClient.SetHttpContextAccessor(app.Services.GetRequiredService<IHttpContextAccessor>());
 ArgCore.Helpers.Common.SetHttpContextAccessor(app.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>(), app.Services.GetRequiredService<IWebHostEnvironment>());

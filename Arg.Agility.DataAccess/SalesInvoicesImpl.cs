@@ -1,22 +1,23 @@
 ﻿using Arg.Agility.DataModels;
 using Arg.DataAccess;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Arg.Agility.DataAccess
 {
     public class SalesInvoicesImpl
     {
+        private readonly SqlConnection _clientDbConnection;
+        public SalesInvoicesImpl() => _clientDbConnection = Common.ClientDatabase;
+
         public List<SalesInvoices> GetDistinctCurrency()
         {
             const string query = @"SELECT DISTINCT InvoiceCurrency FROM SalesInvoices
                                    WHERE InvoiceCurrency <> '';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctCurrency = connection.Query<SalesInvoices>(query, commandType: CommandType.Text).ToList();
-                return distinctCurrency;
-            }
+            var distinctCurrency = _clientDbConnection.Query<SalesInvoices>(query, commandType: CommandType.Text).ToList();
+            return distinctCurrency;
         }
 
         public SalesInvoices GetBOLCharge(string jobNumber)
@@ -30,11 +31,8 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT * FROM SalesInvoices 
                                    WHERE JobNumber=@JobNumber;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bolCharge = connection.QueryFirstOrDefault<SalesInvoices>(query, parameters);
-                return bolCharge;
-            }
+            var bolCharge = _clientDbConnection.QueryFirstOrDefault<SalesInvoices>(query, parameters);
+            return bolCharge;
         }
 
         public List<SalesInvoices> GetAgilityBalanceDuesOtherCharges(string jobNumber)
@@ -42,11 +40,8 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT * FROM SalesInvoices 
                                    WHERE JobNumber=@JobNumber;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var otherCharges = connection.Query<SalesInvoices>(query, new { JobNumber = jobNumber }).ToList();
-                return otherCharges;
-            }
+            var otherCharges = _clientDbConnection.Query<SalesInvoices>(query, new { JobNumber = jobNumber }).ToList();
+            return otherCharges;
         }
 
         public List<SalesInvoices> GetAgilityBalanceDuesOtherChargesWithDesc(string jobNumber)
@@ -56,11 +51,8 @@ namespace Arg.Agility.DataAccess
                                    WHERE o.ChargeCode <> 'M1A' AND o.JobNumber=@JobNumber
                                    ORDER BY ItemId;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var otherChargesWithDesc = connection.Query<SalesInvoices>(query, new { JobNumber = jobNumber }).ToList();
-                return otherChargesWithDesc;
-            }
+            var otherChargesWithDesc = _clientDbConnection.Query<SalesInvoices>(query, new { JobNumber = jobNumber }).ToList();
+            return otherChargesWithDesc;
         }
     }
 }
