@@ -1,12 +1,21 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Arg.Ceva.DataAccess
 {
     public class XrefAirCarriers
     {
+
+        private readonly SqlConnection _connection;
+
+        public XrefAirCarriers()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Table("XrefAirCarriers")]
         public class XrefAirCarrier
         {
@@ -20,14 +29,11 @@ namespace Arg.Ceva.DataAccess
 
         public XrefAirCarrier GetIATACode(string code)
         {
-            const string query = @"SELECT x.*,CONCAT(x.CompanyName,' (',x.IATACode,')') AS AirCompanyName FROM XrefAirCarriers x
+            const string query = @"SELECT x.*,CONCAT(x.CompanyName,' (',x.IATACode,')') AS AirCompanyName 
+                                   FROM XrefAirCarriers x
                                    WHERE IATACode=@IATACode;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var iataCode = connection.QueryFirstOrDefault<XrefAirCarrier>(query, new { @IATACode = code });
-                return iataCode;
-            }
+            return _connection.QueryFirstOrDefault<XrefAirCarrier>(query, new { @IATACode = code });
         }
     }
 }

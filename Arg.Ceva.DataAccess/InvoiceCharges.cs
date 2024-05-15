@@ -1,11 +1,19 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Data;
 namespace Arg.Ceva.DataAccess
 {
     public class InvoiceCharges
     {
+        private readonly SqlConnection _connection;
+
+        public InvoiceCharges()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Table("InvoiceCharges")]
         public class InvoiceCharge
         {
@@ -65,15 +73,12 @@ namespace Arg.Ceva.DataAccess
                 {
                     parameters.Add("@HAWBNO", HAWBNO, DbType.String);
                 }
-                const string query = @"SELECT SUM(INVCURAMT) AS GrossRate FROM InvoiceCharges
+                const string query = @"SELECT SUM(INVCURAMT) AS GrossRate 
+                                       FROM InvoiceCharges
                                        WHERE INVTEXT1 LIKE '%OCEAN%' AND HBLNO = @HBLNO
                                        AND INVTEXT1 LIKE '%AIR KILO%' AND [HAWBNO] = @HAWBNO;";
 
-                using (var connection = Common.ClientDatabase)
-                {
-                    var grossRate = connection.QueryFirstOrDefault<InvoiceCharge>(query, parameters);
-                     return grossRate;
-                }
+                return _connection.QueryFirstOrDefault<InvoiceCharge>(query, parameters);
             }
             return new InvoiceCharge();
         }
@@ -92,28 +97,22 @@ namespace Arg.Ceva.DataAccess
                 {
                     parameters.Add("@HAWBNO", HAWBNO, DbType.String);
                 }
-                const string query = @"SELECT SUM(INVCURAMT) AS NetRate FROM InvoiceCharges
+                const string query = @"SELECT SUM(INVCURAMT) AS NetRate 
+                                       FROM InvoiceCharges
                                        WHERE HBLNO = @HBLNO AND [HAWBNO] = @HAWBNO;";
 
-                using (var connection = Common.ClientDatabase)
-                {
-                    var netRate = connection.QueryFirstOrDefault<InvoiceCharge>(query, parameters);
-                    return netRate;
-                }
+                return _connection.QueryFirstOrDefault<InvoiceCharge>(query, parameters);
             }
             return new InvoiceCharge();
         }
 
         public List<InvoiceCharge> GetDistinctCurrency()
         {
-            const string query = @"SELECT DISTINCT CURR FROM InvoiceCharges 
+            const string query = @"SELECT DISTINCT CURR 
+                                   FROM InvoiceCharges 
                                    WHERE CURR <> '';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctCurrency = connection.Query<InvoiceCharge>(query, commandType: CommandType.Text).ToList();
-                return distinctCurrency;
-            }
+            return _connection.Query<InvoiceCharge>(query, commandType: CommandType.Text).ToList();
         }
 
         public InvoiceCharge GetBOLCharge(string BOLNo)
@@ -126,14 +125,11 @@ namespace Arg.Ceva.DataAccess
                 parameters.Add("@HAWBNO", BOLNo, DbType.String);
                 parameters.Add("@HOUSENO", BOLNo, DbType.String);
             }
-            const string query = @"SELECT * FROM InvoiceCharges
+            const string query = @"SELECT *
+                                   FROM InvoiceCharges
                                    WHERE HBLNO=@HBLNO OR HAWBNO=@HAWBNO OR HOUSENO=@HOUSENO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bolCharge = connection.QueryFirstOrDefault<InvoiceCharge>(query,parameters);
-                return bolCharge;
-            }
+            return _connection.QueryFirstOrDefault<InvoiceCharge>(query, parameters);
         }
 
         public List<InvoiceCharge> GetInvoicedChargesDetail(string code)
@@ -144,11 +140,7 @@ namespace Arg.Ceva.DataAccess
                                    WHERE a.BOKPRT=@BOKPRT
                                    ORDER BY b.DEBTOR,b.INVOICENO, INVCURAMT DESC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var invoicedChargesDetail = connection.Query<InvoiceCharge>(query, new { BOKPRT = code}).ToList();
-                return invoicedChargesDetail;
-            }
+            return _connection.Query<InvoiceCharge>(query, new { BOKPRT = code }).ToList();
         }
 
         public List<DataModels.BalanceDues_OtherCharges> GetBalanceDuesInvoicedChargesDetail(string bolNo)
@@ -157,17 +149,14 @@ namespace Arg.Ceva.DataAccess
 
             parameters.Add("@HBLNo", bolNo, DbType.String);
             parameters.Add("@HAWBNo", bolNo, DbType.String);
-            const string query = @"SELECT b.INVTEXT1 AS ChargeCode,b.INVTEXT2 AS Description,b.INVCURAMT AS AmountDue,b.CURR AS Currency FROM InvoiceCharges b
+            const string query = @"SELECT b.INVTEXT1 AS ChargeCode,b.INVTEXT2 AS Description,b.INVCURAMT AS AmountDue,b.CURR AS Currency 
+                                   FROM InvoiceCharges b
                                    INNER JOIN BookingHeader a ON a.Region=b.Region and  (a.HBLNo=b.HBLNo or a.HAWBNo = b.HAWBNo)
                                    WHERE INVTEXT1 NOT LIKE '%Ocean%' AND INVTEXT1 NOT LIKE '%Air Cargo%'
                                    AND a.HBLNo=@HBLNo OR a.HAWBNo=@HAWBNo
                                    ORDER BY b.DEBTOR,b.INVOICENO, INVCURAMT DESC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var balanceDuesInvoicedChargesDetail = connection.Query<DataModels.BalanceDues_OtherCharges>(query, parameters).ToList();
-                return balanceDuesInvoicedChargesDetail;
-            }
+            return _connection.Query<DataModels.BalanceDues_OtherCharges>(query, parameters).ToList();
         }
     }
 }

@@ -3,16 +3,22 @@ using CacheManager.Core;
 using CustomExtensions;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using MySqlX.XDevAPI.Relational;
 using Newtonsoft.Json;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Xml.Linq;
 
 namespace Arg.Ceva.DataAccess
 {
     public class BookingHeader
     {
+        private readonly SqlConnection _connection;
+
+        public BookingHeader()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Table("BookingHeader")]
         public class BookingHeaderImp
         {
@@ -291,14 +297,11 @@ namespace Arg.Ceva.DataAccess
 
         public List<BookingHeaderImp> GetRegions()
         {
-            const string query = @"SELECT DISTINCT Region FROM BookingHeader
+            const string query = @"SELECT DISTINCT Region 
+                                   FROM BookingHeader
                                    ORDER BY Region;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var regions = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return regions;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public BookingHeaderImp GetBookingHeader(string bolNo)
@@ -313,210 +316,162 @@ namespace Arg.Ceva.DataAccess
                 parameters.Add("@HAWBNO", bolNo, DbType.String);
                 parameters.Add("@LBLNO", bolNo, DbType.String);
 
-            } 
-            const string query = @"SELECT * FROM BookingHeader 
+            }
+            const string query = @"SELECT * 
+                                   FROM BookingHeader 
                                    WHERE AWBNO=@AWBNO OR HOUSENO=@HOUSENO OR HBLNO=@HBLNO OR HAWBNO=@HAWBNO OR LBLNO=@LBLNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingHeader = connection.QueryFirstOrDefault<BookingHeaderImp>(query, parameters);
-                return bookingHeader;
-            }
+            return _connection.QueryFirstOrDefault<BookingHeaderImp>(query, parameters);
         }
 
         public List<BookingHeaderImp> GetBookingBranch()
         {
-            const string query = @"SELECT DISTINCT BRANCH FROM BookingHeader
+            const string query = @"SELECT DISTINCT BRANCH 
+                                   FROM BookingHeader
                                    ORDER BY BRANCH;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingBranches = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return bookingBranches;
-            }
-
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetOriginCountryCode()
         {
-            const string query = @"SELECT CONCAT(xc.Name,' (',xc.Code,')') AS OriginCountryName,bh.CNTRYCODE AS OriginCountryCode FROM BookingHeader bh
+            const string query = @"SELECT CONCAT(xc.Name,' (',xc.Code,')') AS OriginCountryName,bh.CNTRYCODE AS OriginCountryCode 
+                                   FROM BookingHeader bh
                                    INNER JOIN XrefCountries xc ON bh.CNTRYCODE=xc.Code
                                    GROUP BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCODE
                                    ORDER BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCODE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var originCountryCodes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return originCountryCodes;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetDestinationCountryCode()
         {
-            const string query = @"SELECT CONCAT(xc.Name,' (',xc.Code,')') AS DestinationCountryName,bh.CNTRYCOD01 AS DestinationCountryCode FROM BookingHeader bh
+            const string query = @"SELECT CONCAT(xc.Name,' (',xc.Code,')') AS DestinationCountryName,bh.CNTRYCOD01 AS DestinationCountryCode 
+                                   FROM BookingHeader bh
                                    INNER JOIN XrefCountries xc ON bh.CNTRYCOD01=xc.Code
                                    GROUP BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCOD01
                                    ORDER BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCOD01;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var destinationCountryCodes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return destinationCountryCodes;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetDistinctPOL()
         {
-            const string query = @"SELECT DISTINCT CONCAT(l.Name,' (',h.MATRCLOCA,')') AS POL, h.MATRCLOCA AS POLCode FROM BookingHeader h
+            const string query = @"SELECT DISTINCT CONCAT(l.Name,' (',h.MATRCLOCA,')') AS POL, h.MATRCLOCA AS POLCode 
+                                   FROM BookingHeader h
                                    LEFT JOIN Locations l ON h.MATRCLOCA=l.LocationID
                                    WHERE h.MATRCLOCA <> ''
                                    ORDER BY POL;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctPOLs = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return distinctPOLs;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetDistinctPOD()
         {
-            const string query = @"SELECT DISTINCT CONCAT(l.Name,' (',h.MATRDLOCA,')') AS POD, h.MATRDLOCA AS PODCode FROM BookingHeader h
+            const string query = @"SELECT DISTINCT CONCAT(l.Name,' (',h.MATRDLOCA,')') AS POD, h.MATRDLOCA AS PODCode 
+                                   FROM BookingHeader h
                                    LEFT JOIN Locations l ON h.MATRDLOCA=l.LocationID
                                    WHERE h.MATRDLOCA <> ''
                                    ORDER BY POD;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctPODs = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return distinctPODs;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetOceanServiceType()
         {
-            const string query = @"SELECT DISTINCT ONCSERV FROM BookingHeader 
+            const string query = @"SELECT DISTINCT ONCSERV 
+                                   FROM BookingHeader 
                                    WHERE ONCSERV <> ''
                                    ORDER BY ONCSERV;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var oceanServiceTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return oceanServiceTypes;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetDistinctConsignee()
         {
-            const string query = @"SELECT CONCAT(p.Name,' (',h.CSEENO,')') AS Consignee,h.CSEENO FROM BookingHeader h
+            const string query = @"SELECT CONCAT(p.Name,' (',h.CSEENO,')') AS Consignee,h.CSEENO 
+                                   FROM BookingHeader h
                                    INNER JOIN Participants p ON p.ParticipantID=h.CSEENO
                                    WHERE h.CSEENO <> '' AND p.Type= 'Consignor'
                                    GROUP BY CONCAT(p.Name,' (',h.CSEENO,')'),h.CSEENO
                                    ORDER BY CONCAT(p.Name,' (',h.CSEENO,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctConsignees = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return distinctConsignees;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetCustomer()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var customers = connection.Query<BookingHeaderImp>("GetAllCustomer", commandType: CommandType.StoredProcedure).ToList();
-                return customers;
-
-            }
+            return _connection.Query<BookingHeaderImp>("GetAllCustomer", commandType: CommandType.StoredProcedure).ToList();
         }
 
         public List<BookingHeaderImp> GetShipper()
         {
-            const string query = @"SELECT CONCAT(p.Name,' (',h.SHPRNO,')') AS Consignee,h.SHPRNO FROM BookingHeader h
+            const string query = @"SELECT CONCAT(p.Name,' (',h.SHPRNO,')') AS Consignee,h.SHPRNO 
+                                   FROM BookingHeader h
                                    INNER JOIN Participants p ON p.ParticipantID=h.SHPRNO
                                    WHERE h.SHPRNO <> '' AND p.Type= 'Shipper'
                                    GROUP BY CONCAT(p.Name,' (',h.SHPRNO,')'),h.SHPRNO
                                    ORDER BY CONCAT(p.Name,' (',h.SHPRNO,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var shippers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return shippers;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetPackageType()
         {
-            const string query = @"SELECT CONCAT(p.DESCRIPTION,' (',h.PCKGSCODE,')') AS PackageType, h.PCKGSCODE FROM BookingHeader h
+            const string query = @"SELECT CONCAT(p.DESCRIPTION,' (',h.PCKGSCODE,')') AS PackageType, h.PCKGSCODE 
+                                   FROM BookingHeader h
                                    INNER JOIN XrefPackagingCodes p ON p.CODE=h.PCKGSCODE
                                    WHERE h.PCKGSCODE <> ''
                                    GROUP BY h.PCKGSCODE, CONCAT(p.DESCRIPTION, ' (', h.PCKGSCODE, ')')
                                    ORDER BY CONCAT(p.DESCRIPTION,' (',h.PCKGSCODE,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var packageTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return packageTypes;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetOceanCarrier()
         {
-            const string query = @"SELECT CONCAT(o.CompanyName,' (',h.CARRCODE,')') AS OceanCompanyName,h.CARRCODE FROM BookingHeader h
+            const string query = @"SELECT CONCAT(o.CompanyName,' (',h.CARRCODE,')') AS OceanCompanyName,h.CARRCODE 
+                                   FROM BookingHeader h
                                    INNER JOIN XrefOceanCarriers o ON o.SCAC=h.CARRCODE
                                    WHERE h.CARRCODE <> ''
                                    GROUP BY h.CARRCODE, CONCAT(o.CompanyName,' (',h.CARRCODE,')')
                                    ORDER BY CONCAT(o.CompanyName,' (',h.CARRCODE,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var oceanCarriers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return oceanCarriers;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetAirCarrier()
         {
-            const string query = @"SELECT CONCAT(a.CompanyName,' (',h.CARR,')') AS AirCompanyName,h.CARR FROM BookingHeader h
+            const string query = @"SELECT CONCAT(a.CompanyName,' (',h.CARR,')') AS AirCompanyName,h.CARR 
+                                   FROM BookingHeader h
                                    INNER JOIN XrefAirCarriers a ON a.IATACode=h.CARR
                                    WHERE h.CARR <> ''
                                    GROUP BY CONCAT(a.CompanyName,' (',h.CARR,')'),h.CARR
                                    ORDER BY CONCAT(a.CompanyName,' (',h.CARR,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var airCarriers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return airCarriers;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetAirServiceType()
         {
-            const string query = @"SELECT Distinct SERVTYPE FROM BookingHeader 
+            const string query = @"SELECT Distinct SERVTYPE 
+                                   FROM BookingHeader 
                                    WHERE SERVTYPE <> ''
                                    ORDER BY SERVTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var airServiceTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return airServiceTypes;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<BookingHeaderImp> GetBookingType()
         {
-            const string query = @"SELECT CONCAT(b.Description,' (',h.TYPE,')') AS BookingType,h.TYPE FROM BookingHeader h
+            const string query = @"SELECT CONCAT(b.Description,' (',h.TYPE,')') AS BookingType,h.TYPE 
+                                   FROM BookingHeader h
                                    INNER JOIN XrefBookingType b ON b.BookingType=h.TYPE
                                    WHERE h.TYPE <> ''
                                    GROUP BY CONCAT(b.Description,' (',h.TYPE,')'),h.TYPE
                                    ORDER BY CONCAT(b.Description,' (',h.TYPE,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return bookingTypes;
-            }
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         public int GetResultCount(SearchOptions so)
@@ -550,16 +505,13 @@ namespace Arg.Ceva.DataAccess
 
         public List<Generic> GetBOLCustomers()
         {
-            const string query = @"SELECT DISTINCT CONCAT(p.Name,' (',ih.DEBTOR,')') AS Name,ih.DEBTOR AS StrId FROM InvoiceCharges ih
+            const string query = @"SELECT DISTINCT CONCAT(p.Name,' (',ih.DEBTOR,')') AS Name,ih.DEBTOR AS StrId 
+                                   FROM InvoiceCharges ih
                                    INNER JOIN Participants p ON p.ParticipantID=ih.DEBTOR AND p.Region=ih.Region 
                                    WHERE ih.DEBTOR <> '' AND p.Type = 'customer'
                                    ORDER BY Name;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bolCustomers = connection.Query<Generic>(query, commandType: CommandType.Text).ToList();
-                return bolCustomers;
-            }
+            return _connection.Query<Generic>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<Generic> GetBalanceDueCustomersCeva(int companyId)
@@ -570,16 +522,13 @@ namespace Arg.Ceva.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            const string query = @"SELECT DISTINCT c.CustomerId AS StrId,CONCAT(c.customername,' (',c.CustomerId, ')') AS Name FROM [BalanceDues.Customers] c
+            const string query = @"SELECT DISTINCT c.CustomerId AS StrId,CONCAT(c.customername,' (',c.CustomerId, ')') AS Name 
+                                   FROM [BalanceDues.Customers] c
                                    LEFT JOIN BalanceDues b ON b.CustomerId=c.CustomerId
                                    WHERE b.CompanyId = @CompanyId
                                    ORDER BY NAME;";
 
-            using (var connection = Common.Database)
-            {
-                var balanceDueCustomersCeva = connection.Query<Generic>(query, parameters).ToList();
-                return balanceDueCustomersCeva;
-            }
+            return _connection.Query<Generic>(query, parameters).ToList();
         }
 
         public Generic GetCustomersbyBOL(string bol)
@@ -589,30 +538,23 @@ namespace Arg.Ceva.DataAccess
             //parameters.Add("@HAWBNO", bol, DbType.String);
             //parameters.Add("@HOUSENO", bol, DbType.String);
             //parameters.Add("@HBLNO", bol, DbType.String);
-            const string query = @"SELECT TOP 1 CONCAT(p.Name,' (',ih.DEBTOR,')') AS Name,ih.DEBTOR AS StrId FROM InvoiceCharges ih
+            const string query = @"SELECT TOP 1 CONCAT(p.Name,' (',ih.DEBTOR,')') AS Name,ih.DEBTOR AS StrId 
+                                   FROM InvoiceCharges ih
                                    INNER JOIN Participants p ON p.ParticipantID=ih.DEBTOR AND p.Region=ih.Region
                                    WHERE ih.DEBTOR <> '' AND p.Type = 'customer' AND ih.HAWBNO=@HAWBNO OR ih.HOUSENO=@HOUSENO OR ih.HBLNO=@HBLNO
                                    ORDER BY Name;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var customersbyBOL = connection.QueryFirstOrDefault<Generic>(query, new { @HAWBNO = bol, @HOUSENO = bol, @HBLNO = bol });
-                return customersbyBOL;
-            }
+            return _connection.QueryFirstOrDefault<Generic>(query, new { @HAWBNO = bol, @HOUSENO = bol, @HBLNO = bol });
         }
 
         public List<BookingHeaderImp> GetAllModes()
         {
-            const string query = @"SELECT DISTINCT CASE WHEN SERVTYPE = '' OR SERVTYPE IS NULL THEN ONCSERV ELSE SERVTYPE END AS Mode FROM BookingHeader
+            const string query = @"SELECT DISTINCT CASE WHEN SERVTYPE = '' OR SERVTYPE IS NULL THEN ONCSERV ELSE SERVTYPE END AS Mode 
+                                   FROM BookingHeader
                                    WHERE SERVTYPE <> '' OR ONCSERV <> ''
                                    ORDER BY Mode;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var allModes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return allModes;
-            }
-
+            return _connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
         }
 
         private ICacheManager<List<BookingHeaderImp>> _manager = CacheFactory.Build<List<BookingHeaderImp>>(Arg.Core.Settings.DefaultCacheSettings);
@@ -703,7 +645,7 @@ namespace Arg.Ceva.DataAccess
                     else
                     {
                         sortingOrder += sort.ColumnName + ",";
-                    }  
+                    }
                 }
                 sortingOrder = sortingOrder.Remove(sortingOrder.LastIndexOf(","));
 
@@ -758,18 +700,14 @@ namespace Arg.Ceva.DataAccess
                 {
                     ActiveClient.Set(so.CompanyId);
                 }
-                    
+
             }
             else
             {
                 sql = sqlCmd;
             }
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var results = connection.Query<BookingHeaderImp>(sql).ToList();
-                return results;
-            }
+            return _connection.Query<BookingHeaderImp>(sql).ToList();
         }
 
         public List<BookingHeaderImp> GetAuditResultStats(SearchOptions so, string clientName)
@@ -792,11 +730,7 @@ namespace Arg.Ceva.DataAccess
             cmd += @"GROUP BY b.Customer,b.MATRCLOCA,b.MATRDLOCA,Currency";
             cmd += @"ORDER BY b.Customer,b.MATRCLOCA,b.MATRDLOCA";
 
-            using (var connetion = Common.ClientDatabase)
-            {
-                var resultStats = connetion.Query<BookingHeaderImp>(cmd).ToList();
-                return resultStats;
-            }
+            return _connection.Query<BookingHeaderImp>(cmd).ToList();
         }
 
         public List<BookingHeaderImp> GetAuditResultStatsByOrigin(SearchOptions so, string clientName)
@@ -846,11 +780,7 @@ namespace Arg.Ceva.DataAccess
             cmd += @"GROUP BY b.MATRCLOCA,Currency";
             cmd += @"ORDER BY b.MATRCLOCA";
 
-            using (var connetion = Common.ClientDatabase)
-            {
-                var resultStatsByPOL = connetion.Query<BookingHeaderImp>(cmd).ToList();
-                return resultStatsByPOL;
-            }
+            return _connection.Query<BookingHeaderImp>(cmd).ToList();
         }
 
         public void BuildCmdWhereCondition1(ref string cmd, SearchOptions so)
@@ -925,7 +855,7 @@ namespace Arg.Ceva.DataAccess
                 AppendListCondition(ref cmd, "b.SERVLVL", so.SERVLVL);
             }
             if (so.SERVTYPE != null)
-            {  
+            {
                 AppendListCondition(ref cmd, "b.SERVTYPE", so.SERVTYPE);
             }
         }
@@ -1155,7 +1085,7 @@ namespace Arg.Ceva.DataAccess
                     }
                     temp = temp.Remove(temp.Length - strOR.Length, strOR.Length) + ")";
                     AppendConditionOperator(ref cmd);
-                    cmd += temp ;
+                    cmd += temp;
                 }
             }
 
@@ -1165,10 +1095,10 @@ namespace Arg.Ceva.DataAccess
                 {
                     if (so.ContainerIdOperator != "=")
                     {
-                        cmd += $" AND h.CNTRNO <> '{so.ContainerId}'"; 
+                        cmd += $" AND h.CNTRNO <> '{so.ContainerId}'";
                     }
 
-                    cmd += $" AND h.CNTRNO LIKE '%{so.ContainerId}%'"; 
+                    cmd += $" AND h.CNTRNO LIKE '%{so.ContainerId}%'";
                 }
                 if (so.CNTRTYPE != null)
                 {
@@ -1249,11 +1179,11 @@ namespace Arg.Ceva.DataAccess
                     cmd.IndexOf("P.Type='Customer'\n WHERE", StringComparison.CurrentCulture) > 0)
                 {
                     cmd += " AND ";
-                }  
+                }
                 else
                 {
                     cmd += " WHERE ";
-                }    
+                }
             }
             else
             {
@@ -1264,7 +1194,7 @@ namespace Arg.Ceva.DataAccess
                 else
                 {
                     cmd += " WHERE ";
-                }    
+                }
             }
         }
 

@@ -1,11 +1,19 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Data;
 namespace Arg.Ceva.DataAccess
 {
     public class XrefCountries
     {
+        private readonly SqlConnection _connection;
+
+        public XrefCountries()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Table("XrefCountries")]
         public class XrefCountry
         {
@@ -15,13 +23,11 @@ namespace Arg.Ceva.DataAccess
 
         public XrefCountry GetCountryName(string code)
         {
-            const string query = @"SELECT * FROM XrefCountries WHERE Code=@Code;";
+            const string query = @"SELECT * 
+                                   FROM XrefCountries 
+                                   WHERE Code=@Code;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var countryName = connection.QueryFirstOrDefault<XrefCountry>(query, new { @Code = code });
-                return countryName;
-            }
+            return _connection.QueryFirstOrDefault<XrefCountry>(query, new { @Code = code });
         }
     }
 }

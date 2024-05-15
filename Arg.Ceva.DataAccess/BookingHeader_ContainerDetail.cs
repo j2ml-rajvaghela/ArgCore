@@ -1,5 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
@@ -7,6 +8,13 @@ namespace Arg.Ceva.DataAccess
 {
     public class BookingHeader_ContainerDetail
     {
+        private readonly SqlConnection _connection;
+
+        public BookingHeader_ContainerDetail()
+        {
+            _connection = Common.ClientDatabase;
+        }
+
         [Dapper.Contrib.Extensions.Table("BookingHeader.ContainerDetail")]
         public class ContainerDetail
         {
@@ -87,40 +95,31 @@ namespace Arg.Ceva.DataAccess
 
         public List<ContainerDetail> GetContainerDetails()
         {
-            const string query = @"SELECT DISTINCT CNTRTYPE FROM [BookingHeader.ContainerDetail]
+            const string query = @"SELECT DISTINCT CNTRTYPE 
+                                   FROM [BookingHeader.ContainerDetail]
                                    WHERE CNTRTYPE IS NOT NULL AND CNTRTYPE <> ''
                                    ORDER BY CNTRTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var containerDetails = connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
-                return containerDetails;
-            }
+            return _connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<ContainerDetail> GetContainerDetail(string HBLNO)
         {
-            const string query = @"SELECT * FROM [BookingHeader.ContainerDetail]
+            const string query = @"SELECT * 
+                                   FROM [BookingHeader.ContainerDetail]
                                    WHERE HBLNO=@HBLNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var containerDetail = connection.Query<ContainerDetail>(query, new { @HBLNO = HBLNO}).ToList();
-                return containerDetail;
-            }
+            return _connection.Query<ContainerDetail>(query, new { @HBLNO = HBLNO }).ToList();
         }
 
         public List<ContainerDetail> GetDistinctSize()
         {
-            const string query = @"SELECT DISTINCT CNTRTYPE FROM [BookingHeader.ContainerDetail] 
+            const string query = @"SELECT DISTINCT CNTRTYPE 
+                                   FROM [BookingHeader.ContainerDetail] 
                                    WHERE CNTRTYPE <> '' 
                                    ORDER BY CNTRTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctSizes = connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
-                return distinctSizes;
-            }
+            return _connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
         }
 
         public List<DataModels.BalanceDues_Item> GetBalanceDuesContainerDetail(string bolNo)
@@ -140,11 +139,7 @@ namespace Arg.Ceva.DataAccess
                                    LEFT JOIN BookingHeader bh ON bc.HBLNo=bh.HBLNo
                                    WHERE bc.HBLNO=@HBLNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var balanceDuesContainerDetail = connection.Query<DataModels.BalanceDues_Item>(query, new { HBLNO = bolNo }).ToList();
-                return balanceDuesContainerDetail;
-            }
+            return _connection.Query<DataModels.BalanceDues_Item>(query, new { HBLNO = bolNo }).ToList();
         }
     }
 }
