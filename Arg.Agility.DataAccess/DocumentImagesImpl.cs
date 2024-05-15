@@ -22,6 +22,7 @@ namespace Arg.Agility.DataAccess
                                    WHERE i.fileName <> '' AND i.JobNumber=@JobNumber
                                    ORDER BY i.Type;";
 
+
             var documentImages = _connection.Query<DocumentImages>(query, new { JobNumber = jobNumber }).ToList();
             var files = new List<DocumentImages>();
             var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));

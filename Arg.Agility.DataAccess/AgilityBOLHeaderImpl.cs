@@ -203,6 +203,7 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.JobNumber=@JobNumber;";
 
             return _connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
+
         }
 
         public BOLHeaders GetConsigneeReference(string jobNumber)
@@ -217,6 +218,7 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT DISTINCT b.ConsignmentID 
                                    FROM BOLHeaders b
                                    WHERE b.JobNumber=@JobNumber;";
+
 
             return _connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
         }
