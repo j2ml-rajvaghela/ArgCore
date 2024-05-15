@@ -5,22 +5,13 @@ using Arg.DataModels;
 using CacheManager.Core;
 using CustomExtensions;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Arg.Agility.DataAccess
 {
     public class AgilityBOLHeaderImpl
     {
-        private string _dbName;
-        private readonly SqlConnection _clientDbConnection;
-        private readonly SqlConnection _connection;
-        public AgilityBOLHeaderImpl()
-        {
-            _clientDbConnection = Common.ClientDatabase;
-            _connection = Common.Database;
-            _dbName = Common.DBName;
-        }
+        private string _dbName = Common.DBName;
 
         public BOLHeaders GetBOLHeader(string jobNumber)
         {
@@ -33,8 +24,11 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT * FROM BOLHeaders
                                    WHERE JobNumber=@JobNumber;";
 
-            var bOLHeader = _clientDbConnection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
-            return bOLHeader;
+            using (var connection = Common.ClientDatabase)
+            {
+                var bOLHeader = connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
+                return bOLHeader;
+            }
         }
 
         public List<BOLHeaders> GetServiceMovementType()
@@ -43,8 +37,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE ServiceMovementType <> 'null'
                                    ORDER BY ServiceMovementType;";
 
-            var serviceMovementTypes = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return serviceMovementTypes;
+            using (var connection = Common.ClientDatabase)
+            {
+                var serviceMovementTypes = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return serviceMovementTypes;
+            }
         }
 
         public List<BOLHeaders> GetServiceLevel()
@@ -53,8 +50,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE ServiceLevel <> 'null'
                                    ORDER BY ServiceLevel;";
 
-            var serviceLevels = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return serviceLevels;
+            using (var connection = Common.ClientDatabase)
+            {
+                var serviceLevels = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return serviceLevels;
+            }
         }
 
         public List<BOLHeaders> GetServiceType()
@@ -63,8 +63,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE ServiceType <> 'null'
                                    ORDER BY ServiceType;";
 
-            var serviceTypes = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return serviceTypes;
+            using (var connection = Common.ClientDatabase)
+            {
+                var serviceTypes = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return serviceTypes;
+            }
         }
 
         public List<BOLHeaders> GetDistinctOrigin()
@@ -74,8 +77,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.Origin IS NOT NULL
                                    ORDER BY Origin;";
 
-            var distinctOrigins = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return distinctOrigins;
+            using (var connection = Common.ClientDatabase)
+            {
+                var distinctOrigins = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return distinctOrigins;
+            }
         }
 
         public List<BOLHeaders> GetPortOfExit()
@@ -85,8 +91,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.PortOfExit IS NOT NULL
                                    ORDER BY PortOfExit;";
 
-            var portOfExits = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return portOfExits;
+            using (var connection = Common.ClientDatabase)
+            {
+                var portOfExits = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return portOfExits;
+            }
         }
 
         public List<BOLHeaders> GetPortofEntry()
@@ -96,8 +105,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.PortofEntry IS NOT NULL
                                    ORDER BY PortofEntry;";
 
-            var portOfEntries = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return portOfEntries;
+            using (var connection = Common.ClientDatabase)
+            {
+                var portOfEntries = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return portOfEntries;
+            }
         }
 
         public List<BOLHeaders> GetDestination()
@@ -107,8 +119,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.Destination IS NOT NULL
                                    ORDER BY Destination;";
 
-            var destinations = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return destinations;
+            using (var connection = Common.ClientDatabase)
+            {
+                var destinations = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return destinations;
+            }
         }
 
         public List<BOLHeaders> GetShipper()
@@ -118,8 +133,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.Shipper IS NOT NULL
                                    ORDER BY Shipper;";
 
-            var shippers = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return shippers;
+            using (var connection = Common.ClientDatabase)
+            {
+                var shippers = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return shippers;
+            }
         }
 
         public List<BOLHeaders> GetConsignee()
@@ -129,8 +147,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.Consignee IS NOT NULL
                                    ORDER BY Consignee;";
 
-            var consignees = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return consignees;
+            using (var connection = Common.ClientDatabase)
+            {
+                var consignees = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return consignees;
+            }
         }
 
         public List<BOLHeaders> GetNotifyParty()
@@ -140,8 +161,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.NotifyParty IS NOT NULL
                                    ORDER BY NotifyParty;";
 
-            var notifyParties = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return notifyParties;
+            using (var connection = Common.ClientDatabase)
+            {
+                var notifyParties = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return notifyParties;
+            }
         }
 
         public List<BOLHeaders> GetExportingCarrier()
@@ -152,8 +176,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.ExportingCarrier IS NOT NULL
                                    ORDER BY ExportingCarrier;";
 
-            var exportingCarriers = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return exportingCarriers;
+            using (var connection = Common.ClientDatabase)
+            {
+                var exportingCarriers = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return exportingCarriers;
+            }
         }
 
         public List<BOLHeaders> GetPrepaidCollect()
@@ -162,24 +189,33 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.PrepaidCollect IS NOT NULL
                                    ORDER BY PrepaidCollect;";
 
-            var prepaidCollections = _clientDbConnection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
-            return prepaidCollections;
+            using (var connection = Common.ClientDatabase)
+            {
+                var prepaidCollections = connection.Query<BOLHeaders>(query, commandType: CommandType.Text).ToList();
+                return prepaidCollections;
+            }
         }
 
         public List<DataModels.Participants> GetAllParticipants()
         {
             const string query = @"SELECT * FROM Participants;";
 
-            var allParticipants = _clientDbConnection.Query<DataModels.Participants>(query, commandType: CommandType.Text).ToList();
-            return allParticipants;
+            using (var connection = Common.ClientDatabase)
+            {
+                var allParticipants = connection.Query<DataModels.Participants>(query, commandType: CommandType.Text).ToList();
+                return allParticipants;
+            }
         }
 
         public int GetResultCount(Arg.DataModels.SearchOptions so)
         {
             const string query = @"SELECT COUNT(*) AS ResultCount FROM BOLHeaders b;";
 
-            var resultCount = Convert.ToInt32(_clientDbConnection.ExecuteScalar<object>(query, commandType: CommandType.Text));
-            return resultCount;
+            using (var connection = Common.ClientDatabase)
+            {
+                var resultCount = Convert.ToInt32(connection.ExecuteScalar<object>(query, commandType: CommandType.Text));
+                return resultCount;
+            }
         }
 
         public List<DataModels.Generic> GetBOLCustomers()
@@ -188,8 +224,11 @@ namespace Arg.Agility.DataAccess
                                    WHERE ParticipantType = 'Payor'
                                    ORDER BY ParticipantName;";
 
-            var bolCustomers = _clientDbConnection.Query<DataModels.Generic>(query, commandType: CommandType.Text).ToList();
-            return bolCustomers;
+            using (var connection = Common.ClientDatabase)
+            {
+                var bolCustomers = connection.Query<DataModels.Generic>(query, commandType: CommandType.Text).ToList();
+                return bolCustomers;
+            }
         }
 
         public BOLHeaders GetShipper(string jobNumber)
@@ -204,8 +243,11 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT DISTINCT b.ConsignmentID FROM BOLHeaders b
                                    WHERE b.JobNumber=@JobNumber;";
 
-            var shipper = _clientDbConnection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
-            return shipper;
+            using (var connection = Common.ClientDatabase)
+            {
+                var shipper = connection.QueryFirstOrDefault<BOLHeaders>(query,parameters);
+                return shipper;
+            }
         }
 
         public BOLHeaders GetConsigneeReference(string jobNumber)
@@ -220,8 +262,11 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT DISTINCT b.ConsignmentID FROM BOLHeaders b
                                    WHERE b.JobNumber=@JobNumber;";
 
-            var consigneeReference = _clientDbConnection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
-            return consigneeReference;
+            using (var connection = Common.ClientDatabase)
+            {
+                var consigneeReference = connection.QueryFirstOrDefault<BOLHeaders>(query, parameters);
+                return consigneeReference;
+            }
         }
 
         public List<BalanceDue> GetCustomerBalanceDues(string bolNo, int companyId)
@@ -236,8 +281,11 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT * FROM BalanceDues
                                    WHERE CompanyId=@CompanyId AND Bol=@Bol;";
 
-            var balanceDues = _connection.Query<Arg.DataModels.BalanceDue>(query, parameters).ToList();
-            return balanceDues;
+            using (var connection = Common.Database)
+            {
+                var balanceDues = connection.Query<Arg.DataModels.BalanceDue>(query, parameters).ToList();
+                return balanceDues;
+            }
         }
 
         private ICacheManager<List<BOLHeaders>> _manager = CacheFactory.Build<List<BOLHeaders>>(Core.Settings.DefaultCacheSettings);
@@ -360,8 +408,11 @@ namespace Arg.Agility.DataAccess
                 sql = sqlCmd;
             }
 
-            var results = _clientDbConnection.Query<BOLHeaders>(sql).ToList();
-            return results;
+            using (var connection = Common.ClientDatabase)
+            {
+                var results = connection.Query<BOLHeaders>(sql).ToList();
+                return results;
+            }
         }
 
         public List<BOLHeaders> GetAgilityAuditResultStats(Arg.DataModels.SearchOptions so, string clientName)
@@ -382,8 +433,11 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.Shipper,p.ParticipantName,bh.Origin,bh.Destination";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            var resultStats = _clientDbConnection.Query<BOLHeaders>(cmd).ToList();
-            return resultStats;
+            using (var connection = Common.ClientDatabase)
+            {
+                var resultStats = connection.Query<BOLHeaders>(cmd).ToList();
+                return resultStats;
+            }
         }
 
         public List<BOLHeaders> GetAuditResultStatsByOrigin(Arg.DataModels.SearchOptions so, string clientName)
@@ -405,8 +459,11 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.Origin,bh.Destination";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            var resultStatsByOrigin = _clientDbConnection.Query<BOLHeaders>(cmd).ToList();
-            return resultStatsByOrigin;
+            using (var connection = Common.ClientDatabase)
+            {
+                var resultStatsByOrigin = connection.Query<BOLHeaders>(cmd).ToList();
+                return resultStatsByOrigin;
+            }
         }
 
         public List<BOLHeaders> GetAuditResultStatsByPOL(Arg.DataModels.SearchOptions so, string clientName)
@@ -430,8 +487,11 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.PortOfExit";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            var resultStatsByPOL = _clientDbConnection.Query<BOLHeaders>(cmd).ToList();
-            return resultStatsByPOL;
+            using (var connection = Common.ClientDatabase)
+            {
+                var resultStatsByPOL = connection.Query<BOLHeaders>(cmd).ToList();
+                return resultStatsByPOL;
+            }
         }
 
         public List<BOLHeaders> GetAuditResultStatsByShipper(Arg.DataModels.SearchOptions so, string clientName)
@@ -456,8 +516,11 @@ namespace Arg.Agility.DataAccess
             cmd += @"GROUP BY bh.Shipper";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            var resultStatsByShipper = _clientDbConnection.Query<BOLHeaders>(cmd).ToList();
-            return resultStatsByShipper;
+            using (var connection = Common.ClientDatabase)
+            {
+                var resultStatsByShipper = connection.Query<BOLHeaders>(cmd).ToList();
+                return resultStatsByShipper;
+            }
         }
 
         public void BuildCmdWhereCondition1(ref string cmd, Arg.DataModels.SearchOptions so)

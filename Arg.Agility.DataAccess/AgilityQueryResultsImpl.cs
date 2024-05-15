@@ -2,16 +2,12 @@
 using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using System.Data;
 namespace Arg.Agility.DataAccess
 {
     public class AgilityQueryResultsImpl
     {
-        private readonly SqlConnection _clientDbConnection;
-        public AgilityQueryResultsImpl() => _clientDbConnection = Common.ClientDatabase;
-
         public QueryResults GetQueryResults(int queryId)
         {
             var parameters = new DynamicParameters();
@@ -19,12 +15,15 @@ namespace Arg.Agility.DataAccess
             if (queryId > 0)
             {
                 parameters.Add("@QueryId", queryId, DbType.Int32);
-            }
+            }   
             const string query = @"SELECT * FROM QueryResults
                                    WHERE QueryId=@QueryId;";
 
-            var queryResults = _clientDbConnection.QueryFirstOrDefault<QueryResults>(query, parameters);
-            return queryResults;
+            using (var connection = Common.ClientDatabase)
+            {
+                var queryResults = connection.QueryFirstOrDefault<QueryResults>(query, parameters);
+                return queryResults;
+            }
         }
 
         public QueryResults SaveQueryResults(object searchOptions)
@@ -38,8 +37,11 @@ namespace Arg.Agility.DataAccess
 
         public QueryResults SaveQueryResults(QueryResults qr)
         {
-            _clientDbConnection.Insert(qr);
-            return qr;
+            using (var connection = Common.ClientDatabase)
+            {
+                connection.Insert(qr);
+                return qr;
+            }
         }
     }
 }

@@ -24,7 +24,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<DriveService>();
 builder.Services.AddScoped<DapperUserStore>();
 builder.Services.AddScoped<DapperContext>();
-
 builder.Services.AddDistributedMemoryCache();
 
 // Identity setup
@@ -33,8 +32,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddRoleStore<DapperUserStore>()
     .AddDefaultTokenProviders();
 
-
-// Session services
+// Session service
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -50,8 +48,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
 });
 
-// IHttpContextAccessor
+// Add IHttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddScoped<ApplicationSignInManager>();
@@ -60,10 +59,6 @@ builder.Services.AddScoped<ApplicationUserManager>();
 // Add on 20-3-2024
 //builder.Services.AddScoped<ISmsService , SmsService>();
 //builder.Services.AddScoped<IEmailService , EmailServices>();
-
-
-builder.Services.AddScoped<DapperUserStore>();
-builder.Services.AddScoped<DapperContext>();
 
 builder.Services.AddScoped<IUserStore<ApplicationUser>>(provider =>
     new DapperUserStore(provider.GetRequiredService<DapperContext>()));
@@ -100,10 +95,8 @@ builder.Services.AddScoped<ApplicationUserManager>(provider =>
 builder.Services.AddScoped<ApplicationSignInManager>();
 
 
-
 var app = builder.Build();
 
-// Set HttpContextAccessor for Common and other services that need it
 Arg.DataAccess.Common.SetHttpContextAccessor(app.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>());
 ActiveClient.SetHttpContextAccessor(app.Services.GetRequiredService<IHttpContextAccessor>());
 ArgCore.Helpers.Common.SetHttpContextAccessor(app.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>(), app.Services.GetRequiredService<IWebHostEnvironment>());
