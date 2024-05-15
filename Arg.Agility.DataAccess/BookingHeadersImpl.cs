@@ -10,6 +10,7 @@ namespace Arg.Agility.DataAccess
     {
         private readonly SqlConnection _clientDbConnection;
         public BookingHeadersImpl() => _clientDbConnection = Common.ClientDatabase;
+
         public BookingHeaders GetBookingInfo(string jobNumber)
         {
             const string query = @"SELECT * FROM BookingHeaders 
