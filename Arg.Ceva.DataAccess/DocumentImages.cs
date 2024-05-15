@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
 
@@ -9,13 +8,6 @@ namespace Arg.Ceva.DataAccess
 {
     public class DocumentImages
     {
-        private readonly SqlConnection _connection;
-
-        public DocumentImages()
-        {
-            _connection = Common.ClientDatabase;
-        }
-
         [Table("DocumentImages")]
         public class DocumentImage
         {
@@ -119,32 +111,38 @@ namespace Arg.Ceva.DataAccess
 
         public List<DocumentImage> GetDocumentImage(string bolNo)
         {
-            const string query = @"SELECT * 
-                                   FROM DocumentImages i
+            const string query = @"SELECT * FROM DocumentImages i
                                    WHERE i.fileName <> '' AND i.HAWBBLNO=@HAWBBLNO
                                    ORDER BY i.Type,i.ScanDate;";
 
-            var documentImages = _connection.Query<DocumentImage>(query, new { HAWBBLNO = bolNo }).ToList();
-            var files = new List<DocumentImage>();
-            var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
-            files.AddRange(pf);
-            pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[1]));
-            files.AddRange(pf);
-            pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[2]));
-            files.AddRange(pf);
-            var remaining = documentImages.Except(files);
-            files.AddRange(remaining);
-            return files;
+            using (var connection = Common.ClientDatabase)
+            {
+                var documentImages = connection.Query<DocumentImage>(query, new { HAWBBLNO = bolNo }).ToList();
+                var files = new List<DocumentImage>();
+                var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
+                files.AddRange(pf);
+                pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[1]));
+                files.AddRange(pf);
+                pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[2]));
+                files.AddRange(pf);
+                var remaining = documentImages.Except(files);
+                files.AddRange(remaining);
+                return files;
+            }
         }
 
         public List<DocumentImage> GetAllDocumentImage()
         {
-            const string query = @"SELECT distinct Type 
-                                   FROM DocumentImages
+            const string query = @"SELECT distinct Type FROM DocumentImages
                                    WHERE fileName <> ''
                                    ORDER BY Type;";
 
-            return _connection.Query<DocumentImage>(query, commandType: CommandType.Text).ToList();
+
+            using (var connection = Common.ClientDatabase)
+            {
+                var allDocumentimages = connection.Query<DocumentImage>(query, commandType: CommandType.Text).ToList();
+                return allDocumentimages;
+            }
         }
     }
 }

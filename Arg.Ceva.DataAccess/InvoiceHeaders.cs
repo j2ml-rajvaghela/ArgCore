@@ -1,19 +1,11 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Microsoft.Data.SqlClient;
 using System.Data;
 namespace Arg.Ceva.DataAccess
 {
     public class InvoiceHeaders
     {
-        private readonly SqlConnection _connection;
-
-        public InvoiceHeaders()
-        {
-            _connection = Common.ClientDatabase;
-        }
-
         [Table("InvoiceHeader")]
         public class InvoiceHeader
         {
@@ -103,13 +95,16 @@ namespace Arg.Ceva.DataAccess
 
         public List<InvoiceHeader> GetInvoicedChargesDetail(string BOKPRT)
         {
-            const string query = @"SELECT CONCAT(ic.INVTEXT1,' ',ic.INVTEXT2) AS INVTEXTDescription,ic.INVTEXT2,rate, ic.INVCURAMT,ic.CURR 
-                                   FROM InvoiceCharges ic
+            const string query = @"SELECT CONCAT(ic.INVTEXT1,' ',ic.INVTEXT2) AS INVTEXTDescription,ic.INVTEXT2,rate, ic.INVCURAMT,ic.CURR FROM InvoiceCharges ic
                                    INNER JOIN BookingHeader bh ON bh.Region=ic.Region AND bh.BOKPRT=ic.BLPRT
                                    WHERE bh.BOKPRT=@BOKPRT
                                    ORDER BY ic.DEBTOR,ic.INVCURAMT DESC;";
 
-            return _connection.Query<InvoiceHeader>(query, new { BOKPRT = BOKPRT }).ToList();
+            using (var connection = Common.ClientDatabase)
+            {
+                var invoicedChargesDetail = connection.Query<InvoiceHeader>(query, new { BOKPRT = BOKPRT }).ToList();
+                return invoicedChargesDetail;
+            }
         }
     }
 }

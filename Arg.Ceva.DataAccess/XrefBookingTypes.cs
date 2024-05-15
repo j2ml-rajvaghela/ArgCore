@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Arg.Ceva.DataAccess
@@ -9,13 +8,6 @@ namespace Arg.Ceva.DataAccess
     [Table("XrefBookingType")]
     public class XrefBookingTypes
     {
-        private readonly SqlConnection _connection;
-
-        public XrefBookingTypes()
-        {
-            _connection = Common.ClientDatabase;
-        }
-
         public class XrefBookingType
         {
             public string BookingType { get; set; }
@@ -24,11 +16,13 @@ namespace Arg.Ceva.DataAccess
 
         public XrefBookingType GetBookingType(string bookingType)
         {
-            const string query = @"SELECT * 
-                                   FROM XrefBookingType 
-                                   WHERE BookingType=@BookingType;";
+            const string query = @"SELECT * FROM XrefBookingType WHERE BookingType=@BookingType;";
 
-            return _connection.QueryFirstOrDefault<XrefBookingType>(query, new { @BookingType = bookingType });
+            using (var connection = Common.ClientDatabase)
+            {
+                var bType = connection.QueryFirstOrDefault<XrefBookingType>(query, new { @BookingType = bookingType });
+                return bType;
+            }
         }
     }
 }
