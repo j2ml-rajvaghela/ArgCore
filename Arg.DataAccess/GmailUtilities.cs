@@ -34,7 +34,7 @@ namespace Arg.DataAccess
                     {
                         msg.To.Add(MailboxAddress.Parse(sendToMailAddresses));
                     }
-                       
+
                 }
 
                 msg.From.Add(MailboxAddress.Parse(emailAddress));
@@ -42,30 +42,28 @@ namespace Arg.DataAccess
                 msg.Subject = subject;
                 msg.Body = bb.ToMessageBody();
 
-                using (var cancel = new CancellationTokenSource())
+                using var cancel = new CancellationTokenSource();
+                client.Connect(hostName, port, true);
+                client.Authenticate(credentials, cancel.Token);
+
+                var draftFolder = client.GetFolder(SpecialFolder.Drafts);
+                if (draftFolder != null)
                 {
-                    client.Connect(hostName, port, true);
-                    client.Authenticate(credentials, cancel.Token);
+                    draftFolder.Open(FolderAccess.ReadWrite);
 
-                    var draftFolder = client.GetFolder(SpecialFolder.Drafts);
-                    if (draftFolder != null)
-                    {
-                        draftFolder.Open(FolderAccess.ReadWrite);
-
-                        draftFolder.Append(msg, MessageFlags.Draft);
-                        draftFolder.Expunge();
-                    }
-                    else
-                    {
-                        var toplevel = client.GetFolder(client.PersonalNamespaces[0]);
-                        var DraftFolder = toplevel.Create(SpecialFolder.Drafts.ToString(), true);
-
-                        DraftFolder.Open(FolderAccess.ReadWrite);
-                        DraftFolder.Append(msg, MessageFlags.Draft);
-                        DraftFolder.Expunge();
-                    }
-                    client.Disconnect(true, cancel.Token);
+                    draftFolder.Append(msg, MessageFlags.Draft);
+                    draftFolder.Expunge();
                 }
+                else
+                {
+                    var toplevel = client.GetFolder(client.PersonalNamespaces[0]);
+                    var DraftFolder = toplevel.Create(SpecialFolder.Drafts.ToString(), true);
+
+                    DraftFolder.Open(FolderAccess.ReadWrite);
+                    DraftFolder.Append(msg, MessageFlags.Draft);
+                    DraftFolder.Expunge();
+                }
+                client.Disconnect(true, cancel.Token);
             }
         }
     }

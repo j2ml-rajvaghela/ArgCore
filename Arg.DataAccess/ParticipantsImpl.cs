@@ -8,11 +8,9 @@ namespace Arg.DataAccess
         {
             const string query = @"SELECT * FROM Participants;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var allParticipants = connection.Query<DataModels.Participants>(query, commandType: CommandType.Text).ToList();
-                return allParticipants;
-            }
+            using var connection = Common.ClientDatabase;
+            var allParticipants = connection.Query<DataModels.Participants>(query, commandType: CommandType.Text).ToList();
+            return allParticipants;
         }
 
         public DataModels.Participants GetParticipant(string customerId)
@@ -20,11 +18,9 @@ namespace Arg.DataAccess
             const string query = @"SELECT * FROM Participants
                                    WHERE (ParticipantID=@ParticipantId OR @ParticipantId = 0);";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var participants = connection.QueryFirstOrDefault<DataModels.Participants>(query, new { ParticipantId  = customerId });
-                return participants;
-            }
+            using var connection = Common.ClientDatabase;
+            var participants = connection.QueryFirstOrDefault<DataModels.Participants>(query, new { customerId });
+            return participants;
         }
     }
 }

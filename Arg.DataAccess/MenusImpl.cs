@@ -14,11 +14,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@q", q, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var menus = connection.Query<Menus>("GetMenus", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return menus;
-            }
+
+            using var connection = Common.Database;
+            var menus = connection.Query<Menus>("GetMenus", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return menus;
         }
 
         public Menus GetMenu(int menuId)
@@ -28,11 +27,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@MenuId", menuId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var menu = connection.QueryFirstOrDefault<Menus>("GetMenu", parameters, commandType: CommandType.StoredProcedure);
-                return menu;
-            }
+
+            using var connection = Common.Database;
+            var menu = connection.QueryFirstOrDefault<Menus>("GetMenu", parameters, commandType: CommandType.StoredProcedure);
+            return menu;
         }
 
         public void SaveMenu(Menus menus)
@@ -45,28 +43,26 @@ namespace Arg.DataAccess
             {
                 throw new Exception("DisplayName can't be empty.");
             }
-            using (var connection = Common.Database)
+
+            using var connection = Common.Database;
+            if (menus.MenuId == 0)
             {
-                if (menus.MenuId == 0)
-                {
-                    connection.Insert(menus);
-                }
-                else
-                {
-                    connection.Update(menus);
-                }
-                
+                connection.Insert(menus);
+            }
+            else
+            {
+                connection.Update(menus);
             }
         }
 
         public int DeleteMenu(int menuId)
         {
-            const string query = @"Delete FROM Menus WHERE MenuId=@MenuId;";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @MenuId = menuId });
-                return Convert.ToInt32(result);
-            }
+            const string query = @"DELETE FROM Menus 
+                                   WHERE MenuId=@MenuId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { menuId });
+            return Convert.ToInt32(result);
         }
     }
 }

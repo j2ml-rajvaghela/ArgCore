@@ -2,7 +2,6 @@
 using Dapper;
 using Dapper.Contrib.Extensions;
 using System.Data;
-using System.Transactions;
 
 namespace Arg.DataAccess
 {
@@ -10,36 +9,24 @@ namespace Arg.DataAccess
     {
         public List<MenuItems> GetParentMenuItems()
         {
-            using (var connection = Common.Database)
-            {
-                var parentMenuItems = connection.Query<MenuItems>("GetParentMenuItems", commandType: CommandType.StoredProcedure).ToList();
-                return parentMenuItems;
-            }
+            using var connection = Common.Database;
+            var parentMenuItems = connection.Query<MenuItems>("GetParentMenuItems", commandType: CommandType.StoredProcedure).ToList();
+            return parentMenuItems;
         }
 
         public List<MenuItems> GetAssignedMenuItemsWithChildren(string roleId)
 
         {
-            using (var connection = Common.Database)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@RoleId", roleId, DbType.String);
-
-                var assignedMenuItemsWithChildren = connection.Query<MenuItems>("GetAssignedMenuItemsWithChildren", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return assignedMenuItemsWithChildren;
-            }
+            using var connection = Common.Database;
+            var assignedMenuItemsWithChildren = connection.Query<MenuItems>("GetAssignedMenuItemsWithChildren", new { roleId }, commandType: CommandType.StoredProcedure).ToList();
+            return assignedMenuItemsWithChildren;
         }
 
         public List<MenuItems> GetRelatedMenuItems(string roleId)
         {
-            using (var connection = Common.Database)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@RoleId", roleId, DbType.String);
-
-                var relatedMenuItems = connection.Query<MenuItems>("GetRelatedMenuItems", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return relatedMenuItems;
-            }
+            using var connection = Common.Database;
+            var relatedMenuItems = connection.Query<MenuItems>("GetRelatedMenuItems", new { roleId }, commandType: CommandType.StoredProcedure).ToList();
+            return relatedMenuItems;
         }
 
         public MenuItems GetMenuItem(int itemId, string link = "")
@@ -57,11 +44,10 @@ namespace Arg.DataAccess
                 }
                 parameters.Add("@Link", link, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var menuItem = connection.QueryFirstOrDefault<MenuItems>("GetMenuItem", parameters, commandType: CommandType.StoredProcedure);
-                return menuItem;
-            }
+
+            using var connection = Common.Database;
+            var menuItem = connection.QueryFirstOrDefault<MenuItems>("GetMenuItem", parameters, commandType: CommandType.StoredProcedure);
+            return menuItem;
         }
 
 
@@ -72,11 +58,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@q", q, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var menuItems = connection.Query<MenuItems>("GetMenuItems", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return menuItems;
-            }
+
+            using var connection = Common.Database;
+            var menuItems = connection.Query<MenuItems>("GetMenuItems", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return menuItems;
         }
 
         public void SaveMenuItem(MenuItems menuItem)
@@ -89,28 +74,26 @@ namespace Arg.DataAccess
             {
                 throw new Exception("DisplayName can't be empty.");
             }
-            using (var connection = Common.Database)
-            {
-                if (menuItem.ItemId == 0)
-                {
-                    connection.Insert(menuItem);
-                }
-                else
-                {
-                    connection.Update(menuItem);
-                }
 
+            using var connection = Common.Database;
+            if (menuItem.ItemId == 0)
+            {
+                connection.Insert(menuItem);
+            }
+            else
+            {
+                connection.Update(menuItem);
             }
         }
 
         public int DeleteMenuItem(int itemId)
         {
-            const string query = @"DELETE FROM MenuItem WHERE ItemId=@ItemId;";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @ItemId = itemId });
-                return result;
-            }
+            const string query = @"DELETE FROM MenuItem 
+                                   WHERE ItemId=@ItemId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { itemId });
+            return result;
         }
 
 
@@ -184,20 +167,22 @@ namespace Arg.DataAccess
             if (myString == "StatusDetails")
                 menuLink = menuLink.Replace("StatusDetails", "Index");
             var menuItem = GetMenuItem(0, menuLink);
+
             var parameters = new DynamicParameters();
             parameters.Add("@RoleId", roleId, DbType.String);
             parameters.Add("@ItemId", menuItem.ItemId, DbType.Int32);
             parameters.Add("@ParentId", menuItem.ParentId, DbType.Int32);
-            const string query = "SELECT ItemId FROM RoleMenuRels WHERE (RoleId=@RoleId AND ItemId=@ItemId) OR (RoleId=@RoleId AND ItemId=@ParentId)";
-            using (var connection = Common.Database)
+
+            const string query = @"SELECT ItemId FROM RoleMenuRels 
+                                   WHERE (RoleId=@RoleId AND ItemId=@ItemId) OR (RoleId=@RoleId AND ItemId=@ParentId)";
+
+            using var connection = Common.Database;
+            if (menuItem != null && menuItem.ItemId > 0)
             {
-                if (menuItem != null && menuItem.ItemId > 0)
-                {
-                    var result = Convert.ToInt32(connection.ExecuteScalar(query, parameters));
-                    return result > 0;
-                }
-                return false;
+                var result = Convert.ToInt32(connection.ExecuteScalar(query, parameters));
+                return result > 0;
             }
+            return false;
         }
     }
 }

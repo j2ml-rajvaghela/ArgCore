@@ -1,7 +1,6 @@
 ﻿using Arg.DataModels;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.ComponentModel.Design;
 using System.Data;
 
 namespace Arg.DataAccess
@@ -21,41 +20,30 @@ namespace Arg.DataAccess
                 parameters.Add("@Name", name, DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var argClient = connection.QueryFirstOrDefault<ArgClient>("GetArgClient", parameters, commandType: CommandType.StoredProcedure);
-                return argClient;
-            }
+            using var connection = Common.Database;
+            var argClient = connection.QueryFirstOrDefault<ArgClient>("GetArgClient", parameters, commandType: CommandType.StoredProcedure);
+            return argClient;
         }
 
         public ArgClient GetClientDetailsByCustomer(string customerId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@CustomerId", customerId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var clientDetailByCustomer = connection.QueryFirstOrDefault<ArgClient>("GetClientDetailByCustomer", parameters, commandType: CommandType.StoredProcedure);
-                return clientDetailByCustomer;
-            }
+            using var connection = Common.Database;
+            var clientDetailByCustomer = connection.QueryFirstOrDefault<ArgClient>("GetClientDetailByCustomer", new { customerId }, commandType: CommandType.StoredProcedure);
+            return clientDetailByCustomer;
         }
 
         public List<ArgClient> GetDistinctArgClientNames()
         {
-            using (var connection = Common.Database)
-            {
-                var DistinctClientsName = connection.Query<ArgClient>("GetAllDistinctArgClientsName", commandType: CommandType.StoredProcedure).ToList();
-                return DistinctClientsName;
-            }
+            using var connection = Common.Database;
+            var DistinctClientsName = connection.Query<ArgClient>("GetAllDistinctArgClientsName", commandType: CommandType.StoredProcedure).ToList();
+            return DistinctClientsName;
         }
 
         public List<ArgClient> GetArgClients()
         {
-            using (var connection = Common.Database)
-            {
-                var argClients = connection.Query<ArgClient>("GetArgClients", commandType: CommandType.StoredProcedure).ToList();
-                return argClients;
-            }
+            using var connection = Common.Database;
+            var argClients = connection.Query<ArgClient>("GetArgClients", commandType: CommandType.StoredProcedure).ToList();
+            return argClients;
         }
 
         public List<ArgClient> GetArgClients(string userId)
@@ -65,14 +53,9 @@ namespace Arg.DataAccess
                 System.Diagnostics.Trace.TraceError("User not selected");
             }
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var argClientsByUserId = connection.Query<ArgClient>("GetArgClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return argClientsByUserId;
-            }
+            using var connection = Common.Database;
+            var argClientsByUserId = connection.Query<ArgClient>("GetArgClientsByUserId", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return argClientsByUserId;
         }
 
         public List<ArgClient> GetArgClients(int companyId, string name, string email, string location, string contact, DateTime lastModStartDate, DateTime lastModEndDate, string userId)
@@ -116,11 +99,9 @@ namespace Arg.DataAccess
                 parameters.Add("@LastModEndDate", lastModEndDateFormatted);
             }
 
-            using (var connection = Common.Database)
-            {
-                var customerClients = connection.Query<ArgClient>("GetArgClientsByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return customerClients;
-            }
+            using var connection = Common.Database;
+            var customerClients = connection.Query<ArgClient>("GetArgClientsByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return customerClients;
         }
 
         public List<ArgClient> GetBOLClients(string userId)
@@ -130,14 +111,9 @@ namespace Arg.DataAccess
                 System.Diagnostics.Trace.TraceError("User not selected");
             }
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var customerClients = connection.Query<ArgClient>("GetBOLClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return customerClients;
-            }
+            using var connection = Common.Database;
+            var customerClients = connection.Query<ArgClient>("GetBOLClientsByUserId", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return customerClients;
         }
 
         public List<ArgClient> GetBalanceDueClients(int companyId, string userId)
@@ -155,11 +131,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var balanceDueClients = connection.Query<ArgClient>("GetBalanceDueClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return balanceDueClients;
-            }
+            using var connection = Common.Database;
+            var balanceDueClients = connection.Query<ArgClient>("GetBalanceDueClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return balanceDueClients;
         }
 
         public List<ArgClient> GetResearchClients(string userId)
@@ -169,14 +143,9 @@ namespace Arg.DataAccess
                 System.Diagnostics.Trace.TraceError("User not selected");
             }
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var customerClients = connection.Query<ArgClient>("GetResearchClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return customerClients;
-            }
+            using var connection = Common.Database;
+            var customerClients = connection.Query<ArgClient>("GetResearchClientsByUserId", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return customerClients;
         }
 
         public List<ArgClient> GetCustomerClients(string userId)
@@ -186,14 +155,9 @@ namespace Arg.DataAccess
                 System.Diagnostics.Trace.TraceError("User not selected");
             }
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var customerClients = connection.Query<ArgClient>("GetCustomerClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return customerClients;
-            }
+            using var connection = Common.Database;
+            var customerClients = connection.Query<ArgClient>("GetCustomerClientsByUserId", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return customerClients;
 
         }
 
@@ -204,14 +168,9 @@ namespace Arg.DataAccess
                 System.Diagnostics.Trace.TraceError("User not selected");
             }
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var activityClients = connection.Query<ArgClient>("GetActivityClientsByUserId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return activityClients;
-            }
+            using var connection = Common.Database;
+            var activityClients = connection.Query<ArgClient>("GetActivityClientsByUserId", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return activityClients;
         }
 
         public bool IsCurrentCompanyAssigned(string userId, int companyId)
@@ -224,23 +183,16 @@ namespace Arg.DataAccess
             const string query = @"SELECT * FROM UserCompanyRels 
                                    WHERE UserId=@UserId AND CompanyId=@CompanyId;";
 
-            using (var connection = Common.Database)
-            {
-                var isCurrentCompanyAssigned = Convert.ToBoolean(connection.ExecuteScalar<object>(query, parameters));
-                return isCurrentCompanyAssigned;
-            }
+            using var connection = Common.Database;
+            var isCurrentCompanyAssigned = Convert.ToBoolean(connection.ExecuteScalar<object>(query, parameters));
+            return isCurrentCompanyAssigned;
         }
 
         public List<ArgClient> GetRelatedUserCompanies(string userId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-
-            using (var connection = Common.Database)
-            {
-                var relatedUserCompanies = connection.Query<ArgClient>("GetRelatedUserCompanies", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return relatedUserCompanies;
-            }
+            using var connection = Common.Database;
+            var relatedUserCompanies = connection.Query<ArgClient>("GetRelatedUserCompanies", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return relatedUserCompanies;
         }
 
         public void SaveArgClient(ArgClient argClient)
@@ -251,29 +203,26 @@ namespace Arg.DataAccess
                 throw new Exception("Name can't be empty.");
             }
 
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (argClient.CompanyId == 0)
             {
-                if (argClient.CompanyId == 0)
-                {
-                    connection.Insert(argClient);
-                }
-                else
-                {
-                    connection.Update(argClient);
-                }
+                connection.Insert(argClient);
+            }
+            else
+            {
+                connection.Update(argClient);
             }
 
         }
 
         public int DeleteArgClient(int clientId)
         {
-            const string query = @"Delete FROM ArgClients WHERE CompanyId=@CompanyId;";
+            const string query = @"DELETE FROM ArgClients 
+                                   WHERE CompanyId=@CompanyId;";
 
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @CompanyId = clientId });
-                return result;
-            }
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { clientId });
+            return result;
         }
 
     }

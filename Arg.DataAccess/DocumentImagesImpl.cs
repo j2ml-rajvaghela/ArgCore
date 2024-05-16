@@ -14,20 +14,18 @@ namespace Arg.DataAccess
                                    AND (BOL#=@BolNo OR BookingID=@BookingId)
                                    ORDER BY i.Type, i.ScanDate DESC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var documentImages = connection.Query<DocumentImages>(query, new { BolNo = bolNo, BookingId = bookingId }).ToList();
-                var files = new List<DocumentImages>();
-                var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
-                files.AddRange(pf);
-                pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[1]));
-                files.AddRange(pf);
-                pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[2]));
-                files.AddRange(pf);
-                var remaining = documentImages.Except(files);
-                files.AddRange(remaining);
-                return files;
-            }
+            using var connection = Common.ClientDatabase;
+            var documentImages = connection.Query<DocumentImages>(query, new { bolNo, bookingId }).ToList();
+            var files = new List<DocumentImages>();
+            var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
+            files.AddRange(pf);
+            pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[1]));
+            files.AddRange(pf);
+            pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[2]));
+            files.AddRange(pf);
+            var remaining = documentImages.Except(files);
+            files.AddRange(remaining);
+            return files;
         }
     }
 }

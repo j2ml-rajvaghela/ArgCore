@@ -18,11 +18,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@BdChargeCodeId", bdChargeCodeId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var otherChargeCodes = connection.Query<BdOtherChargeCodes>("GetOtherChargeCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return otherChargeCodes;
-            }
+
+            using var connection = Common.Database;
+            var otherChargeCodes = connection.Query<BdOtherChargeCodes>("GetOtherChargeCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return otherChargeCodes;
         }
 
         public BdOtherChargeCodes GetOtherChargeCode(int otherChargeCodeId, int companyId)
@@ -36,55 +35,48 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var otherChargeCode = connection.QueryFirstOrDefault<BdOtherChargeCodes>("GetOtherChargeCode", parameters, commandType: CommandType.StoredProcedure);
-                return otherChargeCode;
-            }
+
+            using var connection = Common.Database;
+            var otherChargeCode = connection.QueryFirstOrDefault<BdOtherChargeCodes>("GetOtherChargeCode", parameters, commandType: CommandType.StoredProcedure);
+            return otherChargeCode;
         }
 
         public List<BdOtherChargeCodes> OtherChargeCodeExist(int companyId, string chargeCode, int bdOtherChargeCodeId)
         {
-            using (var connection = Common.Database)
+            var parameters = new DynamicParameters();
+            parameters.Add("@ChargeCode", chargeCode, DbType.String);
+            parameters.Add("@CompanyId", companyId, DbType.Int32);
+            if (bdOtherChargeCodeId > 0)
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@ChargeCode", chargeCode, DbType.String);
-                parameters.Add("@CompanyId", companyId, DbType.Int32);
-                if (bdOtherChargeCodeId > 0)
-                {
-                    parameters.Add("@BdOtherChargeCodeId", bdOtherChargeCodeId, DbType.Int32);
-                }
-                var isOtherChargeCodesExist = connection.Query<BdOtherChargeCodes>("OtherChargeCodeExist", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return isOtherChargeCodesExist;
+                parameters.Add("@BdOtherChargeCodeId", bdOtherChargeCodeId, DbType.Int32);
             }
+
+            using var connection = Common.Database;
+            var isOtherChargeCodesExist = connection.Query<BdOtherChargeCodes>("OtherChargeCodeExist", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return isOtherChargeCodesExist;
         }
 
         public void SaveBdOtherChargeCode(BdOtherChargeCodes bdOtherChargeCodes)
         {
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (bdOtherChargeCodes.BDOtherChargeCodeId == 0)
             {
-                if (bdOtherChargeCodes.BDOtherChargeCodeId == 0)
-                {
-                    connection.Insert(bdOtherChargeCodes);
-                }
-                else
-                {
-                    connection.Update(bdOtherChargeCodes);
-                }
-               
+                connection.Insert(bdOtherChargeCodes);
+            }
+            else
+            {
+                connection.Update(bdOtherChargeCodes);
             }
         }
 
         public int DeleteBdOtherChargeCode(int otherChargeCodeId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@OtherChargeCodeId", otherChargeCodeId, DbType.Int32);
-            const string cmd = @"DELETE FROM [BalanceDues.OtherChargesCodes] WHERE BDOtherChargeCodeId=@OtherChargeCodeId;";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(cmd, parameters);
-                return Convert.ToInt32(result);
-            }
+            const string cmd = @"DELETE FROM [BalanceDues.OtherChargesCodes] 
+                                 WHERE BDOtherChargeCodeId=@OtherChargeCodeId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(cmd, new { otherChargeCodeId });
+            return Convert.ToInt32(result);
         }
     }
 }

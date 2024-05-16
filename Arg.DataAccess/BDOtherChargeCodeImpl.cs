@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using System.ComponentModel.Design;
 using System.Data;
 namespace Arg.DataAccess
 {
@@ -14,19 +13,16 @@ namespace Arg.DataAccess
 
             var parameters = new { @CompanyId = companyId, @FilterBalanceDue = filterbalanceDue };
 
-            using (var connection = Common.Database)
-            {
-                var distinctChargeCodes = connection.Query<DataModels.BDOtherChargeCode>(query, parameters).ToList();
-                return distinctChargeCodes;
-            }
+            using var connection = Common.Database;
+            var distinctChargeCodes = connection.Query<DataModels.BDOtherChargeCode>(query, parameters).ToList();
+            return distinctChargeCodes;
         }
+
         public List<DataModels.BDOtherChargeCode> GetDistinctChargeCodes()
         {
-            using (var connection = Common.Database)
-            {
-                var distinctChargeCodes = connection.Query<DataModels.BDOtherChargeCode>("GetDistinctChargeCodes", commandType: CommandType.StoredProcedure).ToList();
-                return distinctChargeCodes;
-            }
+            using var connection = Common.Database;
+            var distinctChargeCodes = connection.Query<DataModels.BDOtherChargeCode>("GetDistinctChargeCodes", commandType: CommandType.StoredProcedure).ToList();
+            return distinctChargeCodes;
         }
     }
 }

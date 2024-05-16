@@ -1,10 +1,5 @@
 ﻿using Arg.DataModels;
 using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -17,11 +12,9 @@ namespace Arg.DataAccess
                                    WHERE h.BOL#=@BolNo
                                    ORDER BY n.Sequence;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingsNotes = connection.Query<BookingsNotes>(query, new { BolNo = bolNo }).ToList();
-                return bookingsNotes;
-            }
+            using var connection = Common.ClientDatabase;
+            var bookingsNotes = connection.Query<BookingsNotes>(query, new {  bolNo }).ToList();
+            return bookingsNotes;
         }
     }
 }

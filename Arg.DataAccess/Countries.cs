@@ -1,7 +1,5 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
-using static Arg.DataAccess.Countries;
 
 namespace Arg.DataAccess
 {
@@ -19,30 +17,27 @@ namespace Arg.DataAccess
 
         public Country GetCountry(int countryId)
         {
-            const string query = @"SELECT * FROM countries WHERE CountryId=@CountryId;";
-            using (var connection = Common.Database)
-            {
-                var country = connection.QueryFirstOrDefault<Country>(query, new { @CountryId = countryId });
-                return country;
-            }
+            const string query = @"SELECT * FROM countries 
+                                   WHERE CountryId=@CountryId;";
+
+            using var connection = Common.Database;
+            var country = connection.QueryFirstOrDefault<Country>(query, new { countryId });
+            return country;
         }
 
         public IEnumerable<Country> GetCountries()
         {
             const string query = @"SELECT CountryId, CountryName FROM countries;";
-            using (var connection = Common.Database)
-            {
-                var countries = connection.Query<Country>(query).ToList();
-                return countries;
-            }
+
+            using var connection = Common.Database;
+            var countries = connection.Query<Country>(query).ToList();
+            return countries;
         }
 
         public void SaveCountry(Country country)
         {
-            using (var connection = Common.Database)
-            {
-                connection.Insert(country);
-            }
+            using var connection = Common.Database;
+            connection.Insert(country);
         }
     }
 }

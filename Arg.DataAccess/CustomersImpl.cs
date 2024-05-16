@@ -9,11 +9,9 @@ namespace Arg.DataAccess
     {
         public List<Customers> GetCustomers()
         {
-            using (var connection = Common.Database)
-            {
-                var customers = connection.Query<Customers>("GetCustomers", commandType: CommandType.StoredProcedure).ToList();
-                return customers;
-            }
+            using var connection = Common.Database;
+            var customers = connection.Query<Customers>("GetCustomers", commandType: CommandType.StoredProcedure).ToList();
+            return customers;
         }
 
         public List<Customers> GetBalanceDueCustomers(int companyId)
@@ -24,11 +22,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var customers = connection.Query<Customers>("GetBalanceDueCustomersByCompanyId", parameters ,commandType: CommandType.StoredProcedure).ToList();
-                return customers;
-            }
+            using var connection = Common.Database;
+            var customers = connection.Query<Customers>("GetBalanceDueCustomersByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return customers;
         }
 
         public Customers GetCustomer(int bdCustomerId, int companyId, string customerId = "")
@@ -46,19 +42,16 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var customer = connection.QueryFirstOrDefault<Customers>("GetCustomer", parameters, commandType: CommandType.StoredProcedure);
-                return customer;
-            }
+
+            using var connection = Common.Database;
+            var customer = connection.QueryFirstOrDefault<Customers>("GetCustomer", parameters, commandType: CommandType.StoredProcedure);
+            return customer;
         }
 
         public void SaveCustomer(Customers customer)
         {
-            using (var connection = Common.Database)
-            {
-                connection.Insert(customer);
-            }
+            using var connection = Common.Database;
+            connection.Insert(customer);
         }
     }
 }

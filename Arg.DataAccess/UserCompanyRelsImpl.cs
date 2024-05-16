@@ -1,12 +1,7 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Arg.DataModels;
 using Dapper;
-using System;
-using System.Collections.Generic;
+using Dapper.Contrib.Extensions;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Arg.DataModels;
 
 namespace Arg.DataAccess
 {
@@ -25,23 +20,24 @@ namespace Arg.DataAccess
             var parameters = new DynamicParameters();
             parameters.Add("@UserId", userId, DbType.String);
             parameters.Add("@CompanyId", companyId, DbType.Int32);
-            const string query = @"SELECT RelId FROM UserCompanyRels WHERE UserId=@UserId AND CompanyId=@CompanyId;";
-            using (var connection = Common.Database)
+
+            const string query = @"SELECT RelId FROM UserCompanyRels 
+                                   WHERE UserId=@UserId AND CompanyId=@CompanyId;";
+
+            using var connection = Common.Database;
+            var relId = connection.ExecuteScalar<int?>(query, parameters);
+            if (relId.HasValue && relId.Value > 0)
             {
-                var relId = connection.ExecuteScalar<int?>(query, parameters);
-                if (relId.HasValue && relId.Value > 0)
+                System.Diagnostics.Trace.TraceError("Company already added.");
+            }
+            else
+            {
+                var userComapnyRel = new UserCompanyRels
                 {
-                    System.Diagnostics.Trace.TraceError("Company already added.");
-                }
-                else
-                {
-                    var userComapnyRel = new UserCompanyRels
-                    {
-                        CompanyId = companyId,
-                        UserId = userId,
-                    };
-                    connection.Insert(userComapnyRel);
-                }
+                    CompanyId = companyId,
+                    UserId = userId,
+                };
+                connection.Insert(userComapnyRel);
             }
         }
 
@@ -50,12 +46,13 @@ namespace Arg.DataAccess
             var parameters = new DynamicParameters();
             parameters.Add("@UserId", userId, DbType.String);
             parameters.Add("@CompanyId", companyId, DbType.Int32);
-            const string query = @"DELETE FROM UserCompanyRels WHERE UserId = @UserId AND CompanyId = @CompanyId";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, parameters);
-                return result;
-            }
+
+            const string query = @"DELETE FROM UserCompanyRels 
+                                  WHERE UserId = @UserId AND CompanyId = @CompanyId";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, parameters);
+            return result;
         }
     }
 }

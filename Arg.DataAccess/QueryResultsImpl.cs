@@ -1,7 +1,6 @@
 ﻿using Arg.DataModels;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
 
 namespace Arg.DataAccess
 {
@@ -12,11 +11,9 @@ namespace Arg.DataAccess
             const string query = @"SELECT * FROM QueryResults
                                    WHERE QueryId=@QueryId;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var queryResults = connection.QueryFirstOrDefault<QueryResults>(query, new { @QueryId = queryId});
-                return queryResults;
-            }
+            using var connection = Common.ClientDatabase;
+            var queryResults = connection.QueryFirstOrDefault<QueryResults>(query, new { queryId });
+            return queryResults;
         }
 
         public QueryResults SaveQueryResults(object searchOptions)
@@ -30,11 +27,9 @@ namespace Arg.DataAccess
 
         public QueryResults SaveQueryResults(QueryResults qr)
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                connection.Insert(qr);
-                return qr;
-            }
+            using var connection = Common.ClientDatabase;
+            connection.Insert(qr);
+            return qr;
         }
     }
 }

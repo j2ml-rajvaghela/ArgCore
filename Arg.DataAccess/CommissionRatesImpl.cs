@@ -8,23 +8,16 @@ namespace Arg.DataAccess
     {
         public List<CommissionRates> GetCommissionRates()
         {
-            using (var connection = Common.Database)
-            {
-                var commissionRates = connection.Query<CommissionRates>("GetAllCommissionRates", commandType: CommandType.StoredProcedure).ToList();
-                return commissionRates;
-            }
+            using var connection = Common.Database;
+            var commissionRates = connection.Query<CommissionRates>("GetAllCommissionRates", commandType: CommandType.StoredProcedure).ToList();
+            return commissionRates;
         }
 
         public List<CommissionRates> GetMultipleRates(string argInvoiceNo)
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@ArgInvoiceNo", argInvoiceNo, DbType.String);
-
-                var multipleRates = connection.Query<CommissionRates>("GetMultipleRates", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return multipleRates;
-            }
+            using var connection = Common.ClientDatabase;
+            var multipleRates = connection.Query<CommissionRates>("GetMultipleRates", new { argInvoiceNo }, commandType: CommandType.StoredProcedure).ToList();
+            return multipleRates;
         }
 
 

@@ -2,9 +2,7 @@
 using CacheManager.Core;
 using CustomExtensions;
 using Dapper;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace Arg.DataAccess
 {
@@ -16,12 +14,10 @@ namespace Arg.DataAccess
         {
             const string query = @"SELECT * FROM ShipmentJournal
 	                               WHERE (Shipment_No = @ShipmentNo OR @ShipmentNo = '');";
-               
-            using (var connection = Common.ClientDatabase)
-            {
-                var shipment = connection.QueryFirstOrDefault<ShipmentJournal>(query, new { ShipmentNo = shipmentNo });
-                return shipment;
-            }
+
+            using var connection = Common.ClientDatabase;
+            var shipment = connection.QueryFirstOrDefault<ShipmentJournal>(query, new { shipmentNo });
+            return shipment;
         }
 
         public List<ShipmentJournal> GetDistinctShipmentType()
@@ -31,11 +27,9 @@ namespace Arg.DataAccess
                                    LEFT JOIN Descriptions d ON d.XrefCode = s.Shipment_Type AND d.XrefFieldName='ShipmentType'
                                    ORDER BY ShipmentTypeDescription;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctShipmentType = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
-                return distinctShipmentType;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctShipmentType = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
+            return distinctShipmentType;
         }
 
         public List<ShipmentJournal> GetDistinctIssuingDept()
@@ -45,11 +39,9 @@ namespace Arg.DataAccess
                                    WHERE Issuing_Dept <> ''
                                    ORDER BY Issuing_Dept;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctIssuingDept = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
-                return distinctIssuingDept;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctIssuingDept = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
+            return distinctIssuingDept;
         }
 
         public List<ShipmentJournal> GetDistinctShipmentStatus()
@@ -59,11 +51,9 @@ namespace Arg.DataAccess
                                    LEFT JOIN Descriptions d ON d.XrefCode = s.Shipment_Status AND d.XrefFieldName='ShipmentStatus'
                                    ORDER BY ShipmentStatusDescription;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctShipmentStatus = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
-                return distinctShipmentStatus;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctShipmentStatus = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
+            return distinctShipmentStatus;
         }
 
         public List<ShipmentJournal> GetDistinctShipmentCLStatus()
@@ -73,11 +63,9 @@ namespace Arg.DataAccess
                                    LEFT JOIN Descriptions d ON d.XrefCode = s.Shipment_CL_Status AND d.XrefFieldName='ShipmentCLStatus'
                                    ORDER BY ShipmentCLStatusDescription;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctShipmentCLStatus = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
-                return distinctShipmentCLStatus;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctShipmentCLStatus = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
+            return distinctShipmentCLStatus;
         }
 
         public List<ShipmentJournal> GetDistinctRegion()
@@ -90,11 +78,9 @@ namespace Arg.DataAccess
                            $"WHERE s.Region <> ''" +
                            $"ORDER BY Region;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctRegion = connection.Query<ShipmentJournal>(query).ToList();
-                return distinctRegion;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctRegion = connection.Query<ShipmentJournal>(query).ToList();
+            return distinctRegion;
         }
 
         public List<ShipmentJournal> GetDistinctOrigin()
@@ -103,11 +89,9 @@ namespace Arg.DataAccess
                                    WHERE Origin <> ''
                                    ORDER BY Origin;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctOrigin = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
-                return distinctOrigin;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctOrigin = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
+            return distinctOrigin;
 
         }
 
@@ -117,11 +101,9 @@ namespace Arg.DataAccess
                                    WHERE Dest <> ''
                                    ORDER BY Dest;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctDestination = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
-                return distinctDestination;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctDestination = connection.Query<ShipmentJournal>(query, commandType: CommandType.Text).ToList();
+            return distinctDestination;
 
         }
 
@@ -167,12 +149,10 @@ namespace Arg.DataAccess
 
             query += " AND DATEDIFF(day, flown_date, @ShipmentDate) <= 90";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var parameters = new { AWBBLNo, MAWBBLNo, ShipmentDate = shipmentDate };
-                var houseHAWBAir = connection.QueryFirstOrDefault<HouseHAWBAir>(query, parameters);
-                return houseHAWBAir;
-            }
+            using var connection = Common.ClientDatabase;
+            var parameters = new { AWBBLNo, MAWBBLNo, ShipmentDate = shipmentDate };
+            var houseHAWBAir = connection.QueryFirstOrDefault<HouseHAWBAir>(query, parameters);
+            return houseHAWBAir;
         }
 
         public MasterAWB GetMasterAWB(string AWBBLNo, string MAWBBLNo, string shipmentDate)
@@ -194,12 +174,10 @@ namespace Arg.DataAccess
 
             query += " AND DATEDIFF(day, flown_date, @ShipmentDate) <= 90";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var parameters = new { AWBBLNo, MAWBBLNo, ShipmentDate = shipmentDate };
-                var masterAWB = connection.QueryFirstOrDefault<MasterAWB>(query, parameters);
-                return masterAWB;
-            }
+            using var connection = Common.ClientDatabase;
+            var parameters = new { AWBBLNo, MAWBBLNo, ShipmentDate = shipmentDate };
+            var masterAWB = connection.QueryFirstOrDefault<MasterAWB>(query, parameters);
+            return masterAWB;
         }
 
 
@@ -210,11 +188,9 @@ namespace Arg.DataAccess
                                    AND (RefNo=@ShipmentNo AND CompanyID=@CompanyId AND RefDate=@ShipmentDate)
                                    ORDER BY i.Loaded DESC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var documentImages = connection.Query<HellmannDocumentImages>(query, new { @ShipmentNo = shipmentNo, @CompanyId = companyId, @ShipmentDate = shipmentDate }).ToList();
-                return documentImages;
-            }
+            using var connection = Common.ClientDatabase;
+            var documentImages = connection.Query<HellmannDocumentImages>(query, new { shipmentNo, companyId, shipmentDate }).ToList();
+            return documentImages;
         }
 
         private ICacheManager<List<ShipmentJournal>> _manager = CacheFactory.Build<List<ShipmentJournal>>(Arg.Core.Settings.DefaultCacheSettings);
@@ -269,7 +245,7 @@ namespace Arg.DataAccess
                 {
                     results = GetResults(searchOptions);
                 }
-                   
+
                 _manager.Add(key, results);
             }
             return results;
@@ -329,11 +305,9 @@ namespace Arg.DataAccess
                 sql = sqlCmd;
             }
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var results = connection.Query<ShipmentJournal>(sql).ToList();
-                return results;
-            }
+            using var connection = Common.ClientDatabase;
+            var results = connection.Query<ShipmentJournal>(sql).ToList();
+            return results;
         }
 
         public List<ShipmentJournal> GetShipmentResultStats(SearchOptions so, string clientName)
@@ -347,11 +321,9 @@ namespace Arg.DataAccess
             cmd += @"GROUP BY  b.region, b.Origin,CONCAT(b.Region,' ', r.Description) 
                      ORDER BY ShipmentCount desc";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStats = connection.Query<ShipmentJournal>(cmd, commandTimeout: 1200).ToList();
-                return resultStats ?? new List<ShipmentJournal>();
-            }
+            using var connection = Common.ClientDatabase;
+            var resultStats = connection.Query<ShipmentJournal>(cmd, commandTimeout: 1200).ToList();
+            return resultStats ?? new List<ShipmentJournal>();
         }
 
         public void BuildCmdWhereCondition(ref string cmd, SearchOptions so, bool Table = false)

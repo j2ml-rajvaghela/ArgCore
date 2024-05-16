@@ -71,36 +71,33 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@EndingIP", endingIP, DbType.String);
             }
-            using (var connection = Common.Database)
-            { 
-                var iPAddresses = connection.Query<IPAddressRestriction>("GetIPAddress", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return iPAddresses;
-            }
+
+            using var connection = Common.Database;
+            var iPAddresses = connection.Query<IPAddressRestriction>("GetIPAddress", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return iPAddresses;
         }
 
         public void SaveIPAddress(IPAddressRestriction iPAddressRestriction)
         {
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (iPAddressRestriction.IPAddressRestrictionId == 0)
             {
-                if (iPAddressRestriction.IPAddressRestrictionId == 0)
-                {
-                    connection.Insert(iPAddressRestriction);
-                }
-                else
-                {
-                    connection.Update(iPAddressRestriction);
-                }
+                connection.Insert(iPAddressRestriction);
+            }
+            else
+            {
+                connection.Update(iPAddressRestriction);
             }
         }
 
         public int DeleteIPAddress(int iPAddressRestrictionId)
         {
-            const string query = "DELETE FROM IPAddressRestriction WHERE IPAddressRestrictionId=@IPAddressRestrictionId;";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @IPAddressRestrictionId = iPAddressRestrictionId });
-                return result;
-            }
+            const string query = @"DELETE FROM IPAddressRestriction 
+                                   WHERE IPAddressRestrictionId=@IPAddressRestrictionId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { iPAddressRestrictionId });
+            return result;
         }
     }
 }

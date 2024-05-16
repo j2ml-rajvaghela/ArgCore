@@ -30,11 +30,9 @@ namespace Arg.DataAccess
                                    AND ((Comments LIKE '%' + @Q + '%') OR @Q = '')
                                    AND (Bol = @Bol OR @Bol = '');";
 
-            using (var connection = Common.Database)
-            {
-                var collectionComments = connection.Query<CollectionComment>(query, parameters).ToList();
-                return collectionComments;
-            }
+            using var connection = Common.Database;
+            var collectionComments = connection.Query<CollectionComment>(query, parameters).ToList();
+            return collectionComments;
         }
 
         public void SaveCollectionComment(CollectionComment collectionComment)
@@ -43,10 +41,9 @@ namespace Arg.DataAccess
             {
                 throw new Exception("Comments can't be empty.");
             }
-            using (var connection = Common.Database)
-            {
-                connection.Insert(collectionComment);
-            }
+
+            using var connection = Common.Database;
+            connection.Insert(collectionComment);
         }
     }
 }

@@ -15,11 +15,9 @@ namespace Arg.DataAccess
                                    WHERE c.BOL#=@BolNo
                                    ORDER BY c.USAmount DESC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLCharges = connection.Query<BOLChargesModel>(query, new { BolNo = bolNo }).ToList();
-                return bOLCharges;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLCharges = connection.Query<BOLChargesModel>(query, new { bolNo }).ToList();
+            return bOLCharges;
         }
 
         public List<BOLChargesModel> GetBOLOceanCharges(string bolNo, bool oceanCharges = false)
@@ -29,11 +27,9 @@ namespace Arg.DataAccess
                                    (@OceanCharges = 0 AND ChargeDescription NOT LIKE 'Ocean%')
                                    AND BOL# = @BOLNo;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLOceanCharges = connection.Query<BOLChargesModel>(query, new { OceanCharges = oceanCharges, BOLNo = bolNo}).ToList();
-                return bOLOceanCharges;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLOceanCharges = connection.Query<BOLChargesModel>(query, new { oceanCharges, bolNo }).ToList();
+            return bOLOceanCharges;
         }
 
         public List<BOLChargesModel> GetDistinctCurrency()
@@ -41,11 +37,9 @@ namespace Arg.DataAccess
             const string query = @"SELECT DISTINCT Currency FROM BOLCharges 
                                    WHERE Currency <> '';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctCurrency = connection.Query<BOLChargesModel>(query, commandType: CommandType.Text).ToList();
-                return distinctCurrency;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctCurrency = connection.Query<BOLChargesModel>(query, commandType: CommandType.Text).ToList();
+            return distinctCurrency;
         }
 
         public BOLChargesModel GetBOLCharge(string bolNo)
@@ -53,11 +47,9 @@ namespace Arg.DataAccess
             const string query = @"SELECT* FROM BOLCharges 
                                    WHERE (BOL#=@BolNo OR @BolNo = 0);";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLCharges = connection.QueryFirstOrDefault<BOLChargesModel>(query, new { @BolNo = bolNo });
-                return bOLCharges;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLCharges = connection.QueryFirstOrDefault<BOLChargesModel>(query, new { bolNo });
+            return bOLCharges;
         }
 
         public decimal GetPashaAmountDue(string bolNo)
@@ -65,11 +57,9 @@ namespace Arg.DataAccess
             const string query = @"SELECT c.USAmount FROM BOLCharges c 
                                    WHERE c.Bol#=@BolNo AND (chargeCode='OF' OR chargeDescription LIKE '%Ocean Freight%');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var pashaAmountDue = connection.QueryFirstOrDefault<decimal>(query, new { BolNo = bolNo });
-                return pashaAmountDue;
-            }
+            using var connection = Common.ClientDatabase;
+            var pashaAmountDue = connection.QueryFirstOrDefault<decimal>(query, new { bolNo });
+            return pashaAmountDue;
         }
 
         public List<BOLChargesModel> GetPashaBalanceDuesOtherChargesWithDesc(string bolNo)
@@ -78,11 +68,9 @@ namespace Arg.DataAccess
                                    WHERE o.Bol#=@BolNo 
                                    ORDER BY ItemId;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var PashaBDOtherCharges = connection.Query<BOLChargesModel>(query, new { BolNo = bolNo }).ToList();
-                return PashaBDOtherCharges;
-            }
+            using var connection = Common.ClientDatabase;
+            var PashaBDOtherCharges = connection.Query<BOLChargesModel>(query, new { bolNo }).ToList();
+            return PashaBDOtherCharges;
         }
     }
 }

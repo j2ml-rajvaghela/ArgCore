@@ -14,11 +14,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@GroupId", groupId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var settings = connection.Query<Settings>("GetSettings", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return settings;
-            }
+
+            using var connection = Common.Database;
+            var settings = connection.Query<Settings>("GetSettings", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return settings;
         }
 
         public Settings GetSetting(int settingId)
@@ -28,11 +27,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@SettingId", settingId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var setting = connection.QueryFirstOrDefault<Settings>("GetSetting", parameters, commandType: CommandType.StoredProcedure);
-                return setting;
-            }
+
+            using var connection = Common.Database;
+            var setting = connection.QueryFirstOrDefault<Settings>("GetSetting", parameters, commandType: CommandType.StoredProcedure);
+            return setting;
         }
 
         public string GetSettingValue(string key)
@@ -43,12 +41,10 @@ namespace Arg.DataAccess
                 throw new Exception("No key provided");
             }
             parameters.Add("@Key", key, DbType.String);
-            
-            using (var connection = Common.Database)
-            {
-                var setting = connection.QueryFirstOrDefault<Settings>("GetSettingValue", parameters, commandType: CommandType.StoredProcedure);
-                return setting.Value;
-            }
+
+            using var connection = Common.Database;
+            var setting = connection.QueryFirstOrDefault<Settings>("GetSettingValue", parameters, commandType: CommandType.StoredProcedure);
+            return setting.Value;
         }
         public void SaveSetting(Settings setting)
         {
@@ -56,28 +52,27 @@ namespace Arg.DataAccess
             {
                 throw new Exception("Label can't be empty.");
             }
-            using (var connection = Common.Database)
+
+            using var connection = Common.Database;
+            if (setting.SettingId == 0)
             {
-                if (setting.SettingId == 0)
-                { 
-                    connection.Insert(setting);
-                }
-                else
-                {
-                    connection.Update(setting);
-                }
+                connection.Insert(setting);
+            }
+            else
+            {
+                connection.Update(setting);
             }
 
         }
 
         public int DeleteSetting(int settingId)
         {
-            const string query = @"DELETE FROM Settings WHERE SettingId=@SettingId";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @SettingId = settingId});
-                return result;
-            }
+            const string query = @"DELETE FROM Settings 
+                                   WHERE SettingId=@SettingId";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { settingId });
+            return result;
         }
 
     }

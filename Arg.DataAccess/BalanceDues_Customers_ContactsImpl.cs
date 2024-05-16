@@ -15,11 +15,10 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
             parameters.Add("@CustomerId", customerId, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var distinctLocationCodes = connection.Query<BalanceDues_Customers_Contacts>("GetDistinctLocationCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctLocationCodes;
-            }
+
+            using var connection = Common.Database;
+            var distinctLocationCodes = connection.Query<BalanceDues_Customers_Contacts>("GetDistinctLocationCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctLocationCodes;
         }
 
         public BalanceDues_Customers_Contacts GetContact(int contactId, string customerId, int companyId)
@@ -37,11 +36,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CustomerId", customerId, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var contact = connection.QueryFirstOrDefault<BalanceDues_Customers_Contacts>("GetCustomerContacts", parameters, commandType: CommandType.StoredProcedure);
-                return contact;
-            }
+
+            using var connection = Common.Database;
+            var contact = connection.QueryFirstOrDefault<BalanceDues_Customers_Contacts>("GetCustomerContacts", parameters, commandType: CommandType.StoredProcedure);
+            return contact;
         }
 
         public List<BalanceDues_Customers_Contacts> GetCustomerContactsForEmails(string customerId, string customerLocationCode, string region, int companyId)
@@ -58,39 +56,33 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var contactForEmail = connection.Query<BalanceDues_Customers_Contacts>("GetCustomerContactsForEmails", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return contactForEmail;
-            }
+            using var connection = Common.Database;
+            var contactForEmail = connection.Query<BalanceDues_Customers_Contacts>("GetCustomerContactsForEmails", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return contactForEmail;
         }
 
         public void SaveCustomerContact(BalanceDues_Customers_Contacts customersContact)
         {
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (customersContact.ContactId == 0)
             {
-                if (customersContact.ContactId == 0)
-                {
-                    customersContact.Email = customersContact.Email.Trim();
-                    connection.Insert(customersContact);
-                }
-                else
-                {
-                    connection.Update(customersContact);
-                }
-               
+                customersContact.Email = customersContact.Email.Trim();
+                connection.Insert(customersContact);
+            }
+            else
+            {
+                connection.Update(customersContact);
             }
         }
 
         public int DeleteCustomerContact(int contactId)
         {
-            const string query = @"DELETE FROM [BalanceDues.Customers.Contacts] WHERE ContactId=@ContactId;";
+            const string query = @"DELETE FROM [BalanceDues.Customers.Contacts] 
+                                   WHERE ContactId=@ContactId;";
 
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @ContactId = contactId });
-                return result;
-            }
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { contactId });
+            return result;
         }
     }
 }

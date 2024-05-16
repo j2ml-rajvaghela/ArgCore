@@ -18,12 +18,11 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@q", q, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var templateCates = connection.Query<TemplateCats>("GetTemplateCats", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return templateCates;
-            }
-               
+
+            using var connection = Common.Database;
+            var templateCates = connection.Query<TemplateCats>("GetTemplateCats", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return templateCates;
+
         }
 
         public TemplateCats GetTemplateCat(int catId, string name)
@@ -37,11 +36,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@Name", name, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var templateCate = connection.QueryFirstOrDefault<TemplateCats>("GetTemplateCat", parameters, commandType: CommandType.StoredProcedure);
-                return templateCate;
-            }
+
+            using var connection = Common.Database;
+            var templateCate = connection.QueryFirstOrDefault<TemplateCats>("GetTemplateCat", parameters, commandType: CommandType.StoredProcedure);
+            return templateCate;
         }
 
         public List<TemplateCats> TemplateCatsExist(string name, int catId)
@@ -52,12 +50,10 @@ namespace Arg.DataAccess
                 parameters.Add("@CatId", catId, DbType.Int32);
             }
             parameters.Add("@Name", name, DbType.String);
-            using (var connection = Common.Database)
-            { 
 
-                var isTemplateCatesExist = connection.Query<TemplateCats>("TemplateCatsExits", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return isTemplateCatesExist;
-            }
+            using var connection = Common.Database;
+            var isTemplateCatesExist = connection.Query<TemplateCats>("TemplateCatsExits", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return isTemplateCatesExist;
         }
 
         public void SaveTemplateCat(TemplateCats templateCat)
@@ -67,27 +63,26 @@ namespace Arg.DataAccess
                 throw new Exception("Name can't be empty.");
             }
             templateCat.AddedOn = DateTime.Now;
-            using (var connection = Common.Database)
+
+            using var connection = Common.Database;
+            if (templateCat.CatId == 0)
             {
-                if (templateCat.CatId == 0)
-                {
-                    connection.Insert(templateCat);
-                }
-                else
-                {
-                    connection.Update(templateCat);
-                }
+                connection.Insert(templateCat);
+            }
+            else
+            {
+                connection.Update(templateCat);
             }
         }
 
         public int DeleteTemplateCat(int catId)
         {
-            const string query = @"DELETE FROM TemplateCats WHERE CatId=@CatId";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @CatId = catId });
-                return result;
-            }
+            const string query = @"DELETE FROM TemplateCats 
+                                   WHERE CatId=@CatId";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { catId });
+            return result;
         }
     }
 }

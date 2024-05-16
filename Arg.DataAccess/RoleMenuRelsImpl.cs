@@ -1,12 +1,7 @@
 ﻿using Arg.DataModels;
-using Dapper.Contrib.Extensions;
 using Dapper;
-using System;
-using System.Collections.Generic;
+using Dapper.Contrib.Extensions;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -25,26 +20,25 @@ namespace Arg.DataAccess
             var parameters = new DynamicParameters();
             parameters.Add("@RoleId", roleId, DbType.String);
             parameters.Add("@ItemId", itemId, DbType.Int32);
-            using (var connection = Common.Database)
-            {
-                var relId = connection.ExecuteScalar<int>("AssignMenuItem", parameters);
 
-                if (relId > 0)
+            using var connection = Common.Database;
+            var relId = connection.ExecuteScalar<int>("AssignMenuItem", parameters);
+
+            if (relId > 0)
+            {
+                System.Diagnostics.Trace.TraceError("MenuItem already added.");
+                return;
+            }
+            else
+            {
+                var appActionRel = new RoleMenuRels
                 {
-                    System.Diagnostics.Trace.TraceError("MenuItem already added.");
-                    return;
-                }
-                else
-                {
-                    var appActionRel = new RoleMenuRels
-                    {
-                        ItemId = itemId,
-                        RoleId = roleId,
-                        AddedOn = DateTime.Now,
-                        LastModOn = DateTime.Now
-                    };
-                    connection.Insert(appActionRel);
-                }
+                    ItemId = itemId,
+                    RoleId = roleId,
+                    AddedOn = DateTime.Now,
+                    LastModOn = DateTime.Now
+                };
+                connection.Insert(appActionRel);
             }
         }
 
@@ -54,12 +48,12 @@ namespace Arg.DataAccess
             parameters.Add("@RoleId", roleId, DbType.String);
             parameters.Add("@ItemId", itemId, DbType.Int32);
 
-            const string query = "DELTE FROM RoleMenuRels WHERE RoleId=@RoleId AND ItemId=@ItemId;";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, parameters);
-                return result;
-            }
+            const string query = @"DELETE FROM RoleMenuRels 
+                                   WHERE RoleId=@RoleId AND ItemId=@ItemId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, parameters);
+            return result;
         }
     }
 }

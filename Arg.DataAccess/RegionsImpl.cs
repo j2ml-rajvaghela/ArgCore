@@ -2,7 +2,6 @@
 using Dapper;
 using Dapper.Contrib.Extensions;
 using System.Data;
-using System.Drawing;
 
 namespace Arg.DataAccess
 {
@@ -23,11 +22,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@q", q, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var regions = connection.Query<Regions>("GetRegions", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return regions;
-            }
+
+            using var connection = Common.Database;
+            var regions = connection.Query<Regions>("GetRegions", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return regions;
         }
 
         public Regions GetRegion(int regionId, int companyId)
@@ -41,11 +39,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var region = connection.QueryFirstOrDefault<Regions>("GetRegion", parameters, commandType: CommandType.StoredProcedure);
-                return region;
-            }
+
+            using var connection = Common.Database;
+            var region = connection.QueryFirstOrDefault<Regions>("GetRegion", parameters, commandType: CommandType.StoredProcedure);
+            return region;
         }
 
         public List<Regions> GetRegionsMultiple(int regionId, string q, string companyId)
@@ -65,11 +62,9 @@ namespace Arg.DataAccess
                 parameters.Add("@q", q, DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var regionsMultiple = connection.Query<Regions>("GetRegionsMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return regionsMultiple;
-            }
+            using var connection = Common.Database;
+            var regionsMultiple = connection.Query<Regions>("GetRegionsMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return regionsMultiple;
         }
 
         public List<Regions> GetBalanceDueRegions(int companyId)
@@ -80,29 +75,23 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var regionsMultiple = connection.Query<Regions>("GetBalanceDueRegionsByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return regionsMultiple;
-            }
+            using var connection = Common.Database;
+            var regionsMultiple = connection.Query<Regions>("GetBalanceDueRegionsByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return regionsMultiple;
         }
 
         public List<Regions> GetRegions()
         {
-            using (var connection = Common.Database)
-            {
-                var regions = connection.Query<Regions>("GetAllRegions", commandType: CommandType.StoredProcedure).ToList();
-                return regions;
-            }
+            using var connection = Common.Database;
+            var regions = connection.Query<Regions>("GetAllRegions", commandType: CommandType.StoredProcedure).ToList();
+            return regions;
         }
 
         public List<Regions> GetRegionClients()
         {
-            using (var connection = Common.Database)
-            {
-                var regions = connection.Query<Regions>("GetRegionClients", commandType: CommandType.StoredProcedure).ToList();
-                return regions;
-            }
+            using var connection = Common.Database;
+            var regions = connection.Query<Regions>("GetRegionClients", commandType: CommandType.StoredProcedure).ToList();
+            return regions;
         }
 
         public List<Regions> RegionExist(int companyId, string region, int regionId)
@@ -117,20 +106,17 @@ namespace Arg.DataAccess
                 parameters.Add("@RegionId", regionId, DbType.Int32);
             }
             parameters.Add("@CompanyId", companyId, DbType.Int32);
-            using (var connection = Common.Database)
-            {
-                var isRegionsExist = connection.Query<Regions>("RegionExist", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return isRegionsExist;
-            }
+
+            using var connection = Common.Database;
+            var isRegionsExist = connection.Query<Regions>("RegionExist", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return isRegionsExist;
         }
 
         public List<Regions> GetDistictRegions()
         {
-            using (var connection = Common.Database)
-            {
-                var distictRegions = connection.Query<Regions>("GetDistinctRegions", commandType: CommandType.StoredProcedure).ToList();
-                return distictRegions;
-            }
+            using var connection = Common.Database;
+            var distictRegions = connection.Query<Regions>("GetDistinctRegions", commandType: CommandType.StoredProcedure).ToList();
+            return distictRegions;
         }
 
         public void SaveRegion(Regions region)
@@ -139,29 +125,27 @@ namespace Arg.DataAccess
             {
                 throw new Exception("Region can't be empty.");
             }
-            using (var connection = Common.Database)
+
+            using var connection = Common.Database;
+            if (region.RegionId == 0)
             {
-                if (region.RegionId == 0)
-                {   
-                    connection.Insert(region);
-                }
-                else
-                {
-                    connection.Update(region);
-                }
-               
+                connection.Insert(region);
             }
-           
+            else
+            {
+                connection.Update(region);
+            }
+
         }
 
         public int DeleteRegion(int regionId)
         {
-            const string query = @"DELETE FROM Regions WHERE RegionId=@RegionId;";
-            using (var connection = Common.Database)
-            {              
-                var result = connection.Execute(query, new { @RegionId = regionId });
-                return Convert.ToInt32(result);
-            }
+            const string query = @"DELETE FROM Regions 
+                                   WHERE RegionId=@RegionId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { regionId });
+            return Convert.ToInt32(result);
         }
     }
 }

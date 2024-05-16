@@ -9,11 +9,9 @@ namespace Arg.DataAccess
     {
         public List<AspNetUsers> GetAspNetUsers(SearchOptions so)
         {
-            using (var connection = Common.Database)
-            {
-                var aspNetUsers = connection.Query<AspNetUsers>("GetAspNetUsers", so, commandType: CommandType.StoredProcedure).ToList();
-                return aspNetUsers;
-            }
+            using var connection = Common.Database;
+            var aspNetUsers = connection.Query<AspNetUsers>("GetAspNetUsers", so, commandType: CommandType.StoredProcedure).ToList();
+            return aspNetUsers;
         }
 
         public List<AspNetUsers> GetAspNetUsers(int companyId)
@@ -23,33 +21,24 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var aspNetUsers = connection.Query<AspNetUsers>("GetAspNetUsersByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return aspNetUsers;
-            }
+
+            using var connection = Common.Database;
+            var aspNetUsers = connection.Query<AspNetUsers>("GetAspNetUsersByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return aspNetUsers;
         }
 
         public AspNetUsers GetAspNetUser(string id)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@Id", id, DbType.Int32);
-            using (var connection = Common.Database)
-            {
-                var aspNetUser = connection.QueryFirstOrDefault<AspNetUsers>("GetAspNetUser", parameters, commandType: CommandType.StoredProcedure);
-                return aspNetUser;
-            }
+            using var connection = Common.Database;
+            var aspNetUser = connection.QueryFirstOrDefault<AspNetUsers>("GetAspNetUser", new { id }, commandType: CommandType.StoredProcedure);
+            return aspNetUser;
         }
 
         public List<AspNetUsers> GetAspNetUsers(bool addAllUserOption)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@AddAllUserOption", addAllUserOption, DbType.Boolean);
-            using (var connection = Common.Database)
-            {            
-                var aspNetUsers = connection.Query<AspNetUsers>("GetAspNetUsers", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return aspNetUsers;
-            }
+            using var connection = Common.Database;
+            var aspNetUsers = connection.Query<AspNetUsers>("GetAspNetUsers", new { addAllUserOption }, commandType: CommandType.StoredProcedure).ToList();
+            return aspNetUsers;
         }
 
         public List<AspNetUsers> GetActivityUsers(string userId, bool argManager)
@@ -60,11 +49,10 @@ namespace Arg.DataAccess
                 parameters.Add("@UserId", userId, DbType.Int32);
                 parameters.Add("@ArgManager", argManager, DbType.Boolean);
             }
-            using (var connection = Common.Database)
-            { 
-                var activityUsers = connection.Query<AspNetUsers>("GetActivityUsers", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return activityUsers;
-            }
+
+            using var connection = Common.Database;
+            var activityUsers = connection.Query<AspNetUsers>("GetActivityUsers", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return activityUsers;
         }
 
         public List<AspNetUsers> GetAspNetUsersWithRoles(SearchOptions so, string q)
@@ -87,36 +75,33 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@Name", so.Name, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var aspNetUsersWithRoles = connection.Query<AspNetUsers>("GetAspNetUsersWithRoles", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return aspNetUsersWithRoles;
-            }
+
+            using var connection = Common.Database;
+            var aspNetUsersWithRoles = connection.Query<AspNetUsers>("GetAspNetUsersWithRoles", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return aspNetUsersWithRoles;
         }
 
         public void SaveAspNetUser(AspNetUsers aspNetUser)
         {
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (string.IsNullOrEmpty(aspNetUser.Id))
             {
-                if (string.IsNullOrEmpty(aspNetUser.Id))
-                {
-                    connection.Insert(aspNetUser);
-                }
-                else
-                {
-                    connection.Update(aspNetUser);
-                }
+                connection.Insert(aspNetUser);
+            }
+            else
+            {
+                connection.Update(aspNetUser);
             }
         }
 
         public int DeleteAspNetUser(string userId)
         {
-            const string query = "DELETE FROM AspNetUsers WHERE Id=@UserId;";
-            using (var connection = Common.Database)
-            { 
-                var result = connection.Execute(query, new { UserId = userId });
-                return result;
-            }
+            const string query = @"DELETE FROM AspNetUsers 
+                                   WHERE Id=@UserId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { userId });
+            return result;
         }
     }
 }

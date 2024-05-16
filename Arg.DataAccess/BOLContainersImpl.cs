@@ -12,11 +12,9 @@ namespace Arg.DataAccess
                                    WHERE Size <> ''
                                    ORDER BY Size;";
 
-            using (var connection = Common.ClientDatabase)
-            { 
-                var distinctSize = connection.Query<DataModels.BOLContainers>(query, commandType: CommandType.Text).ToList();
-                return distinctSize;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctSize = connection.Query<DataModels.BOLContainers>(query, commandType: CommandType.Text).ToList();
+            return distinctSize;
         }
 
         public List<DataModels.BOLContainers> GetDistinctType()
@@ -26,11 +24,9 @@ namespace Arg.DataAccess
                                    WHERE Type <> ''
                                    ORDER BY Type;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctType = connection.Query<DataModels.BOLContainers>(query, commandType: CommandType.Text).ToList();
-                return distinctType;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctType = connection.Query<DataModels.BOLContainers>(query, commandType: CommandType.Text).ToList();
+            return distinctType;
         }
     }
 }

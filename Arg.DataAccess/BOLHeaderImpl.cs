@@ -4,42 +4,32 @@ using CustomExtensions;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using System.Data;
-using System.Drawing;
-using System.Linq;
 
 namespace Arg.DataAccess
 {
     public class BOLHeaderImpl
     {
         private string _dbName = Common.DBName;
+
         public List<BOLHeader> GetDistinctShipper()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctShippers = connection.Query<BOLHeader>("GetDistinctShipper", commandType: CommandType.StoredProcedure).ToList();
-                return distinctShippers;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctShippers = connection.Query<BOLHeader>("GetDistinctShipper", commandType: CommandType.StoredProcedure).ToList();
+            return distinctShippers;
         }
 
         public BOLHeader GetBOLHeader(string bolNo)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@BOL#", bolNo, DbType.String);
-
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLHeader = connection.QueryFirstOrDefault<BOLHeader>("GetBOLHeaderByBolNo", parameters, commandType: CommandType.StoredProcedure);
-                return bOLHeader;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLHeader = connection.QueryFirstOrDefault<BOLHeader>("GetBOLHeaderByBolNo", new { bolNo }, commandType: CommandType.StoredProcedure);
+            return bOLHeader;
         }
 
         public List<BOLHeader> GetAgilityDistinctShipper()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctShippers = connection.Query<BOLHeader>("GetAgilityDistinctShipper", commandType: CommandType.StoredProcedure).ToList();
-                return distinctShippers;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctShippers = connection.Query<BOLHeader>("GetAgilityDistinctShipper", commandType: CommandType.StoredProcedure).ToList();
+            return distinctShippers;
         }
 
         public List<BalanceDues_Item> GetBalanceDueItems(string bolNo, int companyId)
@@ -48,105 +38,83 @@ namespace Arg.DataAccess
             parameters.Add("@BOL", bolNo, DbType.String);
             parameters.Add("@CompanyId", companyId, DbType.Int32);
 
-            using (var connection = Common.Database)
-            {
-                var balanceDueItems = connection.Query<BalanceDues_Item>("GetBalanceDueItems", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return balanceDueItems;
-            }
+            using var connection = Common.Database;
+            var balanceDueItems = connection.Query<BalanceDues_Item>("GetBalanceDueItems", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return balanceDueItems;
         }
 
         public List<BOLHeader> GetDistinctPOL()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctPOL = connection.Query<BOLHeader>("GetDistinctPOL", commandType: CommandType.StoredProcedure).ToList();
-                return distinctPOL;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctPOL = connection.Query<BOLHeader>("GetDistinctPOL", commandType: CommandType.StoredProcedure).ToList();
+            return distinctPOL;
         }
 
         public List<BOLHeader> GetDistinctPOD()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctPOD = connection.Query<BOLHeader>("GetDistinctPOD", commandType: CommandType.StoredProcedure).ToList();
-                return distinctPOD;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctPOD = connection.Query<BOLHeader>("GetDistinctPOD", commandType: CommandType.StoredProcedure).ToList();
+            return distinctPOD;
         }
 
         public List<BOLHeader> GetDistinctOrigin()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctOrigin = connection.Query<BOLHeader>("GetDistinctOrigin", commandType: CommandType.StoredProcedure).ToList();
-                return distinctOrigin;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctOrigin = connection.Query<BOLHeader>("GetDistinctOrigin", commandType: CommandType.StoredProcedure).ToList();
+            return distinctOrigin;
         }
 
         public List<BOLHeader> GetDistinctDestination()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctDestination = connection.Query<BOLHeader>("GetDistinctDestination", commandType: CommandType.StoredProcedure).ToList();
-                return distinctDestination;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctDestination = connection.Query<BOLHeader>("GetDistinctDestination", commandType: CommandType.StoredProcedure).ToList();
+            return distinctDestination;
         }
 
         public List<BOLHeader> GetDistinctModes()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctModes = connection.Query<BOLHeader>("GetDistinctModes", commandType: CommandType.StoredProcedure).ToList();
-                return distinctModes;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctModes = connection.Query<BOLHeader>("GetDistinctModes", commandType: CommandType.StoredProcedure).ToList();
+            return distinctModes;
         }
 
         public List<BOLHeader> GetDistinctPayor()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctpayor = connection.Query<BOLHeader>("GetDistinctPayor", commandType: CommandType.StoredProcedure).ToList();
-                return distinctpayor;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctpayor = connection.Query<BOLHeader>("GetDistinctPayor", commandType: CommandType.StoredProcedure).ToList();
+            return distinctpayor;
         }
 
         public List<BOLHeader> GetDistinctConsignee()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctConsignee = connection.Query<BOLHeader>("GetDistinctConsignee", commandType: CommandType.StoredProcedure).ToList();
-                return distinctConsignee;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctConsignee = connection.Query<BOLHeader>("GetDistinctConsignee", commandType: CommandType.StoredProcedure).ToList();
+            return distinctConsignee;
         }
 
         public List<Generic> GetBOLCustomers()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLCustomers = connection.Query<Generic>("GetBOLCustomers", commandType: CommandType.StoredProcedure).ToList();
-                return bOLCustomers;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLCustomers = connection.Query<Generic>("GetBOLCustomers", commandType: CommandType.StoredProcedure).ToList();
+            return bOLCustomers;
         }
 
         public List<Modes> GetAllModes()
         {
             const string query = @"SELECT * FROM Modes;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var modes= connection.Query<Modes>(query, commandType: CommandType.Text).ToList();
-                return modes;
-            }
+            using var connection = Common.ClientDatabase;
+            var modes = connection.Query<Modes>(query, commandType: CommandType.Text).ToList();
+            return modes;
         }
 
         public List<Participants> GetAllParticipants()
         {
             const string query = @"SELECT * FROM Participants;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var participants = connection.Query<Participants>(query, commandType: CommandType.Text).ToList();
-                return participants;
-            }
+            using var connection = Common.ClientDatabase;
+            var participants = connection.Query<Participants>(query, commandType: CommandType.Text).ToList();
+            return participants;
         }
 
         private ICacheManager<List<BOLHeader>> _manager = CacheFactory.Build<List<BOLHeader>>(Core.Settings.DefaultCacheSettings);
@@ -302,11 +270,9 @@ namespace Arg.DataAccess
                 sql = sqlCmd;
             }
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var results = connection.Query<BOLHeader>(sql).ToList();
-                return results;
-            }
+            using var connection = Common.ClientDatabase;
+            var results = connection.Query<BOLHeader>(sql).ToList();
+            return results;
         }
 
         public List<BOLHeader> GetResults(SearchOptions so, bool Table = false)
@@ -340,15 +306,13 @@ namespace Arg.DataAccess
                 cmd += $"b.BillType= {so.BillType}";
             }
 
-            cmd += $"AND p.ParticipantName NOT LIKE '%{ clientName }%'";
+            cmd += $"AND p.ParticipantName NOT LIKE '%{clientName}%'";
             cmd += @"GROUP BY b.shipperid,p.ParticipantName,b.OriginLocationCode,b.DestinationLocationCode";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStats = connection.Query<BOLHeader>(cmd).ToList();
-                return resultStats;
-            }
+            using var connection = Common.ClientDatabase;
+            var resultStats = connection.Query<BOLHeader>(cmd).ToList();
+            return resultStats;
         }
 
         public List<BOLHeader> GetAuditResultStatsByOrigin(SearchOptions so, string clientName)
@@ -379,11 +343,9 @@ namespace Arg.DataAccess
             cmd += @"ORDER BY StandardDeviation DESC";
 
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStatsByOrigin = connection.Query<BOLHeader>(cmd).ToList();
-                return resultStatsByOrigin;
-            }
+            using var connection = Common.ClientDatabase;
+            var resultStatsByOrigin = connection.Query<BOLHeader>(cmd).ToList();
+            return resultStatsByOrigin;
         }
 
         public List<BOLHeader> GetAuditResultStatsByShipper(SearchOptions so, string clientName)
@@ -416,11 +378,9 @@ namespace Arg.DataAccess
             cmd += @"GROUP BY b.shipperid";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStatsByShipper = connection.Query<BOLHeader>(cmd).ToList();
-                return resultStatsByShipper;
-            }
+            using var connection = Common.ClientDatabase;
+            var resultStatsByShipper = connection.Query<BOLHeader>(cmd).ToList();
+            return resultStatsByShipper;
 
         }
 
@@ -453,11 +413,9 @@ namespace Arg.DataAccess
             cmd += @"GROUP BY b.POL";
             cmd += @"ORDER BY StandardDeviation DESC";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultStatsByPOL = connection.Query<BOLHeader>(cmd).ToList();
-                return resultStatsByPOL;
-            }
+            using var connection = Common.ClientDatabase;
+            var resultStatsByPOL = connection.Query<BOLHeader>(cmd).ToList();
+            return resultStatsByPOL;
         }
 
         public void BuildCmdInnerJoin1(ref string cmd, SearchOptions so)
@@ -698,9 +656,9 @@ namespace Arg.DataAccess
                 cmd += $") between {Convert.ToDecimal(so.TotalChargeMinAmount)} AND {Convert.ToDecimal(so.TotalChargeMaxAmount)}";
             }
 
-            if (so.ShipperRefNoNotNullValues || so.ForwarderRefNoNotNullValues || so.ConsigneeRefNoNotNullValues || so.PayorRefNoNotNullValues|| 
-                so.NotifyNoNotNullValues || !string.IsNullOrWhiteSpace(so.ReferenceValue) || !string.IsNullOrWhiteSpace(so.ReferenceType) || 
-                !string.IsNullOrWhiteSpace(so.ShipperReferenceNumber) || !string.IsNullOrWhiteSpace(so.ForwarderReferenceNumber) || 
+            if (so.ShipperRefNoNotNullValues || so.ForwarderRefNoNotNullValues || so.ConsigneeRefNoNotNullValues || so.PayorRefNoNotNullValues ||
+                so.NotifyNoNotNullValues || !string.IsNullOrWhiteSpace(so.ReferenceValue) || !string.IsNullOrWhiteSpace(so.ReferenceType) ||
+                !string.IsNullOrWhiteSpace(so.ShipperReferenceNumber) || !string.IsNullOrWhiteSpace(so.ForwarderReferenceNumber) ||
                 !string.IsNullOrWhiteSpace(so.ConsigneeReferenceNumber) || !string.IsNullOrWhiteSpace(so.PayorReferenceNumber) || !string.IsNullOrWhiteSpace(so.NotifyPartyReferenceNumber))
             {
                 AppendConditionOperator(ref cmd, Table);
@@ -848,36 +806,32 @@ namespace Arg.DataAccess
 
         public void SaveBalanceDueItems(List<BalanceDues_Item> listDues)
         {
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            foreach (var item in listDues)
             {
-                foreach (var item in listDues)
-                {
-                    item.ItemId = 0;
-                    connection.Insert(item);
-                }
+                item.ItemId = 0;
+                connection.Insert(item);
             }
         }
 
         public int DeleteBDItem(int itemId)
         {
-            const string query = @"DELETE FROM [BalanceDues.Item] WHERE  ItemId=@ItemId;"; 
+            const string query = @"DELETE FROM [BalanceDues.Item] 
+                                   WHERE ItemId=@ItemId;";
 
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @ItemId = itemId });
-                return result;
-            }
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { itemId });
+            return result;
         }
 
         public int DeleteBDItem(int companyId, string bolNo, string customerId, string region)
         {
-            const string query = @"DELETE FROM [BalanceDues.Item] WHERE CompanyId=@CompanyId AND Bol=@BolNo AND CustomerId=@CustomerId AND Region=@Region;";
+            const string query = @"DELETE FROM [BalanceDues.Item] 
+                                   WHERE CompanyId=@CompanyId AND Bol=@BolNo AND CustomerId=@CustomerId AND Region=@Region;";
 
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @CompanyId = companyId, @BolNo = bolNo, @CustomerId = customerId, @Region = region });
-                return result;
-            }
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { companyId, bolNo, customerId, region });
+            return result;
         }
     }
 }

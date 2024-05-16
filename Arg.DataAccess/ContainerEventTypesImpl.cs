@@ -11,15 +11,13 @@ namespace Arg.DataAccess
                                    WHERE EventType <> ''
                                    ORDER BY EventDescription;";
 
-            using (var connection = Common.ClientDatabase)
+            using var connection = Common.ClientDatabase;
+            var eventTypes = connection.Query<ContainerEventType>(query).ToList();
+            if (addSelectAllOption)
             {
-                var eventTypes = connection.Query<ContainerEventType>(query).ToList();
-                if (addSelectAllOption)
-                {
-                    eventTypes.Add(new ContainerEventType { EventDescription = "All Events", EventType = "All Events" });
-                }
-                return eventTypes;
+                eventTypes.Add(new ContainerEventType { EventDescription = "All Events", EventType = "All Events" });
             }
+            return eventTypes;
         }
     }
 }

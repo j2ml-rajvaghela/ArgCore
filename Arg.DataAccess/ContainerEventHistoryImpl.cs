@@ -1,10 +1,5 @@
 ﻿using Arg.DataModels;
 using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -24,11 +19,9 @@ namespace Arg.DataAccess
                                  $"h.BOL#='{bolNo}'" +
                                  $"ORDER BY h.EventDateTime;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var contEventHist = connection.Query<ContainerEventHistory>(query).ToList();
-                return contEventHist;
-            }
+            using var connection = Common.ClientDatabase;
+            var contEventHist = connection.Query<ContainerEventHistory>(query).ToList();
+            return contEventHist;
         }
     }
 }

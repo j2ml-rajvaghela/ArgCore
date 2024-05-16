@@ -1,10 +1,5 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -15,12 +10,9 @@ namespace Arg.DataAccess
             //var parameters = new DynamicParameters();
             //parameters.Add("@UserId", userId, DbType.String);
             //parameters.Add("@RoleId", roleId, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var isUserRoleExists = connection.QueryFirstOrDefault<bool>("UserRoleExists", new { @UserId = userId, @RoleId = roleId }, commandType: CommandType.StoredProcedure);
-                return isUserRoleExists;
-
-            }
+            using var connection = Common.Database;
+            var isUserRoleExists = connection.QueryFirstOrDefault<bool>("UserRoleExists", new { userId, roleId }, commandType: CommandType.StoredProcedure);
+            return isUserRoleExists;
         }
 
         public int AssignAspNetUserRoles(string userId, string roleId)
@@ -32,11 +24,9 @@ namespace Arg.DataAccess
                         DELETE FROM [dbo].[AspNetUserRoles] WHERE UserId = @UserId;
                         INSERT INTO [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (@UserId, @RoleId)";
 
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @UserId = userId, @RoleId = roleId });
-                return result;
-            }
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { userId, roleId });
+            return result;
         }
     }
 }

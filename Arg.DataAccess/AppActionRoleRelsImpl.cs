@@ -1,12 +1,7 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Arg.DataModels;
 using Dapper;
-using System;
-using System.Collections.Generic;
+using Dapper.Contrib.Extensions;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Arg.DataModels;
 
 namespace Arg.DataAccess
 {
@@ -25,24 +20,23 @@ namespace Arg.DataAccess
             var parameters = new DynamicParameters();
             parameters.Add("@RoleId", roleId, DbType.String);
             parameters.Add("@AppActionId", appActionId, DbType.Int32);
-            using (var connection = Common.ClientDatabase)
-            {
-                var relId = connection.ExecuteScalar<int>("AssignAppAction", parameters);
 
-                if (relId > 0)
+            using var connection = Common.ClientDatabase;
+            var relId = connection.ExecuteScalar<int>("AssignAppAction", parameters);
+
+            if (relId > 0)
+            {
+                System.Diagnostics.Trace.TraceError("Action already added.");
+                return;
+            }
+            else
+            {
+                var appActionRel = new AppActionRoleRels
                 {
-                    System.Diagnostics.Trace.TraceError("Action already added.");
-                    return;
-                }
-                else
-                {
-                    var appActionRel = new AppActionRoleRels
-                    {
-                        AppActionId = appActionId,
-                        RoleId = roleId
-                    };
-                    connection.Insert(appActionRel);
-                }
+                    AppActionId = appActionId,
+                    RoleId = roleId
+                };
+                connection.Insert(appActionRel);
             }
         }
 
@@ -52,12 +46,12 @@ namespace Arg.DataAccess
             parameters.Add("@RoleId", roleId, DbType.String);
             parameters.Add("@AppActionId", appActionId, DbType.Int32);
 
-            const string query = "DELETE FROM AppActionRoleRels WHERE roleId=@RoleId AND appActionId=@AppActionId;";
-            using (var connection = Common.ClientDatabase)
-            {
-                var result = connection.Execute(query, parameters);
-                return result;
-            }
+            const string query = @"DELETE FROM AppActionRoleRels 
+                                   WHERE roleId=@RoleId AND appActionId=@AppActionId;";
+
+            using var connection = Common.ClientDatabase;
+            var result = connection.Execute(query, parameters);
+            return result;
         }
     }
 }

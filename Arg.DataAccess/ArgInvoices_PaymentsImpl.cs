@@ -2,12 +2,7 @@
 using CuttingEdge.Conditions;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -24,11 +19,9 @@ namespace Arg.DataAccess
             }
             parameters.Add("@InvoiceNo", invoiceNo, DbType.String);
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var invoicesPayments = connection.Query<ArgInvoices_Payments>("GetInvoicePayments", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return invoicesPayments;
-            }
+            using var connection = Common.ClientDatabase;
+            var invoicesPayments = connection.Query<ArgInvoices_Payments>("GetInvoicePayments", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return invoicesPayments;
         }
 
         public void SaveInvoicesPayments(ArgInvoices_Payments invPay)
@@ -37,10 +30,9 @@ namespace Arg.DataAccess
             {
                 throw new Exception("Region can't be empty.");
             }
-            using (var connection = Common.ClientDatabase)
-            {
-                connection.Insert(invPay);
-            }
+
+            using var connection = Common.ClientDatabase;
+            connection.Insert(invPay);
         }
     }
 }

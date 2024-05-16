@@ -19,11 +19,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@q", q, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var argInvoices = connection.Query<ArgInvoice>("GetArgInvoices", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return argInvoices;
-            }
+
+            using var connection = Common.Database;
+            var argInvoices = connection.Query<ArgInvoice>("GetArgInvoices", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return argInvoices;
         }
 
         public ArgInvoice GetArgInvoice(int invoiceId, string invoiceNo = "", int companyId = 0)
@@ -41,11 +40,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@InvoiceNo", invoiceNo, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var argInvoice = connection.QueryFirstOrDefault<ArgInvoice>("GetArgInvoice", parameters, commandType: CommandType.StoredProcedure);
-                return argInvoice;
-            }
+
+            using var connection = Common.Database;
+            var argInvoice = connection.QueryFirstOrDefault<ArgInvoice>("GetArgInvoice", parameters, commandType: CommandType.StoredProcedure);
+            return argInvoice;
         }
 
         public List<ArgInvoice> GetDistinctInvoiceNo(List<string> companyId, List<string> regions, List<string> invoiceTypes)
@@ -64,12 +62,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@InvoiceTypes", string.Join(",", invoiceTypes), DbType.String);
             }
-               
-            using (var connection = Common.Database)
-            {
-                var distinctInvoicesNo = connection.Query<ArgInvoice>("GetDistinctInvoiceNo", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoicesNo;
-            }
+
+            using var connection = Common.Database;
+            var distinctInvoicesNo = connection.Query<ArgInvoice>("GetDistinctInvoiceNo", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoicesNo;
         }
 
         public List<ArgInvoice> GetDistinctInvoiceStatusMultiple(string companyId)
@@ -81,11 +77,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyIds", companyId, DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {  
-                var distinctInvoiceStatusMultiples = connection.Query<ArgInvoice>("GetDistinctInvoiceStatusMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceStatusMultiples;
-            }
+            using var connection = Common.Database;
+            var distinctInvoiceStatusMultiples = connection.Query<ArgInvoice>("GetDistinctInvoiceStatusMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceStatusMultiples;
         }
 
         public List<ArgInvoice> GetDistinctInvoiceNoMultiple(string companyId)
@@ -97,17 +91,15 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyIds", string.Join(",", companyId), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctInvoiceNoMultiples = connection.Query<ArgInvoice>("GetDistinctInvoiceNoMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceNoMultiples;
-            }
+            using var connection = Common.Database;
+            var distinctInvoiceNoMultiples = connection.Query<ArgInvoice>("GetDistinctInvoiceNoMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceNoMultiples;
         }
 
         public ArgInvoice GetArgMultipleInvoice(int invoiceId, List<string> invoiceNo, int companyId = 0)
         {
             var parameters = new DynamicParameters();
- 
+
             if (invoiceId > 0)
             {
                 parameters.Add("@InvoiceId", invoiceId, DbType.Int32);
@@ -121,17 +113,15 @@ namespace Arg.DataAccess
                 parameters.Add("@InvoiceNos", string.Join(",", invoiceNo), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var argMultipleInvoice = connection.QueryFirstOrDefault<ArgInvoice>("GetArgMultipleInvoice", parameters, commandType: CommandType.StoredProcedure);
-                return argMultipleInvoice;
-            }
+            using var connection = Common.Database;
+            var argMultipleInvoice = connection.QueryFirstOrDefault<ArgInvoice>("GetArgMultipleInvoice", parameters, commandType: CommandType.StoredProcedure);
+            return argMultipleInvoice;
         }
 
         public ArgInvoice GetArgInvoiceMultipleInfo(List<string> invoiceNo, string userId, string companyId)
         {
             var parameters = new DynamicParameters();
-        
+
             if (!string.IsNullOrWhiteSpace(userId))
             {
                 parameters.Add("@UserId", userId, DbType.String);
@@ -144,12 +134,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@InvoiceNos", string.Join(",", invoiceNo), DbType.String);
             }
-              
-            using (var connection = Common.ClientDatabase)
-            {
-                var argInvoicesMultipleInfo = connection.QueryFirstOrDefault<ArgInvoice>("GetArgInvoiceMultipleInfo", parameters, commandType: CommandType.StoredProcedure);
-                return argInvoicesMultipleInfo;
-            }
+
+            using var connection = Common.ClientDatabase;
+            var argInvoicesMultipleInfo = connection.QueryFirstOrDefault<ArgInvoice>("GetArgInvoiceMultipleInfo", parameters, commandType: CommandType.StoredProcedure);
+            return argInvoicesMultipleInfo;
         }
 
         public List<ArgInvoice> GetInvoices(SearchOptions so, string currentUserId, bool argManager = false)
@@ -201,11 +189,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CurrentUserId", currentUserId, DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var invoices = connection.Query<ArgInvoice>("GetInvoices", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return invoices;
-            }
+            using var connection = Common.Database;
+            var invoices = connection.Query<ArgInvoice>("GetInvoices", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return invoices;
         }
 
         public void SaveArgInvoice(ArgInvoice argInvoice)
@@ -215,28 +201,25 @@ namespace Arg.DataAccess
                 throw new Exception("Region can't be empty.");
             }
 
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (argInvoice.InvoiceId == 0)
             {
-                if (argInvoice.InvoiceId == 0)
-                {
-                    connection.Insert(argInvoice);
-                }
-                else
-                {
-                    connection.Update(argInvoice);
-                }
-                
+                connection.Insert(argInvoice);
+            }
+            else
+            {
+                connection.Update(argInvoice);
             }
         }
 
         public int DeleteArgInvoice(int invoiceId)
         {
-            const string query = "DELTE FROM ArgInvoices WHERE InvoiceId=@InvoiceId;";
-            using (var connection = Common.ClientDatabase)
-            {
-                var result = connection.Execute(query, new { @InvoiceId = invoiceId });
-                return result;
-            }
+            const string query = @"DELETE FROM ArgInvoices 
+                                   WHERE InvoiceId=@InvoiceId;";
+
+            using var connection = Common.ClientDatabase;
+            var result = connection.Execute(query, new { invoiceId });
+            return result;
         }
     }
 }

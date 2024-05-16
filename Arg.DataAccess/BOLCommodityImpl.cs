@@ -18,11 +18,9 @@ namespace Arg.DataAccess
                                    LEFT JOIN BOLHazardous h ON h.BOL#=c.BOL#
                                    WHERE c.BOL#=@BolNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLItemDetail = connection.Query<BOLCommodity>(query, new { BolNO  = bolNo }).ToList();
-                return bOLItemDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLItemDetail = connection.Query<BOLCommodity>(query, new { bolNo }).ToList();
+            return bOLItemDetail;
         }
     }
 }

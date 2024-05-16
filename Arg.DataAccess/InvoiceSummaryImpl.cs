@@ -20,11 +20,9 @@ namespace Arg.DataAccess
                                               ) b
                                    ON a.PayorID=b.PayorID2;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var invoiceSummary = connection.Query<InvoiceSummary>(query, new { @BOL = bolNo } ).ToList();
-                return invoiceSummary;
-            }
+            using var connection = Common.ClientDatabase;
+            var invoiceSummary = connection.Query<InvoiceSummary>(query, new { bolNo }).ToList();
+            return invoiceSummary;
         }
 
         public InvoiceSummary GetInvoiceNo(string bolNo)
@@ -32,11 +30,9 @@ namespace Arg.DataAccess
             const string query = @"SELECT * FROM InvoiceSummary 
                                    WHERE BOL#=@BOL;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var invoiceNo = connection.QueryFirstOrDefault<InvoiceSummary>(query, new { @BOL = bolNo });
-                return invoiceNo;
-            }
+            using var connection = Common.ClientDatabase;
+            var invoiceNo = connection.QueryFirstOrDefault<InvoiceSummary>(query, new { bolNo });
+            return invoiceNo;
         }
     }
 }

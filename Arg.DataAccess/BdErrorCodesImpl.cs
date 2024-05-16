@@ -1,14 +1,7 @@
 ﻿using Arg.DataModels;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel.Design;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -21,11 +14,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            {
-                var errorCodes = connection.Query<BdErrorCodes>("GetErrorCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return errorCodes;
-            }
+
+            using var connection = Common.Database;
+            var errorCodes = connection.Query<BdErrorCodes>("GetErrorCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return errorCodes;
         }
 
         public BdErrorCodes GetErrorCode(int errorCodeId, int companyId, string bdErrorCode = "")
@@ -43,11 +35,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@BdErrorCode", bdErrorCode, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var errorCode = connection.QueryFirstOrDefault<BdErrorCodes>("GetErrorCode", parameters, commandType: CommandType.StoredProcedure);
-                return errorCode;
-            }
+
+            using var connection = Common.Database;
+            var errorCode = connection.QueryFirstOrDefault<BdErrorCodes>("GetErrorCode", parameters, commandType: CommandType.StoredProcedure);
+            return errorCode;
         }
 
         public List<BdErrorCodes> ErrorCodesExist(int companyId, string bdErrorCode, int errorCodeId)
@@ -60,11 +51,9 @@ namespace Arg.DataAccess
             parameters.Add("@CompanyId", companyId, DbType.Int32);
             parameters.Add("@bdErrorCode", bdErrorCode, DbType.String);
 
-            using (var connection = Common.Database)
-            {
-                var errorCodesExists = connection.Query<BdErrorCodes>("GetErrorCode", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return errorCodesExists;
-            }
+            using var connection = Common.Database;
+            var errorCodesExists = connection.Query<BdErrorCodes>("GetErrorCode", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return errorCodesExists;
         }
 
         public List<BdErrorCodes> GetDistinctErrorCodesCeva(int companyId)
@@ -76,11 +65,9 @@ namespace Arg.DataAccess
                 parameters.Add("@ComapnyId", companyId, DbType.Int32);
             }
 
-            using(var connection = Common.Database)
-            {
-                var distinctErrorCodesCeva = connection.Query<BdErrorCodes>("GetDistinctErrorCodesCeva", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctErrorCodesCeva;
-            }
+            using var connection = Common.Database;
+            var distinctErrorCodesCeva = connection.Query<BdErrorCodes>("GetDistinctErrorCodesCeva", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctErrorCodesCeva;
         }
 
         public List<BdErrorCodes> GetDistinctErrorCodes(int companyId, bool filterbalanceDue = false, string bol = "", string invoiceType = "")
@@ -100,36 +87,32 @@ namespace Arg.DataAccess
 
             var parameters = new { CompanyId = companyId, FilterBalanceDue = filterbalanceDue, InvoiceType = invoiceType };
 
-            using (var connection = Common.Database)
-            {
-                var distinctErrorCodes = connection.Query<BdErrorCodes>(query,parameters).ToList();
-                return distinctErrorCodes;
-            }
+            using var connection = Common.Database;
+            var distinctErrorCodes = connection.Query<BdErrorCodes>(query, parameters).ToList();
+            return distinctErrorCodes;
         }
 
         public void SaveBdErrorCode(BdErrorCodes bdErrorCode)
         {
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (bdErrorCode.ErrorCodeId == 0)
             {
-                 if (bdErrorCode.ErrorCodeId == 0)
-                 {
-                    connection.Insert(bdErrorCode);
-                 }
-                 else
-                 {
-                    connection.Update(bdErrorCode);
-                 }
+                connection.Insert(bdErrorCode);
+            }
+            else
+            {
+                connection.Update(bdErrorCode);
             }
         }
 
         public int DeleteBdErrorCode(int errorCodeId)
         {
-            const string query = @"DELETE FROM BdErrorCodes WHERE ErrorCodeId=@ErrorCodeId;";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @ErrorCodeId = errorCodeId });
-                return result;
-            }
+            const string query = @"DELETE FROM BdErrorCodes 
+                                   WHERE ErrorCodeId=@ErrorCodeId;";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { errorCodeId });
+            return result;
         }
     }
 }

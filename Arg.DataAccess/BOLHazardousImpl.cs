@@ -1,10 +1,5 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -17,11 +12,9 @@ namespace Arg.DataAccess
                                    WHERE UNHazmatCode <> ''
                                    ORDER BY UNHazmatCode;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctUNHazmatCodes = connection.Query<DataModels.BOLHazardous>(query, commandType: CommandType.Text).ToList();
-                return distinctUNHazmatCodes;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctUNHazmatCodes = connection.Query<DataModels.BOLHazardous>(query, commandType: CommandType.Text).ToList();
+            return distinctUNHazmatCodes;
         }
     }
 }

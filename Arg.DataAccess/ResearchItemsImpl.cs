@@ -15,11 +15,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-            using (var connection = Common.Database)
-            { 
-                var researchReasonCodes = connection.Query<ResearchItems>("GetResearchReasonCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return researchReasonCodes;
-            }
+
+            using var connection = Common.Database;
+            var researchReasonCodes = connection.Query<ResearchItems>("GetResearchReasonCodes", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return researchReasonCodes;
         }
 
         public List<ResearchItems> GetResearchItems(string currentUserId, int companyId, string bolNo = "")
@@ -38,11 +37,10 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
             parameters.Add("@ClientDBName", _clientDbName, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var researchItems = connection.Query<ResearchItems>("GetResearchItemsByBOLNo", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return researchItems;
-            }
+
+            using var connection = Common.Database;
+            var researchItems = connection.Query<ResearchItems>("GetResearchItemsByBOLNo", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return researchItems;
         }
 
         public List<ResearchItems> GetResearchItems(SearchOptions so)
@@ -106,11 +104,9 @@ namespace Arg.DataAccess
             }
             parameters.Add("@ClientDBName", _clientDbName, DbType.String);
 
-            using (var connection = Common.Database)
-            { 
-                var researchItems = connection.Query<ResearchItems>("GetResearchItems", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return researchItems;
-            }
+            using var connection = Common.Database;
+            var researchItems = connection.Query<ResearchItems>("GetResearchItems", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return researchItems;
         }
 
         public List<ResearchItems> GetResearchItemsCeva(SearchOptions so)
@@ -173,11 +169,10 @@ namespace Arg.DataAccess
                 parameters.Add("@UserId", so.UserId, DbType.String);
             }
             parameters.Add("@ClientDBName", ActiveClient.Info.DBName, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var researchItemsCeva = connection.Query<ResearchItems>("GetResearchItemsCeva", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return researchItemsCeva;
-            }
+
+            using var connection = Common.Database;
+            var researchItemsCeva = connection.Query<ResearchItems>("GetResearchItemsCeva", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return researchItemsCeva;
         }
 
         public List<ResearchItems> GetAuditingResearchItemsCeva(string currentUserId, int companyId, string bolNo = "")
@@ -197,11 +192,10 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
             parameters.Add("@ClientDBName", ActiveClient.Info.DBName, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var researchItemsCeva = connection.Query<ResearchItems>("GetAuditingResearchItemsCeva", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return researchItemsCeva;
-            }
+
+            using var connection = Common.Database;
+            var researchItemsCeva = connection.Query<ResearchItems>("GetAuditingResearchItemsCeva", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return researchItemsCeva;
         }
 
         public ResearchItems GetResearchItem(int researchId, int companyId, string bolNo = "", string region = "", DateTime? bolExecDate = null)
@@ -227,11 +221,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@BolExecDate", bolExecDate, DbType.DateTime);
             }
-            using (var connection = Common.ClientDatabase)
-            { 
-                var researchItem = connection.QueryFirstOrDefault<ResearchItems>("GetResearchItem", parameters, commandType: CommandType.StoredProcedure);
-                return researchItem;
-            }
+
+            using var connection = Common.ClientDatabase;
+            var researchItem = connection.QueryFirstOrDefault<ResearchItems>("GetResearchItem", parameters, commandType: CommandType.StoredProcedure);
+            return researchItem;
         }
 
         public void SaveResearchItem(ResearchItems researchItems)
@@ -240,27 +233,26 @@ namespace Arg.DataAccess
             {
                 throw new Exception("Region can't be empty.");
             }
-            using (var connection = Common.ClientDatabase)
-            {      
-                if (researchItems.ResearchId == 0)
-                {
-                    connection.Insert(researchItems);
-                }
-                else
-                {
-                    connection.Update(researchItems);
-                }
+
+            using var connection = Common.ClientDatabase;
+            if (researchItems.ResearchId == 0)
+            {
+                connection.Insert(researchItems);
+            }
+            else
+            {
+                connection.Update(researchItems);
             }
         }
 
         public int DeleteResearchItem(int researchId)
         {
-            const string query = "DELETE FROM ResearchItems WHERE ResearchId=@ResearchId";
-            using (var connection = Common.Database)
-            {
-                var result = connection.Execute(query, new { @ResearchId = researchId });
-                return result;
-            }
+            const string query = @"DELETE FROM ResearchItems 
+                                   WHERE ResearchId=@ResearchId";
+
+            using var connection = Common.Database;
+            var result = connection.Execute(query, new { researchId });
+            return result;
         }
     }
 }

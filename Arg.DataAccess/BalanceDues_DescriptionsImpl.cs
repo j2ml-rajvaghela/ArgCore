@@ -1,7 +1,5 @@
 ﻿using Arg.DataModels;
 using Dapper;
-using System.ComponentModel.Design;
-using System.Data;
 
 namespace Arg.DataAccess
 {
@@ -18,11 +16,9 @@ namespace Arg.DataAccess
                                    OR (@InvoiceType = 'under' AND ErrorType LIKE 'UB%'))
                                    ORDER BY ErrorType, Description;";
 
-            using (var connection = Common.Database)
-            {
-                var balanceDuesDesc = connection.Query<BalanceDues_Descriptions>(query, new { CompanyId = companyId, InvoiceType = invoiceType }).ToList();
-                return balanceDuesDesc;
-            }
+            using var connection = Common.Database;
+            var balanceDuesDesc = connection.Query<BalanceDues_Descriptions>(query, new { companyId, invoiceType }).ToList();
+            return balanceDuesDesc;
         }
     }
 }

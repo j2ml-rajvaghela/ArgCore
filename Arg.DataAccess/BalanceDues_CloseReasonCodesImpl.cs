@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using System.ComponentModel.Design;
 
 namespace Arg.DataAccess
 {
@@ -13,11 +12,9 @@ namespace Arg.DataAccess
                                    AND (CompanyId=@CompanyId OR @CompanyId = 0)
                                    ORDER BY CloseReasonCode;";
 
-            using (var connection = Common.Database)
-            {
-                var selectedCloseRasonCodes = connection.Query<DataModels.BalanceDues_CloseReasonCodes>(query, new { @CompanyId = companyId}).ToList(); 
-                return selectedCloseRasonCodes;
-            }
+            using var connection = Common.Database;
+            var selectedCloseRasonCodes = connection.Query<DataModels.BalanceDues_CloseReasonCodes>(query, new { companyId }).ToList();
+            return selectedCloseRasonCodes;
         }
     }
 }

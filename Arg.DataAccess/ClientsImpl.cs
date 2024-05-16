@@ -9,12 +9,12 @@ namespace Arg.DataAccess
 
         public Client GetClient(int clientId)
         {
-            const string query = @"SELECT * From arg.clients WHERE ClientId = @ClientId;";
-            using (var connection = Common.Database)
-            {
-                var client = connection.QueryFirstOrDefault<Client>(query, new { @ClientId = clientId });
-                return client;
-            }
+            const string query = @"SELECT * FROM arg.clients 
+                                   WHERE ClientId = @ClientId;";
+
+            using var connection = Common.Database;
+            var client = connection.QueryFirstOrDefault<Client>(query, new { clientId });
+            return client;
         }
 
         public void SaveClient(Client client)
@@ -27,10 +27,9 @@ namespace Arg.DataAccess
             {
                 throw new Exception("Email Address can't be empty.");
             }
-            using (var connection = Common.Database)
-            {
-                connection.Insert(client);
-            }
+
+            using var connection = Common.Database;
+            connection.Insert(client);
         }
     }
 }

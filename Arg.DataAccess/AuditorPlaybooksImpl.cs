@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
-using System.ComponentModel.Design;
 
 namespace Arg.DataAccess
 {
@@ -18,11 +17,9 @@ namespace Arg.DataAccess
                            $"WHERE a.Status <> 3" +
                            $"ORDER BY a.Region,a.Status,a.Priority,u.FirstName;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var auditorPlaybooks = connection.Query<DataModels.AuditorPlaybook>(query).ToList();
-                return auditorPlaybooks;
-            }
+            using var connection = Common.ClientDatabase;
+            var auditorPlaybooks = connection.Query<DataModels.AuditorPlaybook>(query).ToList();
+            return auditorPlaybooks;
         }
 
         public DataModels.AuditorPlaybook GetAuditorPlaybook(int playId, int companyId)
@@ -31,32 +28,27 @@ namespace Arg.DataAccess
                                  $"INNER JOIN {_dbName}.dbo.AspNetUsers u  ON u.Id = a.UserID" +
                                  $"WHERE (a.PlayID = @PlayId OR @PlayId = 0)" +
                                  $"AND (a.CompanyID = @CompanyId OR @CompanyId = 0);";
-            
-            using (var connection = Common.ClientDatabase)
-            {
-                var auditorPlaybook = connection.QueryFirstOrDefault<DataModels.AuditorPlaybook>(query, new { PlayId = playId, CompanyId = companyId });
-                return auditorPlaybook;
-            }
+
+            using var connection = Common.ClientDatabase;
+            var auditorPlaybook = connection.QueryFirstOrDefault<DataModels.AuditorPlaybook>(query, new { playId, companyId });
+            return auditorPlaybook;
         }
 
         public void SaveAuditorPlaybook(DataModels.AuditorPlaybook playbook)
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                connection.Insert(playbook);
-            }
+            using var connection = Common.ClientDatabase;
+            connection.Insert(playbook);
         }
 
         public int DeleteAuditorPlaybook(int playId, int companyId)
         {
-            const string query = @"UPDATE AuditorPlaybook SET Status=3
+            const string query = @"UPDATE AuditorPlaybook 
+                                   SET Status=3
                                    WHERE PlayID = @playId AND CompanyID = @CompanyId;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var result = connection.Execute(query, new { PlayId = playId, CompanyId = companyId });
-                return result;
-            }
+            using var connection = Common.ClientDatabase;
+            var result = connection.Execute(query, new { playId, companyId });
+            return result;
         }
     }
 }

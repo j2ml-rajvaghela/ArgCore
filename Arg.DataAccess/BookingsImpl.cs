@@ -17,11 +17,9 @@ namespace Arg.DataAccess
                                    FROM Bookings b
                                    INNER JOIN BOLHeader h ON h.BookingID=b.BookingID WHERE h.BOL#=@BolNo;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingInfo = connection.QueryFirstOrDefault<Bookings>(query, new { BolNo = bolNo});
-                return bookingInfo;
-            }
+            using var connection = Common.ClientDatabase;
+            var bookingInfo = connection.QueryFirstOrDefault<Bookings>(query, new { bolNo });
+            return bookingInfo;
         }
 
         public Bookings GetBookingItemDetails(string bolNo)
@@ -32,11 +30,9 @@ namespace Arg.DataAccess
                                    INNER JOIN BOLHeader h ON h.BookingID=b.BookingID
                                    WHERE h.BOL#=@BolNo;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingItemDetail = connection.QueryFirstOrDefault<Bookings>(query, new { BolNo = bolNo });
-                return bookingItemDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var bookingItemDetail = connection.QueryFirstOrDefault<Bookings>(query, new { bolNo });
+            return bookingItemDetail;
         }
 
         public Bookings GetBOLHeaderSection(string bolNo)
@@ -52,11 +48,9 @@ namespace Arg.DataAccess
                                   INNER JOIN Bookings b ON h.BookingID=b.BookingID
                                   WHERE h.BOL#=@BolNo;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bolHeaderSection = connection.QueryFirstOrDefault<Bookings>(query, new { BolNo = bolNo });
-                return bolHeaderSection;
-            }
+            using var connection = Common.ClientDatabase;
+            var bolHeaderSection = connection.QueryFirstOrDefault<Bookings>(query, new { bolNo });
+            return bolHeaderSection;
         }
 
     }

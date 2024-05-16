@@ -3,14 +3,7 @@ using Arg.DataModels;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Google.Apis.Sheets.v4.Data;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arg.DataAccess
 {
@@ -37,33 +30,24 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyIds", companyId, DbType.String);
             }
-            using (var connection = Common.Database)
-            {
-                var distinctInvoiceTypesMultiple = connection.Query<BalanceDue>("GetDistinctInvoiceTypesMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceTypesMultiple;
-            }
+
+            using var connection = Common.Database;
+            var distinctInvoiceTypesMultiple = connection.Query<BalanceDue>("GetDistinctInvoiceTypesMultiple", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceTypesMultiple;
         }
 
         public List<BalanceDue> GetRevenueCollectedPastYear(string userId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var revenueCollectedPastYears = connection.Query<BalanceDue>("GetRevenueCollectedPastYear", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return revenueCollectedPastYears;
-            }
+            using var connection = Common.Database;
+            var revenueCollectedPastYears = connection.Query<BalanceDue>("GetRevenueCollectedPastYear", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return revenueCollectedPastYears;
         }
 
         public List<BalanceDue> GetRevenueCollectedForYearToDate(string userId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-            using (var connection = Common.ClientDatabase)
-            {
-                var revenueCollectedForYearsToDates = connection.Query<BalanceDue>("GetRevenueCollectedForYearToDate", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return revenueCollectedForYearsToDates;
-            }
+            using var connection = Common.ClientDatabase;
+            var revenueCollectedForYearsToDates = connection.Query<BalanceDue>("GetRevenueCollectedForYearToDate", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return revenueCollectedForYearsToDates;
         }
 
         public List<BalanceDue> GetBDSetUp(EnumDashboard enumValues, string userId = "")
@@ -72,11 +56,10 @@ namespace Arg.DataAccess
             var parameters = new DynamicParameters();
             parameters.Add("@UserId", userId, DbType.String);
             parameters.Add("@EnumValues", enumValues, DbType.Int32);
-            using (var connection = Common.Database)
-            {
-                var bdSetUps = connection.Query<BalanceDue>("GetBDSetUp", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return bdSetUps;
-            }
+
+            using var connection = Common.Database;
+            var bdSetUps = connection.Query<BalanceDue>("GetBDSetUp", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return bdSetUps;
         }
 
         public List<BalanceDue> GetBDCollected(EnumDashboard enumValues, string userId = "")
@@ -85,34 +68,24 @@ namespace Arg.DataAccess
             var parameters = new DynamicParameters();
             parameters.Add("@UserId", userId, DbType.String);
             parameters.Add("@EnumValues", enumValues, DbType.Int32);
-            using (var connection = Common.Database)
-            {
-                var bdCollected = connection.Query<BalanceDue>("GetBDCollected", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return bdCollected;
-            }
+
+            using var connection = Common.Database;
+            var bdCollected = connection.Query<BalanceDue>("GetBDCollected", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return bdCollected;
         }
 
         public List<BalanceDue> GetPendingBD(string userId = "", string invoiceStatus = "")
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-            parameters.Add("@InvoiceStatus", invoiceStatus, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var pendingBds = connection.Query<BalanceDue>("GetPendingBD", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return pendingBds;
-            }
+            using var connection = Common.Database;
+            var pendingBds = connection.Query<BalanceDue>("GetPendingBD", new { userId, invoiceStatus }, commandType: CommandType.StoredProcedure).ToList();
+            return pendingBds;
         }
 
         public List<BalanceDue> GetOpenInvoices(string userId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@UserId", userId, DbType.String);
-            using (var connection = Common.Database)
-            {
-                var openInvoices = connection.Query<BalanceDue>("GetOpenInvoices", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return openInvoices;
-            }
+            using var connection = Common.Database;
+            var openInvoices = connection.Query<BalanceDue>("GetOpenInvoices", new { userId }, commandType: CommandType.StoredProcedure).ToList();
+            return openInvoices;
         }
 
         public List<BalanceDue> GetMultipleBalanceDues(string companyId, List<string> region, List<string> invoiceType)
@@ -131,12 +104,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@InvoiceType", string.Join(",", invoiceType), DbType.String);
             }
-               
-            using (var connection = Common.Database)
-            {
-                var multipleBalanceDues = connection.Query<BalanceDue>("GetMultipleBalanceDues", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return multipleBalanceDues;
-            }
+
+            using var connection = Common.Database;
+            var multipleBalanceDues = connection.Query<BalanceDue>("GetMultipleBalanceDues", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return multipleBalanceDues;
         }
 
         public List<BalanceDue> GetDistinctInvoiceTypesByStatus(string companyId, List<string> region, string status)
@@ -157,11 +128,9 @@ namespace Arg.DataAccess
                 parameters.Add("@Region", string.Join(",", region), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctInvoiceTypesByStatus = connection.Query<BalanceDue>("GetDistinctInvoiceTypesByStatus", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceTypesByStatus;
-            }
+            using var connection = Common.Database;
+            var distinctInvoiceTypesByStatus = connection.Query<BalanceDue>("GetDistinctInvoiceTypesByStatus", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceTypesByStatus;
         }
 
         public BalanceDue GetMultipleBalanceDue(int balanceId, string bol, string companyId, List<string> invoiceTypes = null)
@@ -185,11 +154,9 @@ namespace Arg.DataAccess
                 parameters.Add("@InvoiceTypes", string.Join(",", invoiceTypes), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var multipleBalanceDue = connection.QueryFirstOrDefault<BalanceDue>("GetMultipleBalanceDue", parameters, commandType: CommandType.StoredProcedure);
-                return multipleBalanceDue;
-            }
+            using var connection = Common.Database;
+            var multipleBalanceDue = connection.QueryFirstOrDefault<BalanceDue>("GetMultipleBalanceDue", parameters, commandType: CommandType.StoredProcedure);
+            return multipleBalanceDue;
         }
 
         public BalanceDue GetBalanceDue(int balanceId, string bol, int companyId, List<string> invoiceTypes = null)
@@ -213,23 +180,16 @@ namespace Arg.DataAccess
                 parameters.Add("@InvoiceTypes", string.Join("," ,invoiceTypes), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var balaneDue = connection.QueryFirstOrDefault<BalanceDue>("GetBalanceDue", parameters, commandType: CommandType.StoredProcedure);
-                return balaneDue;
-            }
+            using var connection = Common.Database;
+            var balaneDue = connection.QueryFirstOrDefault<BalanceDue>("GetBalanceDue", parameters, commandType: CommandType.StoredProcedure);
+            return balaneDue;
         }
 
         public BalanceDue GetBalanceDue(int balanceId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@BalanceId", balanceId, DbType.Int32);
-
-            using (var connection = Common.Database)
-            {
-                var balanceDue = connection.QueryFirstOrDefault<BalanceDue>("GetBalanceDueByBalanceId", parameters);
-                return balanceDue;
-            }
+            using var connection = Common.Database;
+            var balanceDue = connection.QueryFirstOrDefault<BalanceDue>("GetBalanceDueByBalanceId", new { balanceId }, commandType: CommandType.StoredProcedure);
+            return balanceDue;
         }
 
         public List<BalanceDue> GetDistinctRevenueAnalystAuditor(int companyId)
@@ -240,11 +200,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctRevenueAnalystAuditor = connection.Query<BalanceDue>("GetDistinctRevenueAnalystAuditorByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctRevenueAnalystAuditor;
-            }
+            using var connection = Common.Database;
+            var distinctRevenueAnalystAuditor = connection.Query<BalanceDue>("GetDistinctRevenueAnalystAuditorByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctRevenueAnalystAuditor;
         }
 
         public List<BalanceDue> GetDistinctRevenueAnalystCollector(int companyId)
@@ -255,11 +213,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctRevenueAnalystCollector = connection.Query<BalanceDue>("GetDistinctRevenueAnalystCollectorByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctRevenueAnalystCollector;
-            }
+            using var connection = Common.Database;
+            var distinctRevenueAnalystCollector = connection.Query<BalanceDue>("GetDistinctRevenueAnalystCollectorByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctRevenueAnalystCollector;
         }
 
         public List<BalanceDue> GetBalanceDuesByInvoice(string invoice, int companyId = 0)
@@ -271,12 +227,10 @@ namespace Arg.DataAccess
             {
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
-               
-            using (var connection = Common.Database)
-            {
-                var balanceDuesByInvoices = connection.Query<BalanceDue>("GetBalanceDuesByInvoice", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return balanceDuesByInvoices;
-            }
+
+            using var connection = Common.Database;
+            var balanceDuesByInvoices = connection.Query<BalanceDue>("GetBalanceDuesByInvoice", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return balanceDuesByInvoices;
         }
 
         public decimal GetCurrentOpenBalance(string region, int companyId, List<string> reportType)
@@ -292,11 +246,9 @@ namespace Arg.DataAccess
                 parameters.Add("@ReportType", string.Join(",", region), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var openBalance = connection.ExecuteScalar<decimal>("GetCurrentOpenBalance", parameters, commandType: CommandType.StoredProcedure);
-                return openBalance;
-            }
+            using var connection = Common.Database;
+            var openBalance = connection.ExecuteScalar<decimal>("GetCurrentOpenBalance", parameters, commandType: CommandType.StoredProcedure);
+            return openBalance;
 
 
         }
@@ -326,27 +278,18 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var argBalanceDues = connection.Query<BalanceDue>("GetARGBalanceDue", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return argBalanceDues;
-            }
+            using var connection = Common.Database;
+            var argBalanceDues = connection.Query<BalanceDue>("GetARGBalanceDue", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return argBalanceDues;
 
 
         }
 
         public decimal GetBDPaymentAmount(string bolNo, int companyId)
         {
-            var parameters = new DynamicParameters();
-
-            parameters.Add("@BOL#", bolNo, DbType.String);
-            parameters.Add("@CompanyId", companyId, DbType.Int32);
-
-            using (var connection = Common.Database)
-            {
-                var bDPaymentAmount = connection.ExecuteScalar<decimal>("GetBDPaymentAmount", parameters, commandType: CommandType.StoredProcedure);
-                return bDPaymentAmount;
-            }
+            using var connection = Common.Database;
+            var bDPaymentAmount = connection.ExecuteScalar<decimal>("GetBDPaymentAmount", new { bolNo, companyId }, commandType: CommandType.StoredProcedure);
+            return bDPaymentAmount;
         }
 
         public List<BalanceDue> GetCustomerBalanceDues(string bolNo, int companyId)
@@ -359,11 +302,9 @@ namespace Arg.DataAccess
                 parameters.Add("@Bol", bolNo, DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var customerBalanceDues = connection.Query<BalanceDue>("GetCustomerBalanceDues", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return customerBalanceDues;
-            }
+            using var connection = Common.Database;
+            var customerBalanceDues = connection.Query<BalanceDue>("GetCustomerBalanceDues", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return customerBalanceDues;
         }
 
         public List<BalanceDue> GetBalanceDues(int balanceId, string q, string customerId)
@@ -382,11 +323,9 @@ namespace Arg.DataAccess
                 parameters.Add("@Q", q, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var balanceDues = connection.Query<BalanceDue>("GetBalanceDuesByCustomerId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return balanceDues;
-            }
+            using var connection = Common.Database;
+            var balanceDues = connection.Query<BalanceDue>("GetBalanceDuesByCustomerId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return balanceDues;
         }
 
         public void FixWildcards(ref SearchOptions so)
@@ -410,11 +349,9 @@ namespace Arg.DataAccess
             FixWildcards(ref so);
             BuildCmd(ref sqlCmd, so);
 
-            using (var connection = Common.Database)
-            {
-                var results = connection.Query<BalanceDue>(sqlCmd);
-                return results.ToList();
-            }
+            using var connection = Common.Database;
+            var results = connection.Query<BalanceDue>(sqlCmd);
+            return results.ToList();
         }
 
         public void BuildCmd(ref string sqlCmd, SearchOptions so)
@@ -610,11 +547,9 @@ namespace Arg.DataAccess
                 parameters.Add("@balanceIds", string.Join(",",bdIds), DbType.String);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctClientGLStatus = connection.Query<BalanceDue>("GetBalanceDuesByBDIds", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctClientGLStatus;
-            }
+            using var connection = Common.Database;
+            var distinctClientGLStatus = connection.Query<BalanceDue>("GetBalanceDuesByBDIds", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctClientGLStatus;
         }
 
         public List<BalanceDue> GetDistinctInvoiceStatus(int companyId)
@@ -625,11 +560,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctInvoiceStatus = connection.Query<BalanceDue>("GetDistinctInvoiceStatusByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceStatus;
-            }
+            using var connection = Common.Database;
+            var distinctInvoiceStatus = connection.Query<BalanceDue>("GetDistinctInvoiceStatusByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceStatus;
         }
 
         public List<BalanceDue> GetDistinctClientGLStatus(int companyId)
@@ -640,11 +573,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctClientGLStatus = connection.Query<BalanceDue>("GetDistinctClientGLStatusByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctClientGLStatus;
-            }
+            using var connection = Common.Database;
+            var distinctClientGLStatus = connection.Query<BalanceDue>("GetDistinctClientGLStatusByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctClientGLStatus;
         }
 
         public List<BalanceDue> GetDistinctCloseReasonCodes(int companyId)
@@ -655,11 +586,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctCloseReasonCodes = connection.Query<BalanceDue>("GetDistinctCloseReasonCodesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctCloseReasonCodes;
-            }
+            using var connection = Common.Database;
+            var distinctCloseReasonCodes = connection.Query<BalanceDue>("GetDistinctCloseReasonCodesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctCloseReasonCodes;
         }
 
         public List<BalanceDue> GetDistinctInvoiceNo(int companyId)
@@ -670,11 +599,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctInvoiceNo = connection.Query<BalanceDue>("GetDistinctInvoiceNoByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceNo;
-            }
+            using var connection = Common.Database;
+            var distinctInvoiceNo = connection.Query<BalanceDue>("GetDistinctInvoiceNoByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceNo;
         }
 
         public List<BalanceDue> GetDistinctInvoiceTypes(int companyId)
@@ -685,11 +612,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctInvoiceTypes = connection.Query<BalanceDue>("GetDistinctInvoiceTypesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctInvoiceTypes;
-            }
+            using var connection = Common.Database;
+            var distinctInvoiceTypes = connection.Query<BalanceDue>("GetDistinctInvoiceTypesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctInvoiceTypes;
         }
 
         public List<BalanceDue> GetDistinctMoveTypes(int companyId)
@@ -700,11 +625,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctMoveTypes = connection.Query<BalanceDue>("GetDistinctMoveTypesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctMoveTypes;
-            }
+            using var connection = Common.Database;
+            var distinctMoveTypes = connection.Query<BalanceDue>("GetDistinctMoveTypesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctMoveTypes;
         }
 
         public List<BalanceDue> GetDistinctVessels(int companyId)
@@ -715,11 +638,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctVessels = connection.Query<BalanceDue>("GetDistinctVesselsByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctVessels;
-            }
+            using var connection = Common.Database;
+            var distinctVessels = connection.Query<BalanceDue>("GetDistinctVesselsByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctVessels;
         }
 
         public List<BalanceDue> GetDistinctVoyages(int companyId)
@@ -730,11 +651,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctVoyages = connection.Query<BalanceDue>("GetDistinctVoyagesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctVoyages;
-            }
+            using var connection = Common.Database;
+            var distinctVoyages = connection.Query<BalanceDue>("GetDistinctVoyagesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctVoyages;
         }
 
         public List<BalanceDue> GetDistinctCollectionStatus(int companyId)
@@ -745,11 +664,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctCollectionStatus = connection.Query<BalanceDue>("GetDistinctCollectionStatusByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctCollectionStatus;
-            }
+            using var connection = Common.Database;
+            var distinctCollectionStatus = connection.Query<BalanceDue>("GetDistinctCollectionStatusByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctCollectionStatus;
         }
 
         public List<BalanceDue> GetDistinctOriginLocationCodes(int companyId)
@@ -760,11 +677,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctOriginLocationCodes = connection.Query<BalanceDue>("GetDistinctOriginLocationCodesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctOriginLocationCodes;
-            }
+            using var connection = Common.Database;
+            var distinctOriginLocationCodes = connection.Query<BalanceDue>("GetDistinctOriginLocationCodesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctOriginLocationCodes;
         }
 
         public List<BalanceDue> GetDistinctDestinationLocationCodes(int companyId)
@@ -775,11 +690,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctDestinationLocationCodes = connection.Query<BalanceDue>("GetDistinctDestinationLocationCodesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctDestinationLocationCodes;
-            }
+            using var connection = Common.Database;
+            var distinctDestinationLocationCodes = connection.Query<BalanceDue>("GetDistinctDestinationLocationCodesByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctDestinationLocationCodes;
         }
 
         public List<BalanceDue> GetDistinctPOL(int companyId)
@@ -790,11 +703,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctPOL = connection.Query<BalanceDue>("GetDistinctPOLByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctPOL;
-            }
+            using var connection = Common.Database;
+            var distinctPOL = connection.Query<BalanceDue>("GetDistinctPOLByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctPOL;
         }
 
         public List<BalanceDue> GetDistinctPOD(int companyId)
@@ -805,11 +716,9 @@ namespace Arg.DataAccess
                 parameters.Add("@CompanyId", companyId, DbType.Int32);
             }
 
-            using (var connection = Common.Database)
-            {
-                var distinctPOL = connection.Query<BalanceDue>("GetDistinctPODByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
-                return distinctPOL;
-            }
+            using var connection = Common.Database;
+            var distinctPOL = connection.Query<BalanceDue>("GetDistinctPODByCompanyId", parameters, commandType: CommandType.StoredProcedure).ToList();
+            return distinctPOL;
         }
 
         public string GenerateInvNoFromInvSummaryBasedOnBOL(string bolNo)
@@ -830,17 +739,14 @@ namespace Arg.DataAccess
                 throw new Exception("Please select BDErrorCode");
             }
 
-            using (var connection = Common.Database)
+            using var connection = Common.Database;
+            if (balanceDue.BalanceId == 0)
             {
-                if (balanceDue.BalanceId == 0)
-                {
-                    connection.Insert(balanceDue);
-                }
-                else
-                {
-                    connection.Update(balanceDue);
-                }
-                
+                connection.Insert(balanceDue);
+            }
+            else
+            {
+                connection.Update(balanceDue);
             }
         }
 
