@@ -23,11 +23,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT xa.*,CONCAT(xa.Description,' (',xa.SERVLVL,')') AS AirServiceLevelDetail FROM XrefAirServiceLevelsDetails xa
                                    ORDER BY CONCAT(xa.Description,' (',xa.SERVLVL,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var airServiceLevelDetail = connection.Query<XrefAirServiceLevelsDetail>(query, commandType: CommandType.Text).ToList();
-                return airServiceLevelDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var airServiceLevelDetail = connection.Query<XrefAirServiceLevelsDetail>(query, commandType: CommandType.Text).ToList();
+            return airServiceLevelDetail;
         }
 
         public XrefAirServiceLevelsDetail GetSERVLVLDescription(string code)
@@ -35,11 +33,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT xa.*,concat(xa.Description,' (',xa.SERVLVL,')') AS AirServiceLevelDetail FROM XrefAirServiceLevelsDetails xa
                                    WHERE xa.SERVLVL=@SERVLVL;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var servlVlDescription = connection.QueryFirstOrDefault<XrefAirServiceLevelsDetail>(query, new { SERVLVL = code });
-                return servlVlDescription;
-            }
+            using var connection = Common.ClientDatabase;
+            var servlVlDescription = connection.QueryFirstOrDefault<XrefAirServiceLevelsDetail>(query, new { SERVLVL = code });
+            return servlVlDescription;
         }
     }
 }

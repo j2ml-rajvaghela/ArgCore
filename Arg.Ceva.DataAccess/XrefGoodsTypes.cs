@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
 namespace Arg.Ceva.DataAccess
 {
     public class XrefGoodsTypes
@@ -17,11 +16,9 @@ namespace Arg.Ceva.DataAccess
         {
             const string query = @"SELECT * FROM XrefGoodsType WHERE GOODSTYPE=@GOODSTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var goodsType = connection.QueryFirstOrDefault<XrefGoodsType>(query, new { @GOODSTYPE  = code });
-                return goodsType;
-            }
+            using var connection = Common.ClientDatabase;
+            var goodsType = connection.QueryFirstOrDefault<XrefGoodsType>(query, new { @GOODSTYPE = code });
+            return goodsType;
         }
     }
 }

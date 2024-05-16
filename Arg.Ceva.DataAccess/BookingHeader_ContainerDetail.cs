@@ -91,11 +91,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE CNTRTYPE IS NOT NULL AND CNTRTYPE <> ''
                                    ORDER BY CNTRTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var containerDetails = connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
-                return containerDetails;
-            }
+            using var connection = Common.ClientDatabase;
+            var containerDetails = connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
+            return containerDetails;
         }
 
         public List<ContainerDetail> GetContainerDetail(string HBLNO)
@@ -103,11 +101,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT * FROM [BookingHeader.ContainerDetail]
                                    WHERE HBLNO=@HBLNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var containerDetail = connection.Query<ContainerDetail>(query, new { @HBLNO = HBLNO}).ToList();
-                return containerDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var containerDetail = connection.Query<ContainerDetail>(query, new { @HBLNO = HBLNO }).ToList();
+            return containerDetail;
         }
 
         public List<ContainerDetail> GetDistinctSize()
@@ -116,11 +112,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE CNTRTYPE <> '' 
                                    ORDER BY CNTRTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctSizes = connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
-                return distinctSizes;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctSizes = connection.Query<ContainerDetail>(query, commandType: CommandType.Text).ToList();
+            return distinctSizes;
         }
 
         public List<DataModels.BalanceDues_Item> GetBalanceDuesContainerDetail(string bolNo)
@@ -140,11 +134,9 @@ namespace Arg.Ceva.DataAccess
                                    LEFT JOIN BookingHeader bh ON bc.HBLNo=bh.HBLNo
                                    WHERE bc.HBLNO=@HBLNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var balanceDuesContainerDetail = connection.Query<DataModels.BalanceDues_Item>(query, new { HBLNO = bolNo }).ToList();
-                return balanceDuesContainerDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var balanceDuesContainerDetail = connection.Query<DataModels.BalanceDues_Item>(query, new { HBLNO = bolNo }).ToList();
+            return balanceDuesContainerDetail;
         }
     }
 }

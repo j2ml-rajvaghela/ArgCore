@@ -115,20 +115,18 @@ namespace Arg.Ceva.DataAccess
                                    WHERE i.fileName <> '' AND i.HAWBBLNO=@HAWBBLNO
                                    ORDER BY i.Type,i.ScanDate;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var documentImages = connection.Query<DocumentImage>(query, new { HAWBBLNO = bolNo }).ToList();
-                var files = new List<DocumentImage>();
-                var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
-                files.AddRange(pf);
-                pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[1]));
-                files.AddRange(pf);
-                pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[2]));
-                files.AddRange(pf);
-                var remaining = documentImages.Except(files);
-                files.AddRange(remaining);
-                return files;
-            }
+            using var connection = Common.ClientDatabase;
+            var documentImages = connection.Query<DocumentImage>(query, new { HAWBBLNO = bolNo }).ToList();
+            var files = new List<DocumentImage>();
+            var pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[0]));
+            files.AddRange(pf);
+            pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[1]));
+            files.AddRange(pf);
+            pf = documentImages.Where(x => x.Type.Contains(PriorityFiles[2]));
+            files.AddRange(pf);
+            var remaining = documentImages.Except(files);
+            files.AddRange(remaining);
+            return files;
         }
 
         public List<DocumentImage> GetAllDocumentImage()
@@ -138,11 +136,9 @@ namespace Arg.Ceva.DataAccess
                                    ORDER BY Type;";
 
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var allDocumentimages = connection.Query<DocumentImage>(query, commandType: CommandType.Text).ToList();
-                return allDocumentimages;
-            }
+            using var connection = Common.ClientDatabase;
+            var allDocumentimages = connection.Query<DocumentImage>(query, commandType: CommandType.Text).ToList();
+            return allDocumentimages;
         }
     }
 }

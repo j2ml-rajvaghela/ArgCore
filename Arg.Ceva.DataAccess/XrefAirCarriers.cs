@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
 
 namespace Arg.Ceva.DataAccess
 {
@@ -23,11 +22,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT x.*,CONCAT(x.CompanyName,' (',x.IATACode,')') AS AirCompanyName FROM XrefAirCarriers x
                                    WHERE IATACode=@IATACode;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var iataCode = connection.QueryFirstOrDefault<XrefAirCarrier>(query, new { @IATACode = code });
-                return iataCode;
-            }
+            using var connection = Common.ClientDatabase;
+            var iataCode = connection.QueryFirstOrDefault<XrefAirCarrier>(query, new { @IATACode = code });
+            return iataCode;
         }
     }
 }

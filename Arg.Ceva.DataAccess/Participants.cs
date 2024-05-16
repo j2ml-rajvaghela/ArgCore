@@ -32,11 +32,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT p.*,CONCAT(p.Name,' (',p.ParticipantID,')') AS Shipper FROM Participants p
                                    WHERE p.ParticipantID=@ParticipantID AND p.Type = 'Shipper';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var shipper = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = SHPRNO });
-                return shipper;
-            }
+            using var connection = Common.ClientDatabase;
+            var shipper = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = SHPRNO });
+            return shipper;
         }
 
         public Participant GetPayor(string CSORNO)
@@ -44,11 +42,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT p.*,concat(p.Name,' (',p.ParticipantID,')') AS Payor FROM Participants p
                                    WHERE p.ParticipantID=@ParticipantID AND p.Type = 'Consignee';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var payor = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = CSORNO });
-                return payor;
-            }
+            using var connection = Common.ClientDatabase;
+            var payor = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = CSORNO });
+            return payor;
         }
 
         public Participant GetParticipant(string customerId)
@@ -62,11 +58,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT * FROM Participants 
                                    WHERE ParticipantID=@ParticipantID AND Type = 'customer';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var Participant = connection.QueryFirstOrDefault<Participant>(query, parameters);
-                return Participant;
-            }
+            using var connection = Common.ClientDatabase;
+            var Participant = connection.QueryFirstOrDefault<Participant>(query, parameters);
+            return Participant;
         }
 
         public Participant GetConsignee(string CSEENO)
@@ -74,11 +68,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT p.*,CONCAT(p.Name,' (',p.ParticipantID,')') AS Consignee FROM Participants p
                                    WHERE p.ParticipantID=@ParticipantID AND p.Type = 'Consignee';";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var consignee = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = CSEENO});
-                return consignee;
-            }
+            using var connection = Common.ClientDatabase;
+            var consignee = connection.QueryFirstOrDefault<Participant>(query, new { ParticipantID = CSEENO });
+            return consignee;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
 namespace Arg.Ceva.DataAccess
 {
     public class InvoiceHeaders
@@ -100,11 +99,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE bh.BOKPRT=@BOKPRT
                                    ORDER BY ic.DEBTOR,ic.INVCURAMT DESC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var invoicedChargesDetail = connection.Query<InvoiceHeader>(query, new { BOKPRT = BOKPRT }).ToList();
-                return invoicedChargesDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var invoicedChargesDetail = connection.Query<InvoiceHeader>(query, new { BOKPRT = BOKPRT }).ToList();
+            return invoicedChargesDetail;
         }
     }
 }

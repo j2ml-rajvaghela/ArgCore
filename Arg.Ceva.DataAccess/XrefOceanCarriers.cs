@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
 
 namespace Arg.Ceva.DataAccess
 {
@@ -27,11 +26,9 @@ namespace Arg.Ceva.DataAccess
         {
             const string query = @"SELECT x.*,CONCAT(x.CompanyName,' (',x.SCAC,')') AS SCACCompanyName FROM XrefOceanCarriers X WHERE SCAC=@SCAC;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var oceanCarriersCompanyName = connection.QueryFirstOrDefault<XrefOceanCarrier>(query, new { @SCAC = code });
-                return oceanCarriersCompanyName;
-            }
+            using var connection = Common.ClientDatabase;
+            var oceanCarriersCompanyName = connection.QueryFirstOrDefault<XrefOceanCarrier>(query, new { @SCAC = code });
+            return oceanCarriersCompanyName;
         }
     }
 }

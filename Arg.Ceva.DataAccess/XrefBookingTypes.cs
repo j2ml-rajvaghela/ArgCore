@@ -1,7 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
 
 namespace Arg.Ceva.DataAccess
 {
@@ -18,11 +17,9 @@ namespace Arg.Ceva.DataAccess
         {
             const string query = @"SELECT * FROM XrefBookingType WHERE BookingType=@BookingType;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bType = connection.QueryFirstOrDefault<XrefBookingType>(query, new { @BookingType = bookingType });
-                return bType;
-            }
+            using var connection = Common.ClientDatabase;
+            var bType = connection.QueryFirstOrDefault<XrefBookingType>(query, new { @BookingType = bookingType });
+            return bType;
         }
     }
 }

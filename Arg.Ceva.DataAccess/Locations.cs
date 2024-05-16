@@ -1,8 +1,6 @@
 ﻿using Arg.DataAccess;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using System.Data;
-using static Arg.Ceva.DataAccess.Locations;
 namespace Arg.Ceva.DataAccess
 {
     public class Locations
@@ -35,11 +33,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')') AS LocationName FROM Locations l
                                    WHERE LocationID=@LocationID;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var location = connection.QueryFirstOrDefault<Location>(query, new { @LocationID = code });
-                return location;
-            }
+            using var connection = Common.ClientDatabase;
+            var location = connection.QueryFirstOrDefault<Location>(query, new { @LocationID = code });
+            return location;
         }
 
         public Location GetPOL(string code)
@@ -47,11 +43,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')',l.Address3) AS POLDetail FROM Locations l
                                    WHERE l.LocationID=@LocationID;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var pol = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
-                return pol;
-            }
+            using var connection = Common.ClientDatabase;
+            var pol = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
+            return pol;
         }
 
         public Location GetPOD(string code)
@@ -59,11 +53,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT l.*,CONCAT(l.Name,' (',l.LocationID,')',l.Address3) AS PODDetail FROM Locations l
                                    WHERE l.LocationID=@LocationID;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var pod = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code});
-                return pod;
-            }
+            using var connection = Common.ClientDatabase;
+            var pod = connection.QueryFirstOrDefault<Location>(query, new { LocationID = code });
+            return pod;
         }
     }
 }

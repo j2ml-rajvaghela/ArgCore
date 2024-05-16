@@ -6,8 +6,6 @@ using Dapper.Contrib.Extensions;
 using MySqlX.XDevAPI.Relational;
 using Newtonsoft.Json;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Xml.Linq;
 
 namespace Arg.Ceva.DataAccess
 {
@@ -294,11 +292,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT DISTINCT Region FROM BookingHeader
                                    ORDER BY Region;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var regions = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return regions;
-            }
+            using var connection = Common.ClientDatabase;
+            var regions = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return regions;
         }
 
         public BookingHeaderImp GetBookingHeader(string bolNo)
@@ -317,11 +313,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT * FROM BookingHeader 
                                    WHERE AWBNO=@AWBNO OR HOUSENO=@HOUSENO OR HBLNO=@HBLNO OR HAWBNO=@HAWBNO OR LBLNO=@LBLNO;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingHeader = connection.QueryFirstOrDefault<BookingHeaderImp>(query, parameters);
-                return bookingHeader;
-            }
+            using var connection = Common.ClientDatabase;
+            var bookingHeader = connection.QueryFirstOrDefault<BookingHeaderImp>(query, parameters);
+            return bookingHeader;
         }
 
         public List<BookingHeaderImp> GetBookingBranch()
@@ -329,11 +323,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT DISTINCT BRANCH FROM BookingHeader
                                    ORDER BY BRANCH;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingBranches = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return bookingBranches;
-            }
+            using var connection = Common.ClientDatabase;
+            var bookingBranches = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return bookingBranches;
 
         }
 
@@ -344,11 +336,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCODE
                                    ORDER BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCODE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var originCountryCodes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return originCountryCodes;
-            }
+            using var connection = Common.ClientDatabase;
+            var originCountryCodes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return originCountryCodes;
         }
 
         public List<BookingHeaderImp> GetDestinationCountryCode()
@@ -358,11 +348,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCOD01
                                    ORDER BY CONCAT(xc.Name,' (',xc.Code,')'),bh.CNTRYCOD01;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var destinationCountryCodes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return destinationCountryCodes;
-            }
+            using var connection = Common.ClientDatabase;
+            var destinationCountryCodes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return destinationCountryCodes;
         }
 
         public List<BookingHeaderImp> GetDistinctPOL()
@@ -372,11 +360,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE h.MATRCLOCA <> ''
                                    ORDER BY POL;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctPOLs = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return distinctPOLs;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctPOLs = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return distinctPOLs;
         }
 
         public List<BookingHeaderImp> GetDistinctPOD()
@@ -386,11 +372,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE h.MATRDLOCA <> ''
                                    ORDER BY POD;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctPODs = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return distinctPODs;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctPODs = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return distinctPODs;
         }
 
         public List<BookingHeaderImp> GetOceanServiceType()
@@ -399,11 +383,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE ONCSERV <> ''
                                    ORDER BY ONCSERV;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var oceanServiceTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return oceanServiceTypes;
-            }
+            using var connection = Common.ClientDatabase;
+            var oceanServiceTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return oceanServiceTypes;
         }
 
         public List<BookingHeaderImp> GetDistinctConsignee()
@@ -414,21 +396,16 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY CONCAT(p.Name,' (',h.CSEENO,')'),h.CSEENO
                                    ORDER BY CONCAT(p.Name,' (',h.CSEENO,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctConsignees = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return distinctConsignees;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctConsignees = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return distinctConsignees;
         }
 
         public List<BookingHeaderImp> GetCustomer()
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                var customers = connection.Query<BookingHeaderImp>("GetAllCustomer", commandType: CommandType.StoredProcedure).ToList();
-                return customers;
-
-            }
+            using var connection = Common.ClientDatabase;
+            var customers = connection.Query<BookingHeaderImp>("GetAllCustomer", commandType: CommandType.StoredProcedure).ToList();
+            return customers;
         }
 
         public List<BookingHeaderImp> GetShipper()
@@ -439,11 +416,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY CONCAT(p.Name,' (',h.SHPRNO,')'),h.SHPRNO
                                    ORDER BY CONCAT(p.Name,' (',h.SHPRNO,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var shippers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return shippers;
-            }
+            using var connection = Common.ClientDatabase;
+            var shippers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return shippers;
         }
 
         public List<BookingHeaderImp> GetPackageType()
@@ -454,11 +429,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY h.PCKGSCODE, CONCAT(p.DESCRIPTION, ' (', h.PCKGSCODE, ')')
                                    ORDER BY CONCAT(p.DESCRIPTION,' (',h.PCKGSCODE,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var packageTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return packageTypes;
-            }
+            using var connection = Common.ClientDatabase;
+            var packageTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return packageTypes;
         }
 
         public List<BookingHeaderImp> GetOceanCarrier()
@@ -469,11 +442,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY h.CARRCODE, CONCAT(o.CompanyName,' (',h.CARRCODE,')')
                                    ORDER BY CONCAT(o.CompanyName,' (',h.CARRCODE,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var oceanCarriers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return oceanCarriers;
-            }
+            using var connection = Common.ClientDatabase;
+            var oceanCarriers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return oceanCarriers;
         }
 
         public List<BookingHeaderImp> GetAirCarrier()
@@ -484,11 +455,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY CONCAT(a.CompanyName,' (',h.CARR,')'),h.CARR
                                    ORDER BY CONCAT(a.CompanyName,' (',h.CARR,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var airCarriers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return airCarriers;
-            }
+            using var connection = Common.ClientDatabase;
+            var airCarriers = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return airCarriers;
         }
 
         public List<BookingHeaderImp> GetAirServiceType()
@@ -497,11 +466,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE SERVTYPE <> ''
                                    ORDER BY SERVTYPE;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var airServiceTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return airServiceTypes;
-            }
+            using var connection = Common.ClientDatabase;
+            var airServiceTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return airServiceTypes;
         }
 
         public List<BookingHeaderImp> GetBookingType()
@@ -512,11 +479,9 @@ namespace Arg.Ceva.DataAccess
                                    GROUP BY CONCAT(b.Description,' (',h.TYPE,')'),h.TYPE
                                    ORDER BY CONCAT(b.Description,' (',h.TYPE,')');";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bookingTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return bookingTypes;
-            }
+            using var connection = Common.ClientDatabase;
+            var bookingTypes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return bookingTypes;
         }
 
         public int GetResultCount(SearchOptions so)
@@ -524,11 +489,9 @@ namespace Arg.Ceva.DataAccess
             const string query = @"SELECT COUNT(*) AS ResultCount FROM BookingHeader b;";
             FixWildcards(ref so);
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var resultCount = Convert.ToInt32(connection.ExecuteScalar<object>(query));
-                return resultCount;
-            }
+            using var connection = Common.ClientDatabase;
+            var resultCount = Convert.ToInt32(connection.ExecuteScalar<object>(query));
+            return resultCount;
 
         }
 
@@ -555,11 +518,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE ih.DEBTOR <> '' AND p.Type = 'customer'
                                    ORDER BY Name;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bolCustomers = connection.Query<Generic>(query, commandType: CommandType.Text).ToList();
-                return bolCustomers;
-            }
+            using var connection = Common.ClientDatabase;
+            var bolCustomers = connection.Query<Generic>(query, commandType: CommandType.Text).ToList();
+            return bolCustomers;
         }
 
         public List<Generic> GetBalanceDueCustomersCeva(int companyId)
@@ -575,11 +536,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE b.CompanyId = @CompanyId
                                    ORDER BY NAME;";
 
-            using (var connection = Common.Database)
-            {
-                var balanceDueCustomersCeva = connection.Query<Generic>(query, parameters).ToList();
-                return balanceDueCustomersCeva;
-            }
+            using var connection = Common.Database;
+            var balanceDueCustomersCeva = connection.Query<Generic>(query, parameters).ToList();
+            return balanceDueCustomersCeva;
         }
 
         public Generic GetCustomersbyBOL(string bol)
@@ -594,11 +553,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE ih.DEBTOR <> '' AND p.Type = 'customer' AND ih.HAWBNO=@HAWBNO OR ih.HOUSENO=@HOUSENO OR ih.HBLNO=@HBLNO
                                    ORDER BY Name;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var customersbyBOL = connection.QueryFirstOrDefault<Generic>(query, new { @HAWBNO = bol, @HOUSENO = bol, @HBLNO = bol });
-                return customersbyBOL;
-            }
+            using var connection = Common.ClientDatabase;
+            var customersbyBOL = connection.QueryFirstOrDefault<Generic>(query, new { @HAWBNO = bol, @HOUSENO = bol, @HBLNO = bol });
+            return customersbyBOL;
         }
 
         public List<BookingHeaderImp> GetAllModes()
@@ -607,11 +564,9 @@ namespace Arg.Ceva.DataAccess
                                    WHERE SERVTYPE <> '' OR ONCSERV <> ''
                                    ORDER BY Mode;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var allModes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
-                return allModes;
-            }
+            using var connection = Common.ClientDatabase;
+            var allModes = connection.Query<BookingHeaderImp>(query, commandType: CommandType.Text).ToList();
+            return allModes;
 
         }
 
@@ -765,11 +720,9 @@ namespace Arg.Ceva.DataAccess
                 sql = sqlCmd;
             }
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var results = connection.Query<BookingHeaderImp>(sql).ToList();
-                return results;
-            }
+            using var connection = Common.ClientDatabase;
+            var results = connection.Query<BookingHeaderImp>(sql).ToList();
+            return results;
         }
 
         public List<BookingHeaderImp> GetAuditResultStats(SearchOptions so, string clientName)
@@ -792,11 +745,9 @@ namespace Arg.Ceva.DataAccess
             cmd += @"GROUP BY b.Customer,b.MATRCLOCA,b.MATRDLOCA,Currency";
             cmd += @"ORDER BY b.Customer,b.MATRCLOCA,b.MATRDLOCA";
 
-            using (var connetion = Common.ClientDatabase)
-            {
-                var resultStats = connetion.Query<BookingHeaderImp>(cmd).ToList();
-                return resultStats;
-            }
+            using var connetion = Common.ClientDatabase;
+            var resultStats = connetion.Query<BookingHeaderImp>(cmd).ToList();
+            return resultStats;
         }
 
         public List<BookingHeaderImp> GetAuditResultStatsByOrigin(SearchOptions so, string clientName)
@@ -820,11 +771,9 @@ namespace Arg.Ceva.DataAccess
             cmd += @"GROUP BY b.MATRCLOCA,b.MATRDLOCA,Currency";
             cmd += @"ORDER BY b.MATRCLOCA,b.MATRDLOCA";
 
-            using (var connetion = Common.ClientDatabase)
-            {
-                var resultStatsByOrigin = connetion.Query<BookingHeaderImp>(cmd).ToList();
-                return resultStatsByOrigin;
-            }
+            using var connetion = Common.ClientDatabase;
+            var resultStatsByOrigin = connetion.Query<BookingHeaderImp>(cmd).ToList();
+            return resultStatsByOrigin;
         }
 
         public List<BookingHeaderImp> GetAuditResultStatsByPOL(SearchOptions so, string clientName)
@@ -846,11 +795,9 @@ namespace Arg.Ceva.DataAccess
             cmd += @"GROUP BY b.MATRCLOCA,Currency";
             cmd += @"ORDER BY b.MATRCLOCA";
 
-            using (var connetion = Common.ClientDatabase)
-            {
-                var resultStatsByPOL = connetion.Query<BookingHeaderImp>(cmd).ToList();
-                return resultStatsByPOL;
-            }
+            using var connetion = Common.ClientDatabase;
+            var resultStatsByPOL = connetion.Query<BookingHeaderImp>(cmd).ToList();
+            return resultStatsByPOL;
         }
 
         public void BuildCmdWhereCondition1(ref string cmd, SearchOptions so)
