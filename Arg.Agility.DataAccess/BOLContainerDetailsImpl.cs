@@ -13,11 +13,9 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.unittype IS NOT NULL
                                    ORDER BY UnitType;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var distinctTypes = connection.Query<DataModels.BOLContainerDetails>(query, commandType: CommandType.Text).ToList();
-                return distinctTypes;
-            }
+            using var connection = Common.ClientDatabase;
+            var distinctTypes = connection.Query<DataModels.BOLContainerDetails>(query, commandType: CommandType.Text).ToList();
+            return distinctTypes;
         }
 
         public List<BOLContainerDetails> GetBOLItemDetail(string jobNumber)
@@ -26,11 +24,9 @@ namespace Arg.Agility.DataAccess
                                    WHERE c.JobNumber=@JobNumber
                                    ORDER BY UnitSeqNumber;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var bOLItemDetail = connection.Query<BOLContainerDetails>(query, new { JobNumber = jobNumber}).ToList();
-                return bOLItemDetail;
-            }
+            using var connection = Common.ClientDatabase;
+            var bOLItemDetail = connection.Query<BOLContainerDetails>(query, new { JobNumber = jobNumber }).ToList();
+            return bOLItemDetail;
         }
 
         public List<BOLContainerDetails> GetUnitType()
@@ -39,11 +35,9 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.unittype IS NOT NULL
                                    ORDER BY UnitType;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var unitTypes = connection.Query<BOLContainerDetails>(query, commandType: CommandType.Text).ToList();
-                return unitTypes;
-            }
+            using var connection = Common.ClientDatabase;
+            var unitTypes = connection.Query<BOLContainerDetails>(query, commandType: CommandType.Text).ToList();
+            return unitTypes;
         }
 
         public List<BOLContainerDetails> GetHazMatFlag()
@@ -52,11 +46,9 @@ namespace Arg.Agility.DataAccess
                                    WHERE b.HazMatFlag IS NOT NULL
                                    ORDER BY HazMatFlag;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var hazMatFlag = connection.Query<BOLContainerDetails>(query, commandType: CommandType.Text).ToList();
-                return hazMatFlag;
-            }
+            using var connection = Common.ClientDatabase;
+            var hazMatFlag = connection.Query<BOLContainerDetails>(query, commandType: CommandType.Text).ToList();
+            return hazMatFlag;
         }
     }
 }

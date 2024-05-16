@@ -19,11 +19,9 @@ namespace Arg.Agility.DataAccess
             const string query = @"SELECT * FROM QueryResults
                                    WHERE QueryId=@QueryId;";
 
-            using (var connection = Common.ClientDatabase)
-            {
-                var queryResults = connection.QueryFirstOrDefault<QueryResults>(query, parameters);
-                return queryResults;
-            }
+            using var connection = Common.ClientDatabase;
+            var queryResults = connection.QueryFirstOrDefault<QueryResults>(query, parameters);
+            return queryResults;
         }
 
         public QueryResults SaveQueryResults(object searchOptions)
@@ -37,11 +35,9 @@ namespace Arg.Agility.DataAccess
 
         public QueryResults SaveQueryResults(QueryResults qr)
         {
-            using (var connection = Common.ClientDatabase)
-            {
-                connection.Insert(qr);
-                return qr;
-            }
+            using var connection = Common.ClientDatabase;
+            connection.Insert(qr);
+            return qr;
         }
     }
 }

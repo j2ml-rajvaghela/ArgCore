@@ -2,12 +2,10 @@
 using Arg.Ceva.DataAccess;
 using Arg.DataAccess;
 using Arg.DataModels;
-using ArgCore.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Util.Store;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
