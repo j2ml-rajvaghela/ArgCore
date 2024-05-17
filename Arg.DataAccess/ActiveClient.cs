@@ -9,11 +9,7 @@ namespace Arg.DataAccess
     {
         public static ArgClientsImpl _argClients = new ArgClientsImpl();
 
-        private static IHttpContextAccessor _httpContextAccessor;
-        public static void SetHttpContextAccessor(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }    
+        private static readonly IHttpContextAccessor _httpContextAccessor; 
 
         public static ArgClient Get()
         {

@@ -1,27 +1,20 @@
-﻿using Arg.DataModels;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System.Configuration;
 using System.Globalization;
-using System.Net.Http;
 
 namespace CustomExtensions
 {
     //Extension methods must be defined in a static class
     public static class StringExtension
     {
-        // This is the extension method.
-        // The first parameter takes the "this" modifier
-        // and specifies the type for which the method is defined.
-
         public static DateTime ToDateTime(this string value)
         {
             if (value == null)
             {
                 return DateTime.MinValue;
-            }   
-            CultureInfo newCulture = new CultureInfo("en-US");
+            }
+            CultureInfo newCulture = new("en-US");
             newCulture.DateTimeFormat.ShortDatePattern = "MM-dd-yyyy";
             newCulture.DateTimeFormat.DateSeparator = "-";
             return DateTime.ParseExact(value, "MM-dd-yyyy", newCulture);
@@ -47,15 +40,8 @@ namespace Arg.DataAccess
         public static AspNetRolesImpl AspNetRoles = new();
         public static AppActionsImpl AppActions = new();
 
-
-        private static IConfiguration _configuration;
-        private static IHttpContextAccessor _httpContextAccessor;
-
-        public static void SetHttpContextAccessor(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
-        {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;  
-        }
+        private static readonly IConfiguration _configuration;
+        private static readonly IHttpContextAccessor _httpContextAccessor;
 
         public static string GetIPAddress()
         {
@@ -145,7 +131,7 @@ namespace Arg.DataAccess
                     return "";
                 }
                 return _httpContextAccessor.HttpContext.User.Identity.Name ?? ""; // var userId = "35f7710d-ba3e-4e3d-96c0-6013518d8e59";  
-            } 
+            }
         }
 
         public static string CurrentUserName

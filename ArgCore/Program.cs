@@ -1,4 +1,3 @@
-using Arg.DataAccess;
 using ArgCore.Data;
 using ArgCore.Helpers;
 using ArgCore.Models;
@@ -17,7 +16,6 @@ builder.WebHost.ConfigureKestrel(c =>
 builder.Configuration.AddJsonFile("appsettings.json").AddJsonFile("myconfig.json");
 
 builder.Services.AddHttpContextAccessor();
-
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -52,6 +50,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
+// Register additional services
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddScoped<ApplicationSignInManager>();
 builder.Services.AddScoped<ApplicationUserManager>();
@@ -94,13 +93,7 @@ builder.Services.AddScoped<ApplicationUserManager>(provider =>
 
 builder.Services.AddScoped<ApplicationSignInManager>();
 
-
 var app = builder.Build();
-
-Arg.DataAccess.Common.SetHttpContextAccessor(app.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>());
-ActiveClient.SetHttpContextAccessor(app.Services.GetRequiredService<IHttpContextAccessor>());
-ArgCore.Helpers.Common.SetHttpContextAccessor(app.Configuration, app.Services.GetRequiredService<IHttpContextAccessor>(), app.Services.GetRequiredService<IWebHostEnvironment>());
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

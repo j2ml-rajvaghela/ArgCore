@@ -29,16 +29,10 @@ namespace ArgCore.Helpers
 
     public class Common
     {
-        private static IConfiguration _configuration;
-        private static IHttpContextAccessor _httpContextAccessor;
-        private static IWebHostEnvironment  _webHostEnvironment;
+        private static readonly IConfiguration _configuration;
+        private static readonly IHttpContextAccessor _httpContextAccessor;
+        private static readonly IWebHostEnvironment _webHostEnvironment;
 
-        public static void SetHttpContextAccessor(IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
-        {
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
-            _webHostEnvironment = webHostEnvironment;
-        }
         public class CommonObjects
         {
             public string Heading { get; set; }
@@ -70,23 +64,23 @@ namespace ArgCore.Helpers
 
         public static SqlConnection GetConnection()
         {
-                var connectionString = _configuration.GetConnectionString("ClientDBName");
-                var dbName = Arg.DataAccess.ActiveClient.Info.DBName;
-                if (string.IsNullOrWhiteSpace(dbName))
-                {
-                    dbName = Arg.DataAccess.Common.ClientsDBName;
-                }
-                var formatedConnectionString = string.Format(connectionString, dbName);
-                var db = new SqlConnection(formatedConnectionString);
-                db.Open();
-                return db;
+            var connectionString = _configuration.GetConnectionString("ClientDBName");
+            var dbName = Arg.DataAccess.ActiveClient.Info.DBName;
+            if (string.IsNullOrWhiteSpace(dbName))
+            {
+                dbName = Arg.DataAccess.Common.ClientsDBName;
+            }
+            var formatedConnectionString = string.Format(connectionString, dbName);
+            var db = new SqlConnection(formatedConnectionString);
+            db.Open();
+            return db;
         }
 
         public static ActivityStatsImpl ActivityStats = new();
         public static AspNetUsersImpl AspNetUsers = new();
         public static AspNetRolesImpl AspNetRoles = new();
         public static AspNetUserRolesImpl AspNetUserRoles = new();
-        public static  TemplatesImpl Templates = new();
+        public static TemplatesImpl Templates = new();
         public static IPAddressRestrictionImpl IPAddressRestriction = new();
         public static TemplateCatsImpl TemplateCats = new();
         public static RSReasonCodesImpl RSReasonCodes = new();
@@ -198,7 +192,7 @@ namespace ArgCore.Helpers
                 if (Arg.DataAccess.ActiveClient.Info != null && Arg.DataAccess.ActiveClient.Info.CompanyId > 0)
                 {
                     return Arg.DataAccess.ActiveClient.Info.Name;
-                }      
+                }
                 return "";
             }
 
@@ -375,7 +369,7 @@ namespace ArgCore.Helpers
         };
 
         public static List<SelectListItem> Mode = new()
-        { 
+        {
             new SelectListItem { Text = "Ocean", Value = "O" },
             new SelectListItem { Text = "Air", Value = "P" }
         };
@@ -425,7 +419,7 @@ namespace ArgCore.Helpers
         };
 
         public static List<SelectListItem> ChargableWeightOperator = new()
-        { 
+        {
                new SelectListItem { Text = "<", Value = "<" },
                new SelectListItem { Text = ">", Value = ">" },
                new SelectListItem { Text = "=", Value = "=" }
